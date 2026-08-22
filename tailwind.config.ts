@@ -13,6 +13,13 @@ const config: Config = {
           black: "#0a0a0a",
           offwhite: "#fafaf9",
           white: "#ffffff",
+          /** Brand sage — logo + soft accents */
+          green: {
+            DEFAULT: "#6B8F71",
+            light: "#8AAB90",
+            dark: "#557A5C",
+            muted: "#E8F0E9",
+          },
           gray: {
             50: "#f7f7f6",
             100: "#efefed",

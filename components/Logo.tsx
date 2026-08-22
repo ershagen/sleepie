@@ -14,6 +14,10 @@ const sizes = {
   lg: { text: "text-4xl", moon: 12 },
 } as const;
 
+/**
+ * Sleepie logo — variant 1
+ * Full sage-green wordmark, crescent moon as the tittle on "i"
+ */
 export function Logo({
   className = "",
   href = "/",
@@ -23,7 +27,7 @@ export function Logo({
 
   const content = (
     <span
-      className={`inline-flex items-baseline font-serif ${s.text} text-sleepie-black leading-none select-none ${className}`}
+      className={`inline-flex items-baseline font-serif ${s.text} text-sleepie-green leading-none select-none ${className}`}
       style={{ letterSpacing: "-0.03em" }}
       aria-label="Sleepie"
     >
@@ -61,7 +65,10 @@ export function Logo({
   if (href === null) return content;
 
   return (
-    <Link href={href} className="hover:opacity-75 transition-opacity inline-block">
+    <Link
+      href={href}
+      className="hover:opacity-80 transition-opacity inline-block"
+    >
       {content}
     </Link>
   );
