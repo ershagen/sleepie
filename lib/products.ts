@@ -12,6 +12,11 @@ export type Product = {
   badge?: string;
 };
 
+/**
+ * Fallback product data (used when CMS/DB is not connected).
+ * Images: high-quality Unsplash product-style photos.
+ * Replace with local /products/*.jpg or Payload media when ready.
+ */
 export const products: Product[] = [
   {
     id: "1",
@@ -20,7 +25,8 @@ export const products: Product[] = [
     price: 449,
     description:
       "Den portabla stroller rockern som ger din bebis den mjuka gungande rörelsen den älskar – var som helst. Uppladdningsbar, tyst och universell för de flesta vagnar.",
-    shortDescription: "Mjuk gungning för lugnare stunder – hemma eller på språng.",
+    shortDescription:
+      "Mjuk gungning för lugnare stunder – hemma eller på språng.",
     features: [
       "Uppladdningsbar med USB-C",
       "5 justerbara hastigheter",
@@ -30,8 +36,11 @@ export const products: Product[] = [
       "CE-märkt",
     ],
     category: "Rocker",
-    image: "/products/rocker-1.jpg",
-    images: ["/products/rocker-1.jpg"],
+    image:
+      "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=800&q=80",
+    ],
     badge: "Bästsäljare",
   },
   {
@@ -50,8 +59,11 @@ export const products: Product[] = [
       "Kompakt design",
     ],
     category: "Ljud",
-    image: "/products/noise-1.jpg",
-    images: ["/products/noise-1.jpg"],
+    image:
+      "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80",
+    ],
   },
   {
     id: "3",
@@ -69,8 +81,11 @@ export const products: Product[] = [
       "Andningsbara",
     ],
     category: "Textil",
-    image: "/products/muslin-1.jpg",
-    images: ["/products/muslin-1.jpg"],
+    image:
+      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&q=80",
+    ],
   },
   {
     id: "4",
@@ -87,17 +102,20 @@ export const products: Product[] = [
       "Mjukt material",
     ],
     category: "Textil",
-    image: "/products/sack-1.jpg",
-    images: ["/products/sack-1.jpg"],
+    image:
+      "https://images.unsplash.com/photo-1519689680058-324335c77eba?w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1519689680058-324335c77eba?w=800&q=80",
+    ],
   },
   {
     id: "5",
     slug: "komplett-sovrutin",
     name: "Komplett Sovrutin",
-    price: 899,
+    price: 999,
     description:
-      "Allt du behöver för lugnare nätter: Stroller Rocker + White Noise + Muslin Set. Det perfekta startkitet.",
-    shortDescription: "Rocker + White Noise + Muslin – allt i ett.",
+      "Allt du behöver för en lugnare sovrutin: Stroller Rocker, White Noise Maskin och Muslin Set. Sparar 198 kr jämfört med att köpa separat.",
+    shortDescription: "Rocker + White Noise + Muslin. Bästa starten.",
     features: [
       "Stroller Rocker",
       "White Noise Maskin",
@@ -105,16 +123,19 @@ export const products: Product[] = [
       "Sparar 198 kr",
     ],
     category: "Bundle",
-    image: "/products/rocker-1.jpg",
-    images: ["/products/rocker-1.jpg"],
+    image:
+      "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=800&q=80",
+    ],
     badge: "Sparar 198 kr",
   },
 ];
 
-export function getProductBySlug(slug: string) {
+export function getProductBySlug(slug: string): Product | undefined {
   return products.find((p) => p.slug === slug);
 }
 
-export function getFeaturedProducts() {
+export function getFeaturedProducts(): Product[] {
   return products.slice(0, 4);
 }
