@@ -1,10 +1,13 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ProductCard } from "@/components/ProductCard";
-import { getFeaturedProducts } from "@/lib/products";
-import { Moon, Shield, Truck, Heart, Star, Quote } from "lucide-react";
+import { getFeaturedProducts, getProductBySlug } from "@/lib/products";
+import { Moon, Shield, Truck, Heart, Star, Quote, Check } from "lucide-react";
 
 export default function HomePage() {
   const featured = getFeaturedProducts();
+  const heroProduct = getProductBySlug("stroller-rocker");
+  const kit = getProductBySlug("komplett-sovrutin");
 
   return (
     <>
@@ -15,20 +18,21 @@ export default function HomePage() {
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-sleepie-offwhite">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-16 pb-20 md:pt-24 md:pb-28">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-7 max-w-xl">
-              <p className="text-[11px] font-medium tracking-[0.2em] uppercase text-sleepie-gray-500 mb-5">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-14 pb-16 md:pt-20 md:pb-24">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+            <div className="lg:col-span-6 max-w-xl">
+              <p className="text-[11px] font-medium tracking-[0.22em] uppercase text-sleepie-gray-500 mb-5">
                 Baby sleep & calming
               </p>
-              <h1 className="font-serif text-[2.75rem] sm:text-5xl md:text-[3.5rem] leading-[1.08] text-sleepie-black text-balance">
-                Lugnare nätter börjar här
+              <h1 className="font-serif text-[2.6rem] sm:text-5xl md:text-[3.35rem] leading-[1.1] text-sleepie-black text-balance">
+                Lugnare nätter
+                <br className="hidden sm:block" /> börjar här
               </h1>
-              <p className="mt-6 text-lg text-sleepie-gray-600 leading-relaxed max-w-md">
+              <p className="mt-6 text-base sm:text-lg text-sleepie-gray-600 leading-relaxed max-w-md">
                 Smarta produkter som hjälper ditt barn sova – och dig andas ut.
-                Minimalistisk design. Fokus på trygghet.
+                Minimalistisk design. Fokus på trygghet. Inget brus.
               </p>
-              <div className="mt-9 flex flex-wrap gap-3">
+              <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/produkter"
                   className="inline-flex items-center justify-center bg-sleepie-black text-white px-8 py-3.5 rounded-full text-sm font-medium hover:bg-sleepie-gray-800 transition shadow-sm"
@@ -36,13 +40,13 @@ export default function HomePage() {
                   Upptäck kollektionen
                 </Link>
                 <Link
-                  href="/#varfor"
+                  href="/produkter/stroller-rocker"
                   className="inline-flex items-center justify-center border border-sleepie-gray-300 px-8 py-3.5 rounded-full text-sm font-medium text-sleepie-gray-700 hover:border-sleepie-black hover:text-sleepie-black transition"
                 >
-                  Varför Sleepie
+                  Se bästsäljaren
                 </Link>
               </div>
-              <div className="mt-10 flex items-center gap-3 text-sm text-sleepie-gray-500">
+              <div className="mt-9 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-sleepie-gray-500">
                 <div className="flex text-sleepie-black">
                   {[1, 2, 3, 4, 5].map((i) => (
                     <Star
@@ -56,18 +60,34 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="lg:col-span-5 hidden lg:block">
-              <div className="aspect-[4/5] rounded-2xl bg-sleepie-gray-100 border border-sleepie-gray-100 overflow-hidden relative">
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
-                  <span className="text-5xl opacity-30 mb-4">☾</span>
-                  <p className="font-serif text-2xl text-sleepie-gray-600">
-                    Sov gott.
+            <div className="lg:col-span-6">
+              <Link
+                href="/produkter/stroller-rocker"
+                className="group block relative aspect-[4/5] sm:aspect-[5/5] rounded-2xl overflow-hidden bg-sleepie-gray-100 border border-sleepie-gray-100"
+              >
+                {heroProduct && (
+                  <Image
+                    src={heroProduct.image}
+                    alt={heroProduct.name}
+                    fill
+                    className="object-cover group-hover:scale-[1.02] transition-transform duration-700"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    priority
+                    unoptimized
+                  />
+                )}
+                <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 bg-gradient-to-t from-black/55 to-transparent">
+                  <p className="text-[11px] tracking-[0.15em] uppercase text-white/70 mb-1">
+                    Bästsäljare
                   </p>
-                  <p className="mt-2 text-sm text-sleepie-gray-400 max-w-[12rem]">
-                    Designat för lugn – inte för bruset.
+                  <p className="font-serif text-xl text-white">
+                    {heroProduct?.name}
+                  </p>
+                  <p className="text-sm text-white/80 mt-0.5 tabular-nums">
+                    från {heroProduct?.price} kr
                   </p>
                 </div>
-              </div>
+              </Link>
             </div>
           </div>
         </div>
@@ -75,41 +95,65 @@ export default function HomePage() {
 
       {/* Trust strip */}
       <section className="border-y border-sleepie-gray-100 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap justify-center gap-x-10 gap-y-2 text-xs text-sleepie-gray-500 tracking-wide">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap justify-center gap-x-8 gap-y-2 text-xs text-sleepie-gray-500 tracking-wide">
           <span>CE-märkta produkter</span>
           <span className="hidden sm:inline text-sleepie-gray-300">·</span>
           <span>14 dagars ångerrätt</span>
           <span className="hidden sm:inline text-sleepie-gray-300">·</span>
           <span>Swish · Klarna · Kort</span>
           <span className="hidden sm:inline text-sleepie-gray-300">·</span>
-          <span>Snabb leverans</span>
+          <span>Fri frakt över 799 kr</span>
+        </div>
+      </section>
+
+      {/* Problem → solution */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-start">
+          <div>
+            <p className="text-[11px] tracking-[0.2em] uppercase text-sleepie-gray-500 mb-3">
+              För dig som sover för lite
+            </p>
+            <h2 className="font-serif text-2xl md:text-3xl leading-snug">
+              När nätterna blir långa räcker det inte med "det går över"
+            </h2>
+          </div>
+          <div className="text-sleepie-gray-600 leading-relaxed space-y-4 text-[15px]">
+            <p>
+              Vi är själva föräldrar. Vi vet hur det känns när bebisen inte
+              somnar, när armarna är trötta och när morgonen kommer för tidigt.
+            </p>
+            <p>
+              Sleepie samlar det som faktiskt hjälper: mjuk gungning, lugnande
+              ljud och textilier som känns trygga. Färre prylar. Mer sömn.
+            </p>
+          </div>
         </div>
       </section>
 
       {/* Categories */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-20">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-16 md:pb-20">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
             {
               title: "Rocker",
-              text: "Mjuk gungning för vagnen",
+              text: "Mjuk gungning för vagnen – hemma eller på språng",
               href: "/produkter/stroller-rocker",
             },
             {
               title: "Ljud",
-              text: "White noise & naturljud",
+              text: "White noise & naturljud för djupare sömn",
               href: "/produkter/white-noise",
             },
             {
               title: "Textil",
-              text: "Swaddle & sleep sack",
+              text: "Swaddle & sleep sack i nordiska toner",
               href: "/produkter",
             },
           ].map((cat) => (
             <Link
               key={cat.title}
               href={cat.href}
-              className="group rounded-2xl border border-sleepie-gray-100 bg-white p-8 hover:border-sleepie-gray-300 hover:shadow-sm transition"
+              className="group rounded-2xl border border-sleepie-gray-100 bg-white p-7 hover:border-sleepie-gray-300 hover:shadow-sm transition"
             >
               <p className="text-[11px] tracking-[0.15em] uppercase text-sleepie-gray-400 mb-2">
                 Kategori
@@ -117,7 +161,9 @@ export default function HomePage() {
               <h3 className="font-serif text-xl group-hover:underline underline-offset-4 decoration-1">
                 {cat.title}
               </h3>
-              <p className="mt-2 text-sm text-sleepie-gray-600">{cat.text}</p>
+              <p className="mt-2 text-sm text-sleepie-gray-600 leading-relaxed">
+                {cat.text}
+              </p>
             </Link>
           ))}
         </div>
@@ -131,8 +177,8 @@ export default function HomePage() {
               Varför Sleepie?
             </h2>
             <p className="mt-3 text-sleepie-gray-600 text-sm leading-relaxed">
-              Vi tror på lugn, enkelhet och produkter som faktiskt gör skillnad
-              – för både bebis och förälder.
+              Lugn, enkelhet och produkter som faktiskt gör skillnad – för både
+              bebis och förälder.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
@@ -196,18 +242,59 @@ export default function HomePage() {
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
-        <div className="mt-8 text-center sm:hidden">
-          <Link
-            href="/produkter"
-            className="text-sm font-medium text-sleepie-gray-600 hover:text-sleepie-black transition"
-          >
-            Se alla produkter →
-          </Link>
-        </div>
       </section>
 
+      {/* Bundle spotlight */}
+      {kit && (
+        <section className="bg-sleepie-black text-white">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-20">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+              <div className="relative aspect-square max-w-md mx-auto lg:mx-0 w-full rounded-2xl overflow-hidden bg-sleepie-gray-800">
+                <Image
+                  src={kit.image}
+                  alt={kit.name}
+                  fill
+                  className="object-cover opacity-90"
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  unoptimized
+                />
+              </div>
+              <div>
+                <p className="text-[11px] tracking-[0.2em] uppercase text-white/50 mb-3">
+                  Bästa starten
+                </p>
+                <h2 className="font-serif text-3xl md:text-4xl leading-tight">
+                  {kit.name}
+                </h2>
+                <p className="mt-4 text-white/70 leading-relaxed max-w-md">
+                  Rocker, white noise och muslin i ett paket. Allt du behöver för
+                  en lugnare start – till ett bättre pris.
+                </p>
+                <ul className="mt-6 space-y-2.5">
+                  {kit.features.map((f) => (
+                    <li key={f} className="flex items-start gap-2.5 text-sm text-white/80">
+                      <Check className="w-4 h-4 mt-0.5 shrink-0" strokeWidth={1.75} />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-8 flex flex-wrap items-center gap-4">
+                  <p className="text-2xl font-medium tabular-nums">{kit.price} kr</p>
+                  <Link
+                    href={`/produkter/${kit.slug}`}
+                    className="inline-flex items-center justify-center bg-white text-sleepie-black px-7 py-3 rounded-full text-sm font-medium hover:bg-sleepie-gray-100 transition"
+                  >
+                    Se kitet
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* How it works */}
-      <section className="bg-white border-y border-sleepie-gray-100">
+      <section className="bg-white border-b border-sleepie-gray-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-24">
           <h2 className="font-serif text-2xl md:text-3xl text-center mb-14">
             Så fungerar det
@@ -222,7 +309,7 @@ export default function HomePage() {
               {
                 step: "02",
                 title: "Betala tryggt",
-                text: "Swish, kort eller Klarna. Säkert och enkelt via Mollie.",
+                text: "Swish, kort eller Klarna. Säkert och enkelt.",
               },
               {
                 step: "03",
@@ -249,7 +336,7 @@ export default function HomePage() {
         <div className="text-center mb-12">
           <h2 className="font-serif text-2xl md:text-3xl">Vad föräldrar säger</h2>
           <p className="mt-3 text-sm text-sleepie-gray-600">
-            Riktiga upplevelser från dig som sover – och dig som vill sova.
+            Upplevelser från dig som sover – och dig som vill sova.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -315,11 +402,15 @@ export default function HomePage() {
               },
               {
                 q: "Vilka betalningssätt finns?",
-                a: "Swish, kort och Klarna. Alla betalningar hanteras säkert via Mollie.",
+                a: "Swish, kort och Klarna. Alla betalningar hanteras säkert.",
               },
               {
                 q: "Passar rockern alla vagnar?",
                 a: "Den är universell och passar de flesta standardvagnar. Kolla produktbeskrivningen för detaljer.",
+              },
+              {
+                q: "Vad ingår i Komplett Sovrutin?",
+                a: "Stroller Rocker, White Noise Maskin och Muslin Swaddle Set – till ett bättre paketpris.",
               },
             ].map((item) => (
               <details
@@ -341,19 +432,19 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="bg-sleepie-black text-white">
+      {/* Final CTA */}
+      <section className="bg-sleepie-offwhite">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-24 text-center">
           <h2 className="font-serif text-2xl md:text-3xl mb-4">
             Redo för lugnare nätter?
           </h2>
-          <p className="text-sleepie-gray-400 mb-9 max-w-md mx-auto text-sm leading-relaxed">
+          <p className="text-sleepie-gray-600 mb-9 max-w-md mx-auto text-sm leading-relaxed">
             Upptäck produkterna som hjälper både dig och din bebis att sova
             bättre – utan krångel.
           </p>
           <Link
             href="/produkter"
-            className="inline-flex items-center justify-center bg-white text-sleepie-black px-8 py-3.5 rounded-full text-sm font-medium hover:bg-sleepie-gray-100 transition"
+            className="inline-flex items-center justify-center bg-sleepie-black text-white px-8 py-3.5 rounded-full text-sm font-medium hover:bg-sleepie-gray-800 transition"
           >
             Upptäck kollektionen
           </Link>

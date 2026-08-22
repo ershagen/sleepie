@@ -2,33 +2,37 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./lib/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       colors: {
         sleepie: {
-          black: "#0A0A0A",
-          offwhite: "#FAFAF9",
+          black: "#0a0a0a",
+          offwhite: "#fafaf9",
+          white: "#ffffff",
           gray: {
-            50: "#F7F7F6",
-            100: "#EFEFEF",
-            200: "#E5E5E5",
-            300: "#D4D4D4",
-            400: "#A3A3A3",
-            500: "#737373",
-            600: "#525252",
-            700: "#404040",
-            800: "#262626",
-            900: "#171717",
+            50: "#f7f7f6",
+            100: "#efefed",
+            200: "#e4e4e1",
+            300: "#d1d1cd",
+            400: "#a3a39d",
+            500: "#73736e",
+            600: "#52524e",
+            700: "#3d3d3a",
+            800: "#262624",
+            900: "#171716",
           },
         },
       },
       fontFamily: {
-        serif: ["Georgia", "Cambria", "Times New Roman", "Times", "serif"],
-        sans: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        serif: ["var(--font-serif)", "Georgia", "serif"],
+      },
+      letterSpacing: {
+        tighter: "-0.03em",
       },
     },
   },
