@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { getProductBySlug, products } from "@/lib/products";
 import { Check } from "lucide-react";
 import { AddToCartButton } from "@/components/AddToCartButton";
+import { ProductImage } from "@/components/ProductImage";
 
 export function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
@@ -36,19 +36,12 @@ export default async function ProductPage({
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
         <div className="aspect-square bg-sleepie-gray-50 rounded-2xl relative overflow-hidden">
-          <Image
+          <ProductImage
             src={product.image}
             alt={product.name}
-            fill
-            className="object-cover"
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            priority
+            badge={product.badge}
+            category={product.category}
           />
-          {product.badge && (
-            <span className="absolute top-4 left-4 bg-sleepie-black text-white text-xs px-2.5 py-1 rounded-full z-10">
-              {product.badge}
-            </span>
-          )}
         </div>
 
         <div className="flex flex-col">
