@@ -12,14 +12,14 @@ export type Product = {
   image: string;
   images: string[];
   badge?: string;
-  /** CJ product id */
   cjPid?: string | null;
-  /** CJ variant id for createOrder */
   cjVid?: string | null;
   cjSku?: string | null;
   cjCostUsd?: number | null;
 };
 
+/** Prefer static public assets; fall back to Payload media */
+const img = (name: string) => `/products/${name}`;
 const media = (filename: string) => `/api/media/file/${filename}`;
 
 function withCj(
@@ -53,8 +53,8 @@ export const products: Product[] = [
       "CE-märkt",
     ],
     category: "Rocker",
-    image: media("21H4i.jpg"),
-    images: [media("21H4i.jpg")],
+    image: img("rocker.jpg"),
+    images: [img("rocker.jpg"), media("21H4i.jpg")],
     badge: "Bästsäljare",
   }),
   withCj({
@@ -73,8 +73,8 @@ export const products: Product[] = [
       "Kompakt nordisk design",
     ],
     category: "Ljud",
-    image: media("noise.jpg"),
-    images: [media("noise.jpg")],
+    image: img("noise.jpg"),
+    images: [img("noise.jpg"), media("noise.jpg")],
   }),
   withCj({
     id: "3",
@@ -92,8 +92,8 @@ export const products: Product[] = [
       "Andningsbara & lätta",
     ],
     category: "Textil",
-    image: media("muslin.jpg"),
-    images: [media("muslin.jpg")],
+    image: img("muslin.jpg"),
+    images: [img("muslin.jpg"), media("muslin.jpg")],
   }),
   withCj({
     id: "4",
@@ -111,8 +111,8 @@ export const products: Product[] = [
       "Enkel på/av",
     ],
     category: "Textil",
-    image: media("sack.jpg"),
-    images: [media("sack.jpg")],
+    image: img("sack.jpg"),
+    images: [img("sack.jpg"), media("sack.jpg")],
   }),
   withCj({
     id: "5",
@@ -129,8 +129,8 @@ export const products: Product[] = [
       "Sparar 98 kr mot att köpa separat",
     ],
     category: "Bundle",
-    image: media("bundle.jpg"),
-    images: [media("bundle.jpg")],
+    image: img("bundle.jpg"),
+    images: [img("bundle.jpg"), media("bundle.jpg")],
     badge: "Kit",
   }),
 ];

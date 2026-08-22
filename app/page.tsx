@@ -1,8 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ProductCard } from "@/components/ProductCard";
+import { Reveal } from "@/components/Reveal";
 import { getFeaturedProducts, getProductBySlug } from "@/lib/products";
-import { Moon, Shield, Truck, Heart, Star, Quote, Check } from "lucide-react";
+import { Moon, Shield, Truck, Heart, Star, Quote, Check, ArrowRight } from "lucide-react";
 
 export default function HomePage() {
   const featured = getFeaturedProducts();
@@ -18,26 +19,28 @@ export default function HomePage() {
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-sleepie-offwhite">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-14 pb-16 md:pt-20 md:pb-24">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-14 pb-16 md:pt-24 md:pb-28">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
             <div className="lg:col-span-6 max-w-xl">
-              <p className="text-[11px] font-medium tracking-[0.22em] uppercase text-sleepie-gray-500 mb-5">
-                Baby sleep & calming
+              <p className="animate-fade-in-up text-[11px] font-medium tracking-[0.22em] uppercase text-sleepie-gray-500 mb-5">
+                Baby sleep &amp; calming
               </p>
-              <h1 className="font-serif text-[2.6rem] sm:text-5xl md:text-[3.35rem] leading-[1.1] text-sleepie-black text-balance">
-                Lugnare nätter
-                <br className="hidden sm:block" /> börjar här
+              <h1 className="animate-fade-in-up-delay-1 font-serif text-[2.7rem] sm:text-5xl md:text-[3.5rem] leading-[1.08] text-sleepie-black text-balance">
+                Fler timmar sömn.
+                <br />
+                Färre oroliga nätter.
               </h1>
-              <p className="mt-6 text-base sm:text-lg text-sleepie-gray-600 leading-relaxed max-w-md">
-                Smarta produkter som hjälper ditt barn sova – och dig andas ut.
-                Minimalistisk design. Fokus på trygghet. Inget brus.
+              <p className="animate-fade-in-up-delay-2 mt-6 text-base sm:text-lg text-sleepie-gray-600 leading-relaxed max-w-md">
+                Produkter som hjälper din bebis somna – så du kan andas ut.
+                Utvalt för trygghet. Designat för lugn. Inget onödigt brus.
               </p>
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="animate-fade-in-up-delay-3 mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/produkter"
-                  className="inline-flex items-center justify-center bg-sleepie-black text-white px-8 py-3.5 rounded-full text-sm font-medium hover:bg-sleepie-gray-800 transition shadow-sm"
+                  className="inline-flex items-center justify-center gap-2 bg-sleepie-black text-white px-8 py-3.5 rounded-full text-sm font-medium hover:bg-sleepie-gray-800 transition shadow-sm"
                 >
-                  Upptäck kollektionen
+                  Shoppa nu
+                  <ArrowRight className="w-4 h-4" strokeWidth={1.75} />
                 </Link>
                 <Link
                   href="/produkter/stroller-rocker"
@@ -46,7 +49,7 @@ export default function HomePage() {
                   Se bästsäljaren
                 </Link>
               </div>
-              <div className="mt-9 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-sleepie-gray-500">
+              <div className="animate-fade-in-up-delay-3 mt-9 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-sleepie-gray-500">
                 <div className="flex text-sleepie-black">
                   {[1, 2, 3, 4, 5].map((i) => (
                     <Star
@@ -60,30 +63,30 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="lg:col-span-6">
+            <div className="lg:col-span-6 animate-fade-in-up-delay-2">
               <Link
                 href="/produkter/stroller-rocker"
-                className="group block relative aspect-[4/5] sm:aspect-[5/5] rounded-2xl overflow-hidden bg-sleepie-gray-100 border border-sleepie-gray-100"
+                className="group block relative aspect-[4/5] sm:aspect-[5/5] rounded-2xl overflow-hidden bg-sleepie-gray-100 border border-sleepie-gray-100 animate-float-soft"
               >
                 {heroProduct && (
                   <Image
                     src={heroProduct.image}
                     alt={heroProduct.name}
                     fill
-                    className="object-cover group-hover:scale-[1.02] transition-transform duration-700"
+                    className="object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out"
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     priority
                     unoptimized
                   />
                 )}
-                <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 bg-gradient-to-t from-black/55 to-transparent">
+                <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 bg-gradient-to-t from-black/60 via-black/25 to-transparent">
                   <p className="text-[11px] tracking-[0.15em] uppercase text-white/70 mb-1">
                     Bästsäljare
                   </p>
                   <p className="font-serif text-xl text-white">
                     {heroProduct?.name}
                   </p>
-                  <p className="text-sm text-white/80 mt-0.5 tabular-nums">
+                  <p className="text-sm text-white/85 mt-0.5 tabular-nums">
                     från {heroProduct?.price} kr
                   </p>
                 </div>
@@ -95,7 +98,7 @@ export default function HomePage() {
 
       {/* Trust strip */}
       <section className="border-y border-sleepie-gray-100 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap justify-center gap-x-8 gap-y-2 text-xs text-sleepie-gray-500 tracking-wide">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap justify-center gap-x-8 gap-y-2 text-xs text-sleepie-gray-500 tracking-wide">
           <span>CE-märkta produkter</span>
           <span className="hidden sm:inline text-sleepie-gray-300">·</span>
           <span>14 dagars ångerrätt</span>
@@ -107,14 +110,14 @@ export default function HomePage() {
       </section>
 
       {/* Problem → solution */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-20">
+      <Reveal as="section" className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-24">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-start">
           <div>
             <p className="text-[11px] tracking-[0.2em] uppercase text-sleepie-gray-500 mb-3">
               För dig som sover för lite
             </p>
-            <h2 className="font-serif text-2xl md:text-3xl leading-snug">
-              När nätterna blir långa räcker det inte med "det går över"
+            <h2 className="font-serif text-2xl md:text-[2rem] leading-snug text-balance">
+              När nätterna blir långa räcker det inte med &quot;det går över&quot;
             </h2>
           </div>
           <div className="text-sleepie-gray-600 leading-relaxed space-y-4 text-[15px]">
@@ -126,34 +129,72 @@ export default function HomePage() {
               Sleepie samlar det som faktiskt hjälper: mjuk gungning, lugnande
               ljud och textilier som känns trygga. Färre prylar. Mer sömn.
             </p>
+            <Link
+              href="/om-oss"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-sleepie-black hover:opacity-70 transition pt-1"
+            >
+              Läs vår historia <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </div>
-      </section>
+      </Reveal>
+
+      {/* Social proof numbers */}
+      <Reveal as="section" className="bg-white border-y border-sleepie-gray-100">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-14">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            {[
+              { n: "5–12", l: "arbetsdagars leverans" },
+              { n: "14", l: "dagars ångerrätt" },
+              { n: "799",
+                l: "kr fri frakt" },
+              { n: "3",
+                l: "betalningssätt" },
+            ].map((s) => (
+              <div key={s.l}>
+                <p className="font-serif text-3xl md:text-4xl tabular-nums">{s.n}</p>
+                <p className="mt-1 text-xs text-sleepie-gray-500 tracking-wide">
+                  {s.l}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Reveal>
 
       {/* Categories */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-16 md:pb-20">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <Reveal as="section" className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-20">
+        <div className="text-center mb-10">
+          <h2 className="font-serif text-2xl md:text-3xl">Hitta din lösning</h2>
+          <p className="mt-2 text-sm text-sleepie-gray-600">
+            Tre vägar till lugnare stunder – välj det som passar er.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 reveal-stagger">
           {[
             {
               title: "Rocker",
               text: "Mjuk gungning för vagnen – hemma eller på språng",
               href: "/produkter/stroller-rocker",
+              cta: "Se rocker",
             },
             {
               title: "Ljud",
               text: "White noise & naturljud för djupare sömn",
               href: "/produkter/white-noise",
+              cta: "Se white noise",
             },
             {
               title: "Textil",
               text: "Swaddle & sleep sack i nordiska toner",
               href: "/produkter",
+              cta: "Se textil",
             },
           ].map((cat) => (
             <Link
               key={cat.title}
               href={cat.href}
-              className="group rounded-2xl border border-sleepie-gray-100 bg-white p-7 hover:border-sleepie-gray-300 hover:shadow-sm transition"
+              className="group rounded-2xl border border-sleepie-gray-100 bg-white p-7 hover:border-sleepie-gray-300 hover:shadow-md transition-all duration-300"
             >
               <p className="text-[11px] tracking-[0.15em] uppercase text-sleepie-gray-400 mb-2">
                 Kategori
@@ -164,24 +205,27 @@ export default function HomePage() {
               <p className="mt-2 text-sm text-sleepie-gray-600 leading-relaxed">
                 {cat.text}
               </p>
+              <p className="mt-4 text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                {cat.cta} <ArrowRight className="w-3.5 h-3.5" />
+              </p>
             </Link>
           ))}
         </div>
-      </section>
+      </Reveal>
 
       {/* Why Sleepie */}
-      <section id="varfor" className="bg-white border-y border-sleepie-gray-100">
+      <Reveal as="section" className="bg-white border-y border-sleepie-gray-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-24">
           <div className="text-center max-w-xl mx-auto mb-14">
             <h2 className="font-serif text-2xl md:text-3xl text-sleepie-black">
-              Varför Sleepie?
+              Varför föräldrar väljer Sleepie
             </h2>
             <p className="mt-3 text-sleepie-gray-600 text-sm leading-relaxed">
               Lugn, enkelhet och produkter som faktiskt gör skillnad – för både
               bebis och förälder.
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 reveal-stagger">
             {[
               {
                 icon: Moon,
@@ -219,10 +263,10 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* Featured products */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-24">
+      <Reveal as="section" className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-24">
         <div className="flex items-end justify-between mb-10">
           <div>
             <h2 className="font-serif text-2xl md:text-3xl">Utvalda produkter</h2>
@@ -232,9 +276,9 @@ export default function HomePage() {
           </div>
           <Link
             href="/produkter"
-            className="text-sm font-medium text-sleepie-gray-600 hover:text-sleepie-black transition hidden sm:block"
+            className="text-sm font-medium text-sleepie-gray-600 hover:text-sleepie-black transition hidden sm:inline-flex items-center gap-1"
           >
-            Se alla →
+            Se alla <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -242,26 +286,26 @@ export default function HomePage() {
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
-      </section>
+      </Reveal>
 
       {/* Bundle spotlight */}
       {kit && (
-        <section className="bg-sleepie-black text-white">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-20">
+        <Reveal as="section" className="bg-sleepie-black text-white">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-24">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
               <div className="relative aspect-square max-w-md mx-auto lg:mx-0 w-full rounded-2xl overflow-hidden bg-sleepie-gray-800">
                 <Image
                   src={kit.image}
                   alt={kit.name}
                   fill
-                  className="object-cover opacity-90"
+                  className="object-cover opacity-90 hover:scale-[1.02] transition-transform duration-700"
                   sizes="(max-width: 1024px) 100vw, 40vw"
                   unoptimized
                 />
               </div>
               <div>
                 <p className="text-[11px] tracking-[0.2em] uppercase text-white/50 mb-3">
-                  Bästa starten
+                  Sparar 98 kr · Bästa starten
                 </p>
                 <h2 className="font-serif text-3xl md:text-4xl leading-tight">
                   {kit.name}
@@ -272,8 +316,14 @@ export default function HomePage() {
                 </p>
                 <ul className="mt-6 space-y-2.5">
                   {kit.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2.5 text-sm text-white/80">
-                      <Check className="w-4 h-4 mt-0.5 shrink-0" strokeWidth={1.75} />
+                    <li
+                      key={f}
+                      className="flex items-start gap-2.5 text-sm text-white/80"
+                    >
+                      <Check
+                        className="w-4 h-4 mt-0.5 shrink-0"
+                        strokeWidth={1.75}
+                      />
                       {f}
                     </li>
                   ))}
@@ -282,24 +332,28 @@ export default function HomePage() {
                   <p className="text-2xl font-medium tabular-nums">{kit.price} kr</p>
                   <Link
                     href={`/produkter/${kit.slug}`}
-                    className="inline-flex items-center justify-center bg-white text-sleepie-black px-7 py-3 rounded-full text-sm font-medium hover:bg-sleepie-gray-100 transition"
+                    className="inline-flex items-center justify-center gap-2 bg-white text-sleepie-black px-7 py-3 rounded-full text-sm font-medium hover:bg-sleepie-gray-100 transition"
                   >
-                    Se kitet
+                    Köp kitet
+                    <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
               </div>
             </div>
           </div>
-        </section>
+        </Reveal>
       )}
 
       {/* How it works */}
-      <section className="bg-white border-b border-sleepie-gray-100">
+      <Reveal as="section" className="bg-white border-b border-sleepie-gray-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-24">
-          <h2 className="font-serif text-2xl md:text-3xl text-center mb-14">
-            Så fungerar det
+          <h2 className="font-serif text-2xl md:text-3xl text-center mb-4">
+            Tre steg till lugnare nätter
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-4xl mx-auto">
+          <p className="text-center text-sm text-sleepie-gray-600 mb-14 max-w-md mx-auto">
+            Från val till dörr – enkelt och tryggt.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-4xl mx-auto reveal-stagger">
             {[
               {
                 step: "01",
@@ -329,17 +383,17 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* Reviews */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-24">
+      <Reveal as="section" className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-24">
         <div className="text-center mb-12">
           <h2 className="font-serif text-2xl md:text-3xl">Vad föräldrar säger</h2>
           <p className="mt-3 text-sm text-sleepie-gray-600">
             Upplevelser från dig som sover – och dig som vill sova.
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 reveal-stagger">
           {[
             {
               quote:
@@ -362,7 +416,7 @@ export default function HomePage() {
           ].map((r) => (
             <blockquote
               key={r.name}
-              className="bg-white border border-sleepie-gray-100 rounded-2xl p-7 flex flex-col"
+              className="bg-white border border-sleepie-gray-100 rounded-2xl p-7 flex flex-col hover:shadow-sm transition-shadow duration-300"
             >
               <Quote
                 className="w-5 h-5 text-sleepie-gray-300 mb-4"
@@ -378,10 +432,10 @@ export default function HomePage() {
             </blockquote>
           ))}
         </div>
-      </section>
+      </Reveal>
 
       {/* FAQ */}
-      <section id="faq" className="bg-white border-y border-sleepie-gray-100">
+      <Reveal as="section" className="bg-white border-y border-sleepie-gray-100">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 py-20 md:py-24">
           <h2 className="font-serif text-2xl md:text-3xl text-center mb-10">
             Vanliga frågor
@@ -419,7 +473,7 @@ export default function HomePage() {
               >
                 <summary className="flex items-center justify-between cursor-pointer px-5 py-4 text-sm font-medium list-none">
                   {item.q}
-                  <span className="text-sleepie-gray-400 group-open:rotate-45 transition-transform text-lg leading-none ml-4">
+                  <span className="text-sleepie-gray-400 group-open:rotate-45 transition-transform duration-200 text-lg leading-none ml-4">
                     +
                   </span>
                 </summary>
@@ -430,12 +484,12 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* Final CTA */}
-      <section className="bg-sleepie-offwhite">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-24 text-center">
-          <h2 className="font-serif text-2xl md:text-3xl mb-4">
+      <Reveal as="section" className="bg-sleepie-offwhite">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-28 text-center">
+          <h2 className="font-serif text-2xl md:text-4xl mb-4 text-balance">
             Redo för lugnare nätter?
           </h2>
           <p className="text-sleepie-gray-600 mb-9 max-w-md mx-auto text-sm leading-relaxed">
@@ -444,12 +498,13 @@ export default function HomePage() {
           </p>
           <Link
             href="/produkter"
-            className="inline-flex items-center justify-center bg-sleepie-black text-white px-8 py-3.5 rounded-full text-sm font-medium hover:bg-sleepie-gray-800 transition"
+            className="inline-flex items-center justify-center gap-2 bg-sleepie-black text-white px-8 py-3.5 rounded-full text-sm font-medium hover:bg-sleepie-gray-800 transition"
           >
             Upptäck kollektionen
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
-      </section>
+      </Reveal>
     </>
   );
 }
