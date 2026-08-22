@@ -8,15 +8,15 @@ type LogoProps = {
 };
 
 const sizes = {
-  sm: { mark: 28, text: "text-[1.05rem]", gap: "gap-2" },
-  md: { mark: 34, text: "text-[1.35rem]", gap: "gap-2.5" },
-  lg: { mark: 48, text: "text-[2rem]", gap: "gap-3" },
+  sm: { mark: 28, text: "text-[1.1rem]", gap: "gap-2" },
+  md: { mark: 34, text: "text-[1.4rem]", gap: "gap-2.5" },
+  lg: { mark: 52, text: "text-[2.1rem]", gap: "gap-3.5" },
 } as const;
 
 /**
- * Unique Sleepie mark:
- * Circular seal + crescent moon that doubles as the curve of an "S"
- * + soft sleep-wave — recognisable even without the wordmark.
+ * Unique Sleepie monogram:
+ * Circular seal · crescent moon · abstract S-curves · sleep spark
+ * Readable as both moon and "S" — works as favicon/app icon alone.
  */
 function LogoMark({ size }: { size: number }) {
   return (
@@ -29,62 +29,42 @@ function LogoMark({ size }: { size: number }) {
       aria-hidden="true"
       className="shrink-0 text-sleepie-black"
     >
-      {/* Outer ring */}
       <circle
         cx="24"
         cy="24"
         r="22"
         stroke="currentColor"
-        strokeWidth="1.25"
+        strokeWidth="1.35"
         fill="none"
-        opacity="0.9"
       />
+      <circle cx="24" cy="24" r="18.5" fill="currentColor" opacity="0.05" />
 
-      {/* Inner soft fill circle */}
-      <circle cx="24" cy="24" r="18.5" fill="currentColor" opacity="0.06" />
-
-      {/*
-        Crescent + S hybrid:
-        Primary crescent on the left, open to the right.
-        A second thinner arc completes an abstract "S" flow.
-      */}
+      {/* Crescent (left weight of the S) */}
       <path
-        d="M28.5 11.5C20.8 12.6 15 19.2 15 27C15 33.2 18.8 38.6 24.2 41C18.2 39.4 13.5 33.6 13.5 26.5C13.5 17.8 20.2 10.8 28.5 9.5C28.5 10.2 28.5 10.8 28.5 11.5Z"
+        d="M29 11C20.8 12.2 14.5 19.2 14.5 27.5C14.5 34 18.5 39.5 24.5 41.5C18 40 13 33.8 13 26.8C13 17.5 20.2 10.2 29 9C29 9.7 29 10.3 29 11Z"
         fill="currentColor"
       />
 
-      {/* Upper S-curve (completes the letter feel) */}
+      {/* Upper S arc */}
       <path
-        d="M26 14.5C29.5 14.5 32.5 16.2 34 19"
+        d="M26.5 14C30.5 14 33.8 16 35.5 19.2"
         stroke="currentColor"
-        strokeWidth="2.2"
+        strokeWidth="2.35"
         strokeLinecap="round"
         fill="none"
-        opacity="0.85"
       />
 
-      {/* Lower S-curve */}
+      {/* Lower S arc */}
       <path
-        d="M22 33C25.2 36.2 29.5 37 33 35.5"
+        d="M21.5 33.5C25 37 30 37.8 34 35.8"
         stroke="currentColor"
-        strokeWidth="2.2"
+        strokeWidth="2.35"
         strokeLinecap="round"
         fill="none"
-        opacity="0.85"
       />
 
-      {/* Sleep spark */}
-      <circle cx="33.5" cy="22" r="1.6" fill="currentColor" />
-
-      {/* Soft wave under — sleep motif */}
-      <path
-        d="M17 37.5C19.5 35.5 22 35.5 24.5 37.5C27 39.5 29.5 39.5 32 37.5"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        fill="none"
-        opacity="0.35"
-      />
+      {/* Spark */}
+      <circle cx="34" cy="22.5" r="1.75" fill="currentColor" />
     </svg>
   );
 }
@@ -104,24 +84,11 @@ export function Logo({
     >
       <LogoMark size={s.mark} />
       {!markOnly && (
-        <span className="inline-flex flex-col items-start leading-none">
-          <span
-            className={`font-serif ${s.text} text-sleepie-black select-none`}
-            style={{
-              letterSpacing: "-0.04em",
-              fontWeight: 400,
-            }}
-          >
-            Sleepie
-          </span>
-          {size !== "sm" && (
-            <span
-              className="font-sans text-[0.55rem] uppercase text-sleepie-gray-400 mt-[0.35em]"
-              style={{ letterSpacing: "0.28em", marginLeft: "0.05em" }}
-            >
-              sleep & calm
-            </span>
-          )}
+        <span
+          className={`font-serif ${s.text} text-sleepie-black leading-none select-none`}
+          style={{ letterSpacing: "-0.045em" }}
+        >
+          Sleepie
         </span>
       )}
     </span>
