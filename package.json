@@ -2,17 +2,28 @@
   "name": "sleepie",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
+    "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types"
   },
   "dependencies": {
-    "next": "^15.1.0",
+    "@payloadcms/db-postgres": "^3.28.0",
+    "@payloadcms/next": "^3.28.0",
+    "@payloadcms/richtext-lexical": "^3.28.0",
+    "@payloadcms/ui": "^3.28.0",
+    "cross-env": "^7.0.3",
+    "graphql": "^16.10.0",
+    "lucide-react": "^0.468.0",
+    "next": "^15.2.9",
+    "payload": "^3.28.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "lucide-react": "^0.468.0",
+    "sharp": "^0.33.5",
     "clsx": "^2.1.1",
     "tailwind-merge": "^2.5.5"
   },
@@ -25,6 +36,6 @@
     "postcss": "^8.4.49",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.16.0",
-    "eslint-config-next": "^15.1.0"
+    "eslint-config-next": "^15.2.9"
   }
 }
