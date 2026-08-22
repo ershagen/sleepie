@@ -12,23 +12,33 @@ export type Product = {
   image: string;
   images: string[];
   badge?: string;
+  sku: string;
+  brand: string;
+  condition: "new";
+  availability: "in_stock";
   cjPid?: string | null;
   cjVid?: string | null;
   cjSku?: string | null;
   cjCostUsd?: number | null;
 };
 
-/** AI-generated product photos (Vercel Blob) — based on Alibaba/CJ product types */
+/** AI-generated product photos hosted on Vercel Blob */
 const BLOB =
   "https://bmpvyjsgiskr7b9a.public.blob.vercel-storage.com/products";
 const img = (name: string) => `${BLOB}/${name}.jpg`;
 
 function withCj(
-  base: Omit<Product, "cjPid" | "cjVid" | "cjSku" | "cjCostUsd">
+  base: Omit<
+    Product,
+    "cjPid" | "cjVid" | "cjSku" | "cjCostUsd" | "brand" | "condition" | "availability"
+  >
 ): Product {
   const m = getCjMapping(base.slug);
   return {
     ...base,
+    brand: "Sleepie",
+    condition: "new",
+    availability: "in_stock",
     cjPid: m?.pid ?? null,
     cjVid: m?.vid ?? null,
     cjSku: m?.sku ?? null,
@@ -41,9 +51,10 @@ export const products: Product[] = [
     id: "1",
     slug: "stroller-rocker",
     name: "Stroller Rocker",
+    sku: "SLP-ROCK-001",
     price: 449,
     description:
-      "Portabel USB-C stroller rocker – samma typ som hos leverantörer på Alibaba/CJ. Klipsas på vagnen, ger mjuk gungning med tyst motor, flera hastigheter och timer. För hemmet, caféet och resan.",
+      "Portabel USB-C stroller rocker som klipsas på vagnen. Mjuk gungning med tyst motor, flera hastigheter och timer. För hemmet, caféet och resan – när armarna behöver vila.",
     shortDescription: "USB-C clip-on rocker – mjuk gungning på språng.",
     features: [
       "Uppladdningsbar USB-C",
@@ -62,9 +73,10 @@ export const products: Product[] = [
     id: "2",
     slug: "white-noise",
     name: "White Noise Maskin",
+    sku: "SLP-NOIS-001",
     price: 299,
     description:
-      "Kompakt portabel white noise-maskin med mjuk nattlampa och USB-C – inspirerad av de mest efterfrågade soothers. Skapar en trygg ljudbubbla för bättre sömn.",
+      "Kompakt portabel white noise-maskin med mjuk nattlampa och USB-C. Skapar en trygg ljudbubbla för djupare sömn – hemma eller på resan.",
     shortDescription: "Lugnande ljud + mjukt ljus, USB-C.",
     features: [
       "White noise + naturljud",
@@ -81,16 +93,17 @@ export const products: Product[] = [
     id: "3",
     slug: "muslin-set",
     name: "Muslin Swaddle Set",
+    sku: "SLP-MUSL-001",
     price: 349,
     description:
-      "3-pack mjuka muslin/gauze-swaddles i neutrala toner – samma kategori som CJ-mappade swaddles. Andningsbara, lätta och sköna mot känslig hud.",
+      "3-pack mjuka muslin-swaddles i neutrala toner. Andningsbara, lätta och sköna mot känslig hud – swaddle, amning och solskydd i ett.",
     shortDescription: "3-pack mjuka swaddles i nordiska toner.",
     features: [
       "Mjuk gauze / muslin",
       "3-pack",
       "Neutrala färger",
       "Andningsbara & lätta",
-      "CJ-kopplad dropshipping",
+      "Maskintvätt",
     ],
     category: "Textil",
     image: img("muslin"),
@@ -100,9 +113,10 @@ export const products: Product[] = [
     id: "4",
     slug: "sleep-sack",
     name: "Sleep Sack",
+    sku: "SLP-SACK-001",
     price: 399,
     description:
-      "Säker sömnsäck utan lösa täcken – håller bebisen lagom varm. Matchar CJ sleep/swaddle-sortimentet för trygg dropshipping.",
+      "Säker sömnsäck utan lösa täcken. Håller bebisen lagom varm under natten – mjuk, andningsbar och enkel att ta på.",
     shortDescription: "Säker sömn utan lösa täcken.",
     features: [
       "Andningsbart material",
@@ -119,6 +133,7 @@ export const products: Product[] = [
     id: "5",
     slug: "komplett-sovrutin",
     name: "Komplett Sovrutin",
+    sku: "SLP-KIT-001",
     price: 999,
     description:
       "Allt i ett: Stroller Rocker + White Noise + Muslin Set. Bästa starten för lugnare nätter – sparar jämfört med att köpa separat.",
@@ -137,6 +152,8 @@ export const products: Product[] = [
 ];
 
 export const FREE_SHIPPING_THRESHOLD = 799;
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SERVER_URL || "https://sleepie-alectiv.vercel.app";
 
 export function getProductBySlug(slug: string): Product | undefined {
   return products.find((p) => p.slug === slug);
