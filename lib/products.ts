@@ -13,9 +13,8 @@ export type Product = {
 };
 
 /**
- * Fallback product data (used when CMS/DB is not connected).
- * Images: high-quality Unsplash product-style photos.
- * Replace with local /products/*.jpg or Payload media when ready.
+ * Fallback product catalog (used when Payload/CMS is offline).
+ * Images: curated lifestyle photos — swap for AI / Payload Media later.
  */
 export const products: Product[] = [
   {
@@ -24,22 +23,23 @@ export const products: Product[] = [
     name: "Stroller Rocker",
     price: 449,
     description:
-      "Den portabla stroller rockern som ger din bebis den mjuka gungande rörelsen den älskar – var som helst. Uppladdningsbar, tyst och universell för de flesta vagnar.",
+      "Den portabla stroller rockern som ger din bebis den mjuka gungande rörelsen den älskar – hemma, på caféet eller på resan. Uppladdningsbar USB-C, tyst motor och universell passform för de flesta vagnar. Fem hastigheter och timer så du kan fokusera på dig själv en stund.",
     shortDescription:
       "Mjuk gungning för lugnare stunder – hemma eller på språng.",
     features: [
       "Uppladdningsbar med USB-C",
       "5 justerbara hastigheter",
-      "Timer 15/30/45 min",
-      "Passar de flesta vagnar",
-      "Tyst motor",
+      "Timer 15 / 30 / 45 min",
+      "Passar de flesta standardvagnar",
+      "Tyst, diskret motor",
       "CE-märkt",
     ],
     category: "Rocker",
     image:
-      "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=800&q=80",
+      "https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=900&q=85",
     images: [
-      "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=800&q=80",
+      "https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=900&q=85",
+      "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=900&q=85",
     ],
     badge: "Bästsäljare",
   },
@@ -49,20 +49,20 @@ export const products: Product[] = [
     name: "White Noise Maskin",
     price: 299,
     description:
-      "Portabel white noise-maskin med naturljud och mjuk nattlampa. Hjälper både bebis och dig att sova bättre.",
+      "Portabel white noise-maskin med naturljud och mjuk nattlampa. Skapar en trygg ljudbubbla som hjälper både bebis och dig att somna snabbare – och sova längre. Kompakt nog för nattduksbordet och resan.",
     shortDescription: "Lugnande ljud och mjukt ljus för bättre sömn.",
     features: [
-      "Flera naturljud + white noise",
+      "White noise + naturljud",
       "Uppladdningsbar",
-      "Timer",
+      "Inbyggd timer",
       "Mjuk nattlampa",
-      "Kompakt design",
+      "Kompakt nordisk design",
     ],
     category: "Ljud",
     image:
-      "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80",
+      "https://images.unsplash.com/photo-1519689680058-324335c77eba?w=900&q=85",
     images: [
-      "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80",
+      "https://images.unsplash.com/photo-1519689680058-324335c77eba?w=900&q=85",
     ],
   },
   {
@@ -71,20 +71,20 @@ export const products: Product[] = [
     name: "Muslin Swaddle Set",
     price: 349,
     description:
-      "Mjukt set med ekologiska muslinfiltar i neutrala toner. Andningsbara och sköna mot huden.",
+      "Mjukt 3-pack med ekologiska muslinfiltar i lugna, neutrala toner. Andningsbara, lätta och sköna mot känslig hud – perfekta för swaddle, amning eller som lätt täcke i vagnen.",
     shortDescription: "Mjuka, andningsbara swaddles i nordiska toner.",
     features: [
-      "Ekologisk bambu/bomull",
+      "Ekologisk bomull / bambu",
       "GOTS / OEKO-TEX",
       "3-pack",
       "Neutrala färger",
-      "Andningsbara",
+      "Andningsbara & lätta",
     ],
     category: "Textil",
     image:
-      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&q=80",
+      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=900&q=85",
     images: [
-      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&q=80",
+      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=900&q=85",
     ],
   },
   {
@@ -93,19 +93,20 @@ export const products: Product[] = [
     name: "Sleep Sack",
     price: 399,
     description:
-      "Säker och bekväm sömnsäck som håller bebisen lagom varm utan lösa täcken.",
+      "Säker och bekväm sömnsäck som håller bebisen lagom varm utan lösa täcken. Andningsbart material, mjuk passform och enkel att ta på – en tryggare natt för er båda.",
     shortDescription: "Säker sömn utan lösa täcken.",
     features: [
-      "Andningsbar",
-      "Säker design",
-      "Olika storlekar",
-      "Mjukt material",
+      "Andningsbart material",
+      "Säker design utan lösa delar",
+      "Flera storlekar",
+      "Mjuk mot huden",
+      "Enkel på/av",
     ],
     category: "Textil",
     image:
-      "https://images.unsplash.com/photo-1519689680058-324335c77eba?w=800&q=80",
+      "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=900&q=85",
     images: [
-      "https://images.unsplash.com/photo-1519689680058-324335c77eba?w=800&q=80",
+      "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=900&q=85",
     ],
   },
   {
@@ -114,21 +115,21 @@ export const products: Product[] = [
     name: "Komplett Sovrutin",
     price: 999,
     description:
-      "Allt du behöver för en lugnare sovrutin: Stroller Rocker, White Noise Maskin och Muslin Set. Sparar 198 kr jämfört med att köpa separat.",
+      "Allt du behöver för en lugnare start: Stroller Rocker, White Noise Maskin och Muslin Swaddle Set. Ett genomtänkt kit för dig som vill ha helheten – till ett bättre pris.",
     shortDescription: "Rocker + White Noise + Muslin. Bästa starten.",
     features: [
-      "Stroller Rocker",
-      "White Noise Maskin",
-      "Muslin Swaddle Set",
-      "Sparar 198 kr",
+      "Stroller Rocker (449 kr)",
+      "White Noise Maskin (299 kr)",
+      "Muslin Swaddle Set (349 kr)",
+      "Sparar 98 kr mot att köpa separat",
     ],
     category: "Bundle",
     image:
-      "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=800&q=80",
+      "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=900&q=85",
     images: [
-      "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=800&q=80",
+      "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=900&q=85",
     ],
-    badge: "Sparar 198 kr",
+    badge: "Kit",
   },
 ];
 
@@ -138,4 +139,8 @@ export function getProductBySlug(slug: string): Product | undefined {
 
 export function getFeaturedProducts(): Product[] {
   return products.slice(0, 4);
+}
+
+export function getRelatedProducts(slug: string, limit = 3): Product[] {
+  return products.filter((p) => p.slug !== slug).slice(0, limit);
 }

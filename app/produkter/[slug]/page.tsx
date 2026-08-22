@@ -1,9 +1,14 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getProductBySlug, products } from "@/lib/products";
-import { Check } from "lucide-react";
+import {
+  getProductBySlug,
+  getRelatedProducts,
+  products,
+} from "@/lib/products";
+import { Check, Truck, RotateCcw, Shield } from "lucide-react";
 import { AddToCartButton } from "@/components/AddToCartButton";
 import { ProductImage } from "@/components/ProductImage";
+import { ProductCard } from "@/components/ProductCard";
 
 export function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
@@ -32,10 +37,24 @@ export default async function ProductPage({
   const product = getProductBySlug(slug);
   if (!product) notFound();
 
+  const related = getRelatedProducts(slug);
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
+      <nav className="text-xs text-sleepie-gray-500 mb-8 flex gap-2">
+        <Link href="/" className="hover:text-sleepie-black transition">
+          Hem
+        </Link>
+        <span>/</span>
+        <Link href="/produkter" className="hover:text-sleepie-black transition">
+          Produkter
+        </Link>
+        <span>/</span>
+        <span className="text-sleepie-black">{product.name}</span>
+      </nav>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
-        <div className="aspect-square bg-sleepie-gray-50 rounded-2xl relative overflow-hidden">
+        <div className="aspect-square bg-sleepie-gray-50 rounded-2xl relative overflow-hidden border border-sleepie-gray-100">
           <ProductImage
             src={product.image}
             alt={product.name}
@@ -45,9 +64,16 @@ export default async function ProductPage({
         </div>
 
         <div className="flex flex-col">
-          <p className="text-sm text-sleepie-gray-500 mb-2">{product.category}</p>
-          <h1 className="font-serif text-3xl md:text-4xl">{product.name}</h1>
-          <p className="mt-4 text-2xl font-medium tabular-nums">{product.price} kr</p>
+          <p className="text-[11px] tracking-[0.15em] uppercase text-sleepie-gray-500 mb-2">
+            {product.category}
+          </p>
+          <h1 className="font-serif text-3xl md:text-4xl leading-tight">
+            {product.name}
+          </h1>
+          <p className="mt-4 text-2xl font-medium tabular-nums">
+            {product.price} kr
+          </p>
+          <p className="text-xs text-sleepie-gray-500 mt-1">Inkl. moms</p>
 
           <p className="mt-6 text-sleepie-gray-600 leading-relaxed">
             {product.description}
@@ -56,7 +82,10 @@ export default async function ProductPage({
           <ul className="mt-8 space-y-3">
             {product.features.map((feature) => (
               <li key={feature} className="flex items-start gap-3 text-sm">
-                <Check className="w-4 h-4 mt-0.5 text-sleepie-black shrink-0" />
+                <Check
+                  className="w-4 h-4 mt-0.5 text-sleepie-black shrink-0"
+                  strokeWidth={1.75}
+                />
                 <span>{feature}</span>
               </li>
             ))}
@@ -68,17 +97,53 @@ export default async function ProductPage({
               href="/produkter"
               className="flex-1 text-center border border-sleepie-gray-300 py-3.5 px-6 rounded-full text-sm font-medium hover:border-sleepie-black transition"
             >
-              Tillbaka till shop
+              Fortsätt handla
             </Link>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-sleepie-gray-100 text-xs text-sleepie-gray-500 space-y-1">
-            <p>✓ CE-märkt</p>
-            <p>✓ 14 dagars ångerrätt</p>
-            <p>✓ Säkra betalningar via Mollie (Swish, kort, Klarna)</p>
+          <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-sleepie-gray-100">
+            {[
+              {
+                icon: Truck,
+                title: "Leverans",
+                text: "5–12 arbetsdagar",
+              },
+              {
+                icon: RotateCcw,
+                title: "Ångerrätt",
+                text: "14 dagar",
+              },
+              {
+                icon: Shield,
+                title: "Säkert",
+                text: "CE-märkt",
+              },
+            ].map((item) => (
+              <div key={item.title} className="flex items-start gap-3">
+                <item.icon
+                  className="w-4 h-4 mt-0.5 text-sleepie-gray-500 shrink-0"
+                  strokeWidth={1.5}
+                />
+                <div>
+                  <p className="text-xs font-medium">{item.title}</p>
+                  <p className="text-xs text-sleepie-gray-500">{item.text}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
+
+      {related.length > 0 && (
+        <section className="mt-20 md:mt-28">
+          <h2 className="font-serif text-2xl mb-8">Du kanske också gillar</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {related.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

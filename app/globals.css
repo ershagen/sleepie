@@ -9,6 +9,15 @@
   body {
     @apply bg-sleepie-offwhite text-sleepie-black antialiased;
   }
+  ::selection {
+    background: #0a0a0a;
+    color: #fafaf9;
+  }
+  input,
+  textarea,
+  select {
+    @apply bg-white;
+  }
 }
 
 @layer utilities {
