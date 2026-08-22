@@ -15,6 +15,7 @@ export function ProductImage({
   category?: string;
 }) {
   const [error, setError] = useState(false);
+  const isLocalApi = src.startsWith("/api/") || src.startsWith("data:");
 
   return (
     <>
@@ -26,6 +27,7 @@ export function ProductImage({
           className="object-cover"
           sizes="(max-width: 1024px) 100vw, 50vw"
           priority
+          unoptimized={isLocalApi}
           onError={() => setError(true)}
         />
       ) : (

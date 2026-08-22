@@ -12,9 +12,10 @@ export type Product = {
   badge?: string;
 };
 
+const img = (name: string) => `/api/product-image/${name}`;
+
 /**
- * Fallback product catalog (used when Payload/CMS is offline).
- * Images: curated lifestyle photos — swap for AI / Payload Media later.
+ * Fallback catalog — AI-generated product photos via /api/product-image/*
  */
 export const products: Product[] = [
   {
@@ -24,8 +25,7 @@ export const products: Product[] = [
     price: 449,
     description:
       "Den portabla stroller rockern som ger din bebis den mjuka gungande rörelsen den älskar – hemma, på caféet eller på resan. Uppladdningsbar USB-C, tyst motor och universell passform för de flesta vagnar. Fem hastigheter och timer så du kan fokusera på dig själv en stund.",
-    shortDescription:
-      "Mjuk gungning för lugnare stunder – hemma eller på språng.",
+    shortDescription: "Mjuk gungning för lugnare stunder – hemma eller på språng.",
     features: [
       "Uppladdningsbar med USB-C",
       "5 justerbara hastigheter",
@@ -35,12 +35,8 @@ export const products: Product[] = [
       "CE-märkt",
     ],
     category: "Rocker",
-    image:
-      "https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=900&q=85",
-    images: [
-      "https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=900&q=85",
-      "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=900&q=85",
-    ],
+    image: img("rocker"),
+    images: [img("rocker")],
     badge: "Bästsäljare",
   },
   {
@@ -49,7 +45,7 @@ export const products: Product[] = [
     name: "White Noise Maskin",
     price: 299,
     description:
-      "Portabel white noise-maskin med naturljud och mjuk nattlampa. Skapar en trygg ljudbubbla som hjälper både bebis och dig att somna snabbare – och sova längre. Kompakt nog för nattduksbordet och resan.",
+      "Portabel white noise-maskin med naturljud och mjuk nattlampa. Skapar en trygg ljudbubbla som hjälper både bebis och dig att somna snabbare – och sova längre.",
     shortDescription: "Lugnande ljud och mjukt ljus för bättre sömn.",
     features: [
       "White noise + naturljud",
@@ -59,11 +55,8 @@ export const products: Product[] = [
       "Kompakt nordisk design",
     ],
     category: "Ljud",
-    image:
-      "https://images.unsplash.com/photo-1519689680058-324335c77eba?w=900&q=85",
-    images: [
-      "https://images.unsplash.com/photo-1519689680058-324335c77eba?w=900&q=85",
-    ],
+    image: img("noise"),
+    images: [img("noise")],
   },
   {
     id: "3",
@@ -71,7 +64,7 @@ export const products: Product[] = [
     name: "Muslin Swaddle Set",
     price: 349,
     description:
-      "Mjukt 3-pack med ekologiska muslinfiltar i lugna, neutrala toner. Andningsbara, lätta och sköna mot känslig hud – perfekta för swaddle, amning eller som lätt täcke i vagnen.",
+      "Mjukt 3-pack med ekologiska muslinfiltar i lugna, neutrala toner. Andningsbara, lätta och sköna mot känslig hud.",
     shortDescription: "Mjuka, andningsbara swaddles i nordiska toner.",
     features: [
       "Ekologisk bomull / bambu",
@@ -81,11 +74,8 @@ export const products: Product[] = [
       "Andningsbara & lätta",
     ],
     category: "Textil",
-    image:
-      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=900&q=85",
-    images: [
-      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=900&q=85",
-    ],
+    image: img("muslin"),
+    images: [img("muslin")],
   },
   {
     id: "4",
@@ -93,7 +83,7 @@ export const products: Product[] = [
     name: "Sleep Sack",
     price: 399,
     description:
-      "Säker och bekväm sömnsäck som håller bebisen lagom varm utan lösa täcken. Andningsbart material, mjuk passform och enkel att ta på – en tryggare natt för er båda.",
+      "Säker och bekväm sömnsäck som håller bebisen lagom varm utan lösa täcken.",
     shortDescription: "Säker sömn utan lösa täcken.",
     features: [
       "Andningsbart material",
@@ -103,11 +93,8 @@ export const products: Product[] = [
       "Enkel på/av",
     ],
     category: "Textil",
-    image:
-      "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=900&q=85",
-    images: [
-      "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=900&q=85",
-    ],
+    image: img("sack"),
+    images: [img("sack")],
   },
   {
     id: "5",
@@ -115,7 +102,7 @@ export const products: Product[] = [
     name: "Komplett Sovrutin",
     price: 999,
     description:
-      "Allt du behöver för en lugnare start: Stroller Rocker, White Noise Maskin och Muslin Swaddle Set. Ett genomtänkt kit för dig som vill ha helheten – till ett bättre pris.",
+      "Allt du behöver för en lugnare start: Stroller Rocker, White Noise Maskin och Muslin Swaddle Set.",
     shortDescription: "Rocker + White Noise + Muslin. Bästa starten.",
     features: [
       "Stroller Rocker (449 kr)",
@@ -124,11 +111,8 @@ export const products: Product[] = [
       "Sparar 98 kr mot att köpa separat",
     ],
     category: "Bundle",
-    image:
-      "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=900&q=85",
-    images: [
-      "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=900&q=85",
-    ],
+    image: img("bundle"),
+    images: [img("bundle")],
     badge: "Kit",
   },
 ];
