@@ -13,7 +13,6 @@ const sizes = {
   lg: { mark: 36, text: "text-3xl", gap: "gap-3" },
 } as const;
 
-/** Clean crescent moon mark */
 function LogoMark({ size }: { size: number }) {
   return (
     <svg
@@ -50,10 +49,6 @@ export function Logo({
       {!markOnly && (
         <span
           className={`font-serif ${s.text} tracking-tight text-sleepie-black leading-none select-none`}
-          style={{
-            fontFamily:
-              "Georgia, 'Iowan Old Style', 'Palatino Linotype', Times, serif",
-          }}
         >
           Sleepie
         </span>
