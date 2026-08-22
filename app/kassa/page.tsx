@@ -8,14 +8,16 @@ import { useCart } from "@/lib/cart";
 import { calcOrderTotal } from "@/lib/shipping";
 import { Shield, Lock } from "lucide-react";
 
+const LAST_ORDER_KEY = "sleepie-last-order";
+
 export default function CheckoutPage() {
   const { items, totalPrice, clearCart, isReady } = useCart();
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<"swish" | "card" | "klarna">(
-    "swish"
-  );
+  const [paymentMethod, setPaymentMethod] = useState<
+    "swish" | "card" | "klarna"
+  >("swish");
 
   if (!isReady) {
     return (
@@ -28,11 +30,11 @@ export default function CheckoutPage() {
   if (items.length === 0) {
     return (
       <div className="max-w-lg mx-auto px-4 py-20 text-center">
-        <h1 className="font-serif text-3xl mb-3">Kassan</h1>
+        <h1 className="font-serif text-3xl mb-3">Kassa</h1>
         <p className="text-sleepie-gray-600 mb-8">Varukorgen är tom.</p>
         <Link
           href="/produkter"
-          className="inline-flex bg-sleepie-black text-white px-7 py-3.5 rounded-full text-sm font-medium hover:bg-sleepie-gray-800 transition"
+          className="inline-flex bg-sleepie-black text-white px-7 py-3.5 text-sm font-medium hover:bg-sleepie-gray-800 transition"
         >
           Till produkterna
         </Link>
@@ -50,42 +52,66 @@ export default function CheckoutPage() {
     const form = e.currentTarget;
     const data = new FormData(form);
 
-    try {
-      // Spara order-intent lokalt / redo för Mollie
-      const payload = {
-        email: data.get("email"),
-        phone: data.get("phone"),
-        firstName: data.get("firstName"),
-        lastName: data.get("lastName"),
-        address: data.get("address"),
-        zip: data.get("zip"),
-        city: data.get("city"),
-        country: "SE",
-        paymentMethod,
-        items: items.map((i) => ({
-          id: i.id,
-          slug: i.slug,
-          name: i.name,
-          price: i.price,
-          quantity: i.quantity,
-        })),
-        subtotal,
-        shipping,
-        total,
-      };
+    const payload = {
+      email: String(data.get("email") || ""),
+      phone: String(data.get("phone") || ""),
+      firstName: String(data.get("firstName") || ""),
+      lastName: String(data.get("lastName") || ""),
+      address: String(data.get("address") || ""),
+      zip: String(data.get("zip") || ""),
+      city: String(data.get("city") || ""),
+      country: "SE",
+      paymentMethod,
+      items: items.map((i) => ({
+        id: i.id,
+        slug: i.slug,
+        name: i.name,
+        price: i.price,
+        quantity: i.quantity,
+        image: i.image,
+      })),
+      subtotal,
+      shipping,
+      total,
+    };
 
-      // Försök spara via API (fallback om endpoint saknas)
-      await fetch("/api/orders", {
+    try {
+      const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
-      }).catch(() => null);
+      });
 
-      // Mollie kommer här – just nu testorder
-      await new Promise((r) => setTimeout(r, 700));
+      if (!res.ok) {
+        throw new Error("order_failed");
+      }
+
+      const json = (await res.json()) as {
+        orderId: string;
+        checkoutUrl?: string;
+      };
+
+      // When Mollie is live: window.location = json.checkoutUrl
+      if (json.checkoutUrl) {
+        window.location.href = json.checkoutUrl;
+        return;
+      }
+
+      try {
+        sessionStorage.setItem(
+          LAST_ORDER_KEY,
+          JSON.stringify({
+            orderId: json.orderId,
+            ...payload,
+            createdAt: new Date().toISOString(),
+          })
+        );
+      } catch {
+        // ignore
+      }
 
       clearCart();
-      router.push("/order-bekraftelse");
+      router.push(`/order-bekraftelse?order=${encodeURIComponent(json.orderId)}`);
     } catch {
       setError("Något gick fel. Försök igen.");
       setSubmitting(false);
@@ -98,22 +124,16 @@ export default function CheckoutPage() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
       <div className="mb-8">
-        <Link
-          href="/varukorg"
-          className="text-sm text-sleepie-gray-500 hover:text-sleepie-black transition"
-        >
-          ← Tillbaka till varukorgen
-        </Link>
-        <h1 className="font-serif text-3xl md:text-4xl mt-3">Kassa</h1>
+        <h1 className="font-serif text-3xl md:text-4xl">Kassa</h1>
+        <p className="mt-2 text-sm text-sleepie-gray-500">
+          Steg 2 av 2 · Betalning & leverans
+        </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
-        <form onSubmit={handleSubmit} className="lg:col-span-7 space-y-8">
-          {/* Kontakt */}
+        <form onSubmit={handleSubmit} className="lg:col-span-7 space-y-6">
           <section className="rounded-2xl border border-sleepie-gray-100 bg-white p-6 sm:p-7">
-            <h2 className="text-sm font-medium tracking-wide uppercase text-sleepie-gray-500 mb-5">
-              Kontakt
-            </h2>
+            <h2 className="font-medium mb-5">Kontakt</h2>
             <div className="space-y-4">
               <div>
                 <label htmlFor="email" className="block text-sm mb-1.5">
@@ -148,11 +168,8 @@ export default function CheckoutPage() {
             </div>
           </section>
 
-          {/* Leverans */}
           <section className="rounded-2xl border border-sleepie-gray-100 bg-white p-6 sm:p-7">
-            <h2 className="text-sm font-medium tracking-wide uppercase text-sleepie-gray-500 mb-5">
-              Leveransadress
-            </h2>
+            <h2 className="font-medium mb-5">Leveransadress</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="firstName" className="block text-sm mb-1.5">
@@ -225,11 +242,8 @@ export default function CheckoutPage() {
             </div>
           </section>
 
-          {/* Betalning */}
           <section className="rounded-2xl border border-sleepie-gray-100 bg-white p-6 sm:p-7">
-            <h2 className="text-sm font-medium tracking-wide uppercase text-sleepie-gray-500 mb-5">
-              Betalning
-            </h2>
+            <h2 className="font-medium mb-5">Betalning</h2>
             <div className="space-y-3">
               {(
                 [
@@ -277,8 +291,8 @@ export default function CheckoutPage() {
             </div>
             <p className="mt-4 text-xs text-sleepie-gray-500 flex items-start gap-2">
               <Lock className="w-3.5 h-3.5 mt-0.5 shrink-0" strokeWidth={1.5} />
-              Riktig betalning via Mollie kopplas in med API-nyckel. Just nu
-              skapas en testorder utan dragning.
+              Säker betalning. Mollie kopplas in med API-nyckel – just nu skapas
+              en testorder utan dragning.
             </p>
           </section>
 
@@ -287,7 +301,7 @@ export default function CheckoutPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-sleepie-black text-white py-4 rounded-full text-sm font-medium hover:bg-sleepie-gray-800 transition disabled:opacity-60"
+            className="w-full bg-sleepie-black text-white py-4 text-sm font-medium hover:bg-sleepie-gray-800 transition disabled:opacity-60"
           >
             {submitting ? "Bearbetar…" : `Slutför order · ${total} kr`}
           </button>
@@ -308,43 +322,37 @@ export default function CheckoutPage() {
           </p>
         </form>
 
-        {/* Order summary */}
         <aside className="lg:col-span-5">
           <div className="rounded-2xl border border-sleepie-gray-100 bg-white p-6 sm:p-7 sticky top-24">
             <h2 className="font-medium mb-5">Din order</h2>
 
             <ul className="space-y-4">
-              {items.map((item) => {
-                const local =
-                  item.image.startsWith("/api/") ||
-                  item.image.startsWith("data:");
-                return (
-                  <li key={item.id} className="flex gap-3">
-                    <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-sleepie-gray-50 shrink-0 border border-sleepie-gray-100">
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        fill
-                        className="object-cover"
-                        sizes="64px"
-                        unoptimized={local}
-                      />
-                      <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 flex items-center justify-center rounded-full bg-sleepie-black text-white text-[10px] font-medium">
-                        {item.quantity}
-                      </span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{item.name}</p>
-                      <p className="text-xs text-sleepie-gray-500 tabular-nums mt-0.5">
-                        {item.price} kr
-                      </p>
-                    </div>
-                    <p className="text-sm tabular-nums shrink-0">
-                      {item.price * item.quantity} kr
+              {items.map((item) => (
+                <li key={item.id} className="flex gap-3">
+                  <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-sleepie-gray-50 shrink-0 border border-sleepie-gray-100">
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      fill
+                      className="object-cover"
+                      sizes="64px"
+                      unoptimized
+                    />
+                    <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 flex items-center justify-center rounded-full bg-sleepie-black text-white text-[10px] font-medium">
+                      {item.quantity}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{item.name}</p>
+                    <p className="text-xs text-sleepie-gray-500 tabular-nums mt-0.5">
+                      {item.price} kr
                     </p>
-                  </li>
-                );
-              })}
+                  </div>
+                  <p className="text-sm tabular-nums shrink-0">
+                    {item.price * item.quantity} kr
+                  </p>
+                </li>
+              ))}
             </ul>
 
             <dl className="mt-6 space-y-2.5 text-sm border-t border-sleepie-gray-100 pt-5">
