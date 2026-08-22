@@ -4,7 +4,7 @@ export const Products: CollectionConfig = {
   slug: 'products',
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'price', 'category', 'updatedAt'],
+    defaultColumns: ['name', 'price', 'category', 'cjVid', 'updatedAt'],
   },
   fields: [
     {
@@ -59,7 +59,7 @@ export const Products: CollectionConfig = {
       name: 'badge',
       type: 'text',
       admin: {
-        description: 't.ex. Bästsäljare, Sparar 198 kr',
+        description: 't.ex. Bästsäljare, Kit',
       },
     },
     {
@@ -79,11 +79,43 @@ export const Products: CollectionConfig = {
       ],
     },
     {
+      name: 'cj',
+      type: 'group',
+      label: 'CJDropshipping',
+      admin: { position: 'sidebar' },
+      fields: [
+        {
+          name: 'pid',
+          type: 'text',
+          label: 'Product ID (pid)',
+        },
+        {
+          name: 'vid',
+          type: 'text',
+          label: 'Variant ID (vid)',
+          admin: {
+            description: 'Krävs för createOrder',
+          },
+        },
+        {
+          name: 'sku',
+          type: 'text',
+          label: 'SKU',
+        },
+        {
+          name: 'costUsd',
+          type: 'number',
+          label: 'Kostnad USD',
+        },
+      ],
+    },
+    {
       name: 'cjProductId',
       type: 'text',
       admin: {
-        description: 'CJDropshipping Product ID',
+        description: 'Legacy: använd cj.vid istället',
         position: 'sidebar',
+        hidden: true,
       },
     },
     {

@@ -1,3 +1,5 @@
+import { getCjMapping } from "./cj-mapping";
+
 export type Product = {
   id: string;
   slug: string;
@@ -10,13 +12,31 @@ export type Product = {
   image: string;
   images: string[];
   badge?: string;
+  /** CJ product id */
+  cjPid?: string | null;
+  /** CJ variant id for createOrder */
+  cjVid?: string | null;
+  cjSku?: string | null;
+  cjCostUsd?: number | null;
 };
 
-/** AI product photos in Payload Media → Vercel Blob */
 const media = (filename: string) => `/api/media/file/${filename}`;
 
+function withCj(
+  base: Omit<Product, "cjPid" | "cjVid" | "cjSku" | "cjCostUsd">
+): Product {
+  const m = getCjMapping(base.slug);
+  return {
+    ...base,
+    cjPid: m?.pid ?? null,
+    cjVid: m?.vid ?? null,
+    cjSku: m?.sku ?? null,
+    cjCostUsd: m?.costUsd ?? null,
+  };
+}
+
 export const products: Product[] = [
-  {
+  withCj({
     id: "1",
     slug: "stroller-rocker",
     name: "Stroller Rocker",
@@ -36,8 +56,8 @@ export const products: Product[] = [
     image: media("21H4i.jpg"),
     images: [media("21H4i.jpg")],
     badge: "Bästsäljare",
-  },
-  {
+  }),
+  withCj({
     id: "2",
     slug: "white-noise",
     name: "White Noise Maskin",
@@ -55,8 +75,8 @@ export const products: Product[] = [
     category: "Ljud",
     image: media("noise.jpg"),
     images: [media("noise.jpg")],
-  },
-  {
+  }),
+  withCj({
     id: "3",
     slug: "muslin-set",
     name: "Muslin Swaddle Set",
@@ -74,8 +94,8 @@ export const products: Product[] = [
     category: "Textil",
     image: media("muslin.jpg"),
     images: [media("muslin.jpg")],
-  },
-  {
+  }),
+  withCj({
     id: "4",
     slug: "sleep-sack",
     name: "Sleep Sack",
@@ -93,8 +113,8 @@ export const products: Product[] = [
     category: "Textil",
     image: media("sack.jpg"),
     images: [media("sack.jpg")],
-  },
-  {
+  }),
+  withCj({
     id: "5",
     slug: "komplett-sovrutin",
     name: "Komplett Sovrutin",
@@ -112,7 +132,7 @@ export const products: Product[] = [
     image: media("bundle.jpg"),
     images: [media("bundle.jpg")],
     badge: "Kit",
-  },
+  }),
 ];
 
 export const FREE_SHIPPING_THRESHOLD = 799;
