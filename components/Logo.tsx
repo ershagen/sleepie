@@ -15,8 +15,8 @@ const sizes = {
 } as const;
 
 /**
- * Sleepie logo — variant 1
- * Full sage-green wordmark, crescent moon as the tittle on "i"
+ * Sleepie wordmark — black, crescent moon on the i
+ * Brand green is reserved for CTAs / accents, not the logo
  */
 export function Logo({
   className = "",
@@ -27,15 +27,13 @@ export function Logo({
 
   const content = (
     <span
-      className={`inline-flex items-baseline font-serif ${s.text} text-sleepie-green leading-none select-none ${className}`}
+      className={`inline-flex items-baseline font-serif ${s.text} text-sleepie-black leading-none select-none ${className}`}
       style={{ letterSpacing: "-0.03em" }}
       aria-label="Sleepie"
     >
       Sleep
       <span className="relative inline-block">
-        {/* Invisible i keeps natural width/spacing */}
         <span className="opacity-0">i</span>
-        {/* Custom i: stem + crescent instead of dot */}
         <span
           className="absolute left-1/2 -translate-x-1/2 bottom-0 flex flex-col items-center"
           aria-hidden="true"
@@ -67,7 +65,7 @@ export function Logo({
   return (
     <Link
       href={href}
-      className="hover:opacity-80 transition-opacity inline-block"
+      className="hover:opacity-75 transition-opacity inline-block"
     >
       {content}
     </Link>
