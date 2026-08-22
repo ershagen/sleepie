@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Providers } from "@/components/Providers";
+import { ShopChrome } from "@/components/ShopChrome";
 
 export const metadata: Metadata = {
   title: "Sleepie | Lugnare nätter börjar här",
@@ -14,7 +16,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sv">
-      <body className="min-h-screen flex flex-col">{children}</body>
+      <body className="min-h-screen flex flex-col">
+        <Providers>
+          <ShopChrome>{children}</ShopChrome>
+        </Providers>
+      </body>
     </html>
   );
 }
