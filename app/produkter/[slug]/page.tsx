@@ -5,6 +5,7 @@ import {
   getRelatedProducts,
   products,
 } from "@/lib/products";
+import { productJsonLd } from "@/lib/structured-data";
 import { Check, Truck, RotateCcw, Shield } from "lucide-react";
 import { AddToCartButton } from "@/components/AddToCartButton";
 import { ProductImage } from "@/components/ProductImage";
@@ -25,6 +26,12 @@ export async function generateMetadata({
   return {
     title: `${product.name} | Sleepie`,
     description: product.shortDescription,
+    openGraph: {
+      title: product.name,
+      description: product.shortDescription,
+      images: [{ url: product.image }],
+      type: "website",
+    },
   };
 }
 
@@ -41,6 +48,13 @@ export default async function ProductPage({
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(productJsonLd(product)),
+        }}
+      />
+
       <nav className="text-xs text-sleepie-gray-500 mb-8 flex gap-2">
         <Link href="/" className="hover:text-sleepie-black transition">
           Hem
@@ -54,7 +68,7 @@ export default async function ProductPage({
       </nav>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
-        <div className="aspect-square bg-sleepie-gray-50 rounded-2xl relative overflow-hidden border border-sleepie-gray-100">
+        <div className="aspect-square bg-sleepie-gray-50 rounded-xl relative overflow-hidden border border-sleepie-gray-100">
           <ProductImage
             src={product.image}
             alt={product.name}
@@ -100,21 +114,9 @@ export default async function ProductPage({
 
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-sleepie-gray-100">
             {[
-              {
-                icon: Truck,
-                title: "Leverans",
-                text: "5–12 arbetsdagar",
-              },
-              {
-                icon: RotateCcw,
-                title: "Ångerrätt",
-                text: "14 dagar",
-              },
-              {
-                icon: Shield,
-                title: "Säkert",
-                text: "CE-märkt",
-              },
+              { icon: Truck, title: "Leverans", text: "5–12 arbetsdagar" },
+              { icon: RotateCcw, title: "Ångerrätt", text: "14 dagar" },
+              { icon: Shield, title: "Säkert", text: "CE-märkt" },
             ].map((item) => (
               <div key={item.title} className="flex items-start gap-3">
                 <item.icon
