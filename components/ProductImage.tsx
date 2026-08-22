@@ -15,7 +15,10 @@ export function ProductImage({
   category?: string;
 }) {
   const [error, setError] = useState(false);
-  const isLocalApi = src.startsWith("/api/") || src.startsWith("data:");
+  const local =
+    src.startsWith("/api/") ||
+    src.startsWith("data:") ||
+    src.includes("blob.vercel-storage.com");
 
   return (
     <>
@@ -27,7 +30,7 @@ export function ProductImage({
           className="object-cover"
           sizes="(max-width: 1024px) 100vw, 50vw"
           priority
-          unoptimized={isLocalApi}
+          unoptimized={local}
           onError={() => setError(true)}
         />
       ) : (

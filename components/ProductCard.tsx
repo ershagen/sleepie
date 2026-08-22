@@ -7,8 +7,10 @@ import { Product } from "@/lib/products";
 
 export function ProductCard({ product }: { product: Product }) {
   const [imgError, setImgError] = useState(false);
-  const isLocalApi =
-    product.image.startsWith("/api/") || product.image.startsWith("data:");
+  const local =
+    product.image.startsWith("/api/") ||
+    product.image.startsWith("data:") ||
+    product.image.includes("blob.vercel-storage.com");
 
   return (
     <Link
@@ -23,7 +25,7 @@ export function ProductCard({ product }: { product: Product }) {
             fill
             className="object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            unoptimized={isLocalApi}
+            unoptimized={local}
             onError={() => setImgError(true)}
           />
         ) : (

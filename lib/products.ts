@@ -12,8 +12,8 @@ export type Product = {
   badge?: string;
 };
 
-/** Local AI images when available; otherwise curated lifestyle photos */
-const LOCAL = (name: string) => `/api/product-image/${name}`;
+/** AI product photos in Payload Media → Vercel Blob */
+const media = (filename: string) => `/api/media/file/${filename}`;
 
 export const products: Product[] = [
   {
@@ -33,8 +33,8 @@ export const products: Product[] = [
       "CE-märkt",
     ],
     category: "Rocker",
-    image: LOCAL("rocker"),
-    images: [LOCAL("rocker")],
+    image: media("21H4i.jpg"),
+    images: [media("21H4i.jpg")],
     badge: "Bästsäljare",
   },
   {
@@ -43,7 +43,7 @@ export const products: Product[] = [
     name: "White Noise Maskin",
     price: 299,
     description:
-      "Portabel white noise-maskin med naturljud och mjuk nattlampa. Skapar en trygg ljudbubbla som hjälper både bebis och dig att somna snabbare – och sova längre. Kompakt nog för nattduksbordet och resan.",
+      "Portabel white noise-maskin med naturljud och mjuk nattlampa. Skapar en trygg ljudbubbla som hjälper både bebis och dig att somna snabbare – och sova längre.",
     shortDescription: "Lugnande ljud och mjukt ljus för bättre sömn.",
     features: [
       "White noise + naturljud",
@@ -53,8 +53,8 @@ export const products: Product[] = [
       "Kompakt nordisk design",
     ],
     category: "Ljud",
-    image: LOCAL("noise"),
-    images: [LOCAL("noise")],
+    image: media("noise.jpg"),
+    images: [media("noise.jpg")],
   },
   {
     id: "3",
@@ -62,7 +62,7 @@ export const products: Product[] = [
     name: "Muslin Swaddle Set",
     price: 349,
     description:
-      "Mjukt 3-pack med ekologiska muslinfiltar i lugna, neutrala toner. Andningsbara, lätta och sköna mot känslig hud – perfekta för swaddle, amning eller som lätt täcke i vagnen.",
+      "Mjukt 3-pack med ekologiska muslinfiltar i lugna, neutrala toner. Andningsbara, lätta och sköna mot känslig hud.",
     shortDescription: "Mjuka, andningsbara swaddles i nordiska toner.",
     features: [
       "Ekologisk bomull / bambu",
@@ -72,11 +72,8 @@ export const products: Product[] = [
       "Andningsbara & lätta",
     ],
     category: "Textil",
-    image:
-      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=900&q=85",
-    images: [
-      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=900&q=85",
-    ],
+    image: media("muslin.jpg"),
+    images: [media("muslin.jpg")],
   },
   {
     id: "4",
@@ -84,7 +81,7 @@ export const products: Product[] = [
     name: "Sleep Sack",
     price: 399,
     description:
-      "Säker och bekväm sömnsäck som håller bebisen lagom varm utan lösa täcken. Andningsbart material, mjuk passform och enkel att ta på – en tryggare natt för er båda.",
+      "Säker och bekväm sömnsäck som håller bebisen lagom varm utan lösa täcken.",
     shortDescription: "Säker sömn utan lösa täcken.",
     features: [
       "Andningsbart material",
@@ -94,11 +91,8 @@ export const products: Product[] = [
       "Enkel på/av",
     ],
     category: "Textil",
-    image:
-      "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=900&q=85",
-    images: [
-      "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=900&q=85",
-    ],
+    image: media("sack.jpg"),
+    images: [media("sack.jpg")],
   },
   {
     id: "5",
@@ -106,7 +100,7 @@ export const products: Product[] = [
     name: "Komplett Sovrutin",
     price: 999,
     description:
-      "Allt du behöver för en lugnare start: Stroller Rocker, White Noise Maskin och Muslin Swaddle Set. Ett genomtänkt kit för dig som vill ha helheten – till ett bättre pris.",
+      "Allt du behöver för en lugnare start: Stroller Rocker, White Noise Maskin och Muslin Swaddle Set.",
     shortDescription: "Rocker + White Noise + Muslin. Bästa starten.",
     features: [
       "Stroller Rocker (449 kr)",
@@ -115,11 +109,8 @@ export const products: Product[] = [
       "Sparar 98 kr mot att köpa separat",
     ],
     category: "Bundle",
-    image:
-      "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=900&q=85",
-    images: [
-      "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=900&q=85",
-    ],
+    image: media("bundle.jpg"),
+    images: [media("bundle.jpg")],
     badge: "Kit",
   },
 ];
