@@ -4,17 +4,17 @@ type LogoProps = {
   className?: string;
   href?: string | null;
   size?: "sm" | "md" | "lg";
-  /** Show icon mark only (e.g. favicon-style) */
+  /** Icon mark only */
   markOnly?: boolean;
 };
 
 const sizes = {
-  sm: { mark: 22, text: "text-lg", gap: "gap-2" },
-  md: { mark: 28, text: "text-[1.35rem]", gap: "gap-2.5" },
-  lg: { mark: 40, text: "text-3xl", gap: "gap-3" },
+  sm: { mark: 24, text: "text-lg", gap: "gap-2" },
+  md: { mark: 30, text: "text-[1.4rem]", gap: "gap-2.5" },
+  lg: { mark: 44, text: "text-3xl", gap: "gap-3" },
 } as const;
 
-/** Unique Sleepie mark: crescent moon cradling a soft sleep-wave */
+/** Sleepie mark — crescent + spark + soft sleep-wave */
 function LogoMark({ size }: { size: number }) {
   return (
     <svg
@@ -26,30 +26,32 @@ function LogoMark({ size }: { size: number }) {
       aria-hidden="true"
       className="shrink-0 text-sleepie-black"
     >
-      {/* Soft outer circle hint */}
       <circle
         cx="20"
         cy="20"
         r="18.5"
         stroke="currentColor"
-        strokeWidth="0.75"
-        opacity="0.12"
+        strokeWidth="0.7"
+        opacity="0.1"
       />
-      {/* Crescent moon */}
+      {/* Crescent */}
       <path
-        d="M24.2 8.5C17.8 9.2 12.8 14.6 12.8 21.2C12.8 27.2 16.8 32.3 22.2 34.2C17.4 33.1 13.8 28.8 13.8 23.6C13.8 16.8 18.8 11.2 25.2 10.2C24.9 9.6 24.6 9 24.2 8.5Z"
+        d="M24.4 8.2C17.6 9 12.4 14.6 12.4 21.4C12.4 27.6 16.6 32.9 22.4 34.6C17.4 33.4 13.6 28.9 13.6 23.5C13.6 16.5 18.8 10.7 25.4 9.6C25.1 9.1 24.8 8.6 24.4 8.2Z"
         fill="currentColor"
       />
-      {/* Small star / spark near crescent tip */}
-      <circle cx="27.5" cy="11.5" r="1.15" fill="currentColor" opacity="0.9" />
-      {/* Soft sleep-wave under moon */}
+      {/* Spark */}
       <path
-        d="M11 28.5C13.5 26.2 16.5 26.2 19 28.5C21.5 30.8 24.5 30.8 27 28.5"
+        d="M28.2 10.2L28.55 11.35L29.7 11.7L28.55 12.05L28.2 13.2L27.85 12.05L26.7 11.7L27.85 11.35L28.2 10.2Z"
+        fill="currentColor"
+      />
+      {/* Sleep wave */}
+      <path
+        d="M10.5 29C13.2 26.5 16.5 26.5 19.2 29C21.9 31.5 25.2 31.5 27.9 29"
         stroke="currentColor"
-        strokeWidth="1.4"
+        strokeWidth="1.35"
         strokeLinecap="round"
         fill="none"
-        opacity="0.55"
+        opacity="0.5"
       />
     </svg>
   );
@@ -70,48 +72,41 @@ export function Logo({
     >
       <LogoMark size={s.mark} />
       {!markOnly && (
-        <span className="inline-flex flex-col items-start leading-none">
-          <span
-            className={`font-serif ${s.text} tracking-[-0.02em] text-sleepie-black select-none`}
-            style={{
-              fontFamily:
-                "Georgia, 'Iowan Old Style', 'Palatino Linotype', Palatino, serif",
-            }}
-          >
-            Sleep
-            <span className="relative inline-block">
-              <span className="opacity-0 w-[0.28em] inline-block">i</span>
-              {/* Custom i: stem + moon-dot */}
-              <span
-                className="absolute inset-0 flex flex-col items-center justify-end"
-                aria-hidden="true"
+        <span
+          className={`font-serif ${s.text} tracking-[-0.03em] text-sleepie-black leading-none select-none`}
+          style={{
+            fontFamily:
+              "Georgia, 'Iowan Old Style', 'Palatino Linotype', Palatino, serif",
+          }}
+        >
+          Sleep
+          <span className="relative inline-block align-baseline">
+            {/* Invisible i for spacing */}
+            <span className="opacity-0">i</span>
+            {/* Custom moon-dot i */}
+            <span
+              className="absolute left-1/2 -translate-x-1/2 bottom-0 flex flex-col items-center"
+              aria-hidden="true"
+            >
+              <svg
+                className="mb-[0.12em]"
+                width={size === "lg" ? 8 : size === "sm" ? 5 : 6}
+                height={size === "lg" ? 8 : size === "sm" ? 5 : 6}
+                viewBox="0 0 10 10"
+                fill="currentColor"
               >
-                <svg
-                  className="mb-[0.08em]"
-                  width={size === "lg" ? 7 : size === "sm" ? 4.5 : 5.5}
-                  height={size === "lg" ? 7 : size === "sm" ? 4.5 : 5.5}
-                  viewBox="0 0 10 10"
-                  fill="currentColor"
-                >
-                  <path d="M7.2 1.2C5.1 1.5 3.5 3.3 3.5 5.5C3.5 6.7 4.1 7.7 5 8.3C3.6 7.8 2.6 6.5 2.6 4.9C2.6 2.7 4.3 0.9 6.5 0.6C6.8 0.8 7 1 7.2 1.2Z" />
-                </svg>
-                <span
-                  className="bg-current rounded-[1px]"
-                  style={{
-                    width: size === "lg" ? 2.5 : size === "sm" ? 1.5 : 2,
-                    height: size === "lg" ? 11 : size === "sm" ? 7 : 9,
-                  }}
-                />
-              </span>
+                <path d="M7.4 1C5.1 1.35 3.4 3.3 3.4 5.6C3.4 6.9 4 8 5 8.7C3.5 8.15 2.4 6.7 2.4 5C2.4 2.6 4.2 0.7 6.6 0.35C6.9 0.55 7.15 0.75 7.4 1Z" />
+              </svg>
+              <span
+                className="block bg-current rounded-[0.5px]"
+                style={{
+                  width: size === "lg" ? 2.25 : size === "sm" ? 1.4 : 1.75,
+                  height: size === "lg" ? 12 : size === "sm" ? 7.5 : 9.5,
+                }}
+              />
             </span>
-            e
           </span>
-          <span
-            className="text-[0.55em] tracking-[0.28em] uppercase text-sleepie-gray-400 font-sans mt-[0.35em] ml-[0.05em]"
-            style={{ letterSpacing: "0.22em" }}
-          >
-            sleep & calm
-          </span>
+          e
         </span>
       )}
     </span>
@@ -121,7 +116,7 @@ export function Logo({
   return (
     <Link
       href={href}
-      className="hover:opacity-80 transition inline-flex items-center"
+      className="hover:opacity-75 transition-opacity inline-flex items-center"
     >
       {content}
     </Link>
