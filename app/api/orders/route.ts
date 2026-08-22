@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sendOrderConfirmation } from "@/lib/email";
-import { fulfillOrderAtCj } from "@/lib/fulfillment";
+import { createPayment, checkoutUrl } from "@/lib/mollie";
 
 export type OrderPayload = {
   email: string;
@@ -34,10 +33,8 @@ function orderId() {
 }
 
 /**
- * Create order intent.
- * - Mollie: add payment + checkoutUrl when MOLLIE_API_KEY is set
- * - Email: sends confirmation if RESEND_API_KEY is set (otherwise logs)
- * - CJ: sandbox fulfill when CJ keys exist and products are mapped
+ * Create order + Mollie payment.
+ * Confirmation email + CJ fulfill run from Mollie webhook after paid.
  */
 export async function POST(req: NextRequest) {
   try {
@@ -49,85 +46,88 @@ export async function POST(req: NextRequest) {
       !body?.lastName ||
       !body?.address ||
       !Array.isArray(body.items) ||
-      body.items.length === 0
+      body.items.length === 0 ||
+      !body.total ||
+      body.total <= 0
     ) {
       return NextResponse.json({ error: "Ogiltig order" }, { status: 400 });
     }
 
     const id = orderId();
 
-    // --- Mollie (when key exists) ---
-    // const payment = await createMolliePayment({ orderId: id, amount: body.total, ... })
-    // return { orderId: id, checkoutUrl: payment.getCheckoutUrl() }
+    // Compact metadata for Mollie (string values only, keep small)
+    const itemsMeta = body.items
+      .map((i) => `${i.slug}x${i.quantity}`)
+      .join(",")
+      .slice(0, 180);
 
-    const order = {
-      id,
-      createdAt: new Date().toISOString(),
-      status: "pending_payment" as const,
-      ...body,
+    const metadata: Record<string, string> = {
+      orderId: id,
+      email: body.email.slice(0, 100),
+      firstName: body.firstName.slice(0, 40),
+      lastName: body.lastName.slice(0, 40),
+      phone: (body.phone || "").slice(0, 30),
+      address: body.address.slice(0, 80),
+      zip: body.zip.slice(0, 12),
+      city: body.city.slice(0, 40),
+      country: body.country || "SE",
+      items: itemsMeta,
+      itemsJson: JSON.stringify(
+        body.items.map((i) => ({
+          s: i.slug,
+          n: i.name.slice(0, 40),
+          p: i.price,
+          q: i.quantity,
+        }))
+      ).slice(0, 900),
+      subtotal: String(body.subtotal),
+      shipping: String(body.shipping),
+      total: String(body.total),
+      paymentMethod: body.paymentMethod || "swish",
     };
 
-    console.log("[order]", JSON.stringify(order));
+    console.log("[order:create]", id, body.email, body.total);
 
-    // Confirmation email (no-op without RESEND_API_KEY)
-    const emailResult = await sendOrderConfirmation({
+    if (!process.env.MOLLIE_API_KEY) {
+      console.error("[order] MOLLIE_API_KEY missing");
+      return NextResponse.json(
+        { error: "Betalning är inte konfigurerad" },
+        { status: 503 }
+      );
+    }
+
+    const payment = await createPayment({
       orderId: id,
-      email: body.email,
-      firstName: body.firstName,
-      lastName: body.lastName,
-      items: body.items.map((i) => ({
-        name: i.name,
-        quantity: i.quantity,
-        price: i.price,
-      })),
-      subtotal: body.subtotal,
-      shipping: body.shipping,
-      total: body.total,
-      address: body.address,
-      zip: body.zip,
-      city: body.city,
+      amountSek: body.total,
+      description: `Sleepie ${id}`,
+      method: body.paymentMethod,
+      customerEmail: body.email,
+      metadata,
     });
 
-    // CJ fulfill in sandbox after "payment" (test flow).
-    // When Mollie is live: only call this from payment webhook after paid.
-    let cjResult: Awaited<ReturnType<typeof fulfillOrderAtCj>> | null = null;
-    const autoCj = process.env.CJ_AUTO_FULFILL === "1";
-    if (autoCj) {
-      cjResult = await fulfillOrderAtCj({
-        orderNumber: id,
-        lines: body.items.map((i) => ({ slug: i.slug, quantity: i.quantity })),
-        shipping: {
-          zip: body.zip,
-          city: body.city,
-          address: body.address,
-          phone: body.phone || "0700000000",
-          customer: `${body.firstName} ${body.lastName}`,
-          countryCode: body.country === "SE" ? "SE" : body.country || "SE",
-          country: "Sweden",
-        },
-        isSandbox: 1,
-      });
-      console.log("[cj:fulfill]", cjResult);
+    const url = checkoutUrl(payment);
+    if (!url) {
+      console.error("[order] no checkout url", payment.id, payment.status);
+      return NextResponse.json(
+        { error: "Kunde inte starta betalning" },
+        { status: 502 }
+      );
     }
 
     return NextResponse.json({
       orderId: id,
-      status: "pending_payment",
-      email: {
-        sent: emailResult.ok,
-        configured: emailResult.ok || emailResult.reason !== "no_api_key",
-        reason: "reason" in emailResult ? emailResult.reason : undefined,
-      },
-      cj: cjResult
-        ? {
-            ok: cjResult.ok,
-            cjOrderId: "cjOrderId" in cjResult ? cjResult.cjOrderId : null,
-            skipped: "skipped" in cjResult ? cjResult.skipped : [],
-          }
-        : { ok: false, deferred: true },
+      paymentId: payment.id,
+      status: payment.status,
+      checkoutUrl: url,
     });
   } catch (e) {
     console.error("[orders]", e);
-    return NextResponse.json({ error: "Serverfel" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error:
+          e instanceof Error ? e.message : "Serverfel vid betalning",
+      },
+      { status: 500 }
+    );
   }
 }

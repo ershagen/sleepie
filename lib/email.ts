@@ -1,6 +1,6 @@
 /**
- * Email layer — Resend when RESEND_API_KEY is set, otherwise logs only.
- * Set RESEND_API_KEY + EMAIL_FROM (e.g. Sleepie <hej@sleepie.se>) in Vercel.
+ * Email via Resend — from mail.alectiv.com
+ * ENV: RESEND_API_KEY, EMAIL_FROM=Sleepie <noreply@mail.alectiv.com>
  */
 
 export type MailOrderItem = {
@@ -31,11 +31,7 @@ export type ShippingMailData = OrderMailData & {
 };
 
 function fromAddress() {
-  return process.env.EMAIL_FROM || "Sleepie <onboarding@resend.dev>";
-}
-
-function hasResend() {
-  return Boolean(process.env.RESEND_API_KEY);
+  return process.env.EMAIL_FROM || "Sleepie <noreply@mail.alectiv.com>";
 }
 
 async function sendResend(payload: {
@@ -66,11 +62,19 @@ async function sendResend(payload: {
   if (!res.ok) {
     const text = await res.text();
     console.error("[email:error]", res.status, text);
-    return { ok: false as const, reason: "send_failed" as const };
+    return { ok: false as const, reason: "send_failed" as const, detail: text };
   }
 
   const json = await res.json();
   return { ok: true as const, id: json.id as string };
+}
+
+function escapeHtml(s: string) {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 function itemsHtml(items: MailOrderItem[]) {
@@ -85,22 +89,14 @@ function itemsHtml(items: MailOrderItem[]) {
     .join("");
 }
 
-function escapeHtml(s: string) {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
 function layout(title: string, body: string) {
   return `<!DOCTYPE html>
 <html><body style="font-family:system-ui,sans-serif;background:#fafaf9;color:#0a0a0a;margin:0;padding:24px;">
   <div style="max-width:520px;margin:0 auto;background:#fff;border:1px solid #e7e5e4;border-radius:12px;padding:28px;">
-    <p style="font-size:13px;letter-spacing:0.04em;color:#78716c;margin:0 0 16px;">Sleepie</p>
+    <p style="font-size:13px;letter-spacing:0.04em;color:#6B8F71;margin:0 0 16px;font-weight:600;">Sleepie</p>
     <h1 style="font-size:22px;font-weight:600;margin:0 0 12px;">${title}</h1>
     ${body}
-    <p style="font-size:12px;color:#a8a29e;margin-top:28px;">Frågor? hej@sleepie.se</p>
+    <p style="font-size:12px;color:#a8a29e;margin-top:28px;">Frågor? Svara på detta mejl eller skriv till hej@sleepie.se</p>
   </div>
 </body></html>`;
 }
@@ -109,7 +105,7 @@ export async function sendOrderConfirmation(order: OrderMailData) {
   const html = layout(
     "Tack för din order",
     `
-    <p style="color:#57534e;line-height:1.5;">Hej ${escapeHtml(order.firstName)}, vi har tagit emot din beställning.</p>
+    <p style="color:#57534e;line-height:1.5;">Hej ${escapeHtml(order.firstName)}, vi har mottagit din betalning och förbereder din beställning.</p>
     <p style="font-size:14px;"><strong>Ordernummer:</strong> ${escapeHtml(order.orderId)}</p>
     <table style="width:100%;border-collapse:collapse;margin:16px 0;font-size:14px;">
       ${itemsHtml(order.items)}
@@ -165,5 +161,5 @@ export async function sendShippingNotification(data: ShippingMailData) {
 }
 
 export function emailConfigured() {
-  return hasResend();
+  return Boolean(process.env.RESEND_API_KEY);
 }
