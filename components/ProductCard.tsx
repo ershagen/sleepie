@@ -7,7 +7,7 @@ import { Product } from "@/lib/products";
 
 export function ProductCard({ product }: { product: Product }) {
   const [imgError, setImgError] = useState(false);
-  const local =
+  const remote =
     product.image.startsWith("/api/") ||
     product.image.startsWith("data:") ||
     product.image.includes("blob.vercel-storage.com");
@@ -25,25 +25,21 @@ export function ProductCard({ product }: { product: Product }) {
             fill
             className="object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            unoptimized={local}
+            unoptimized={remote}
             onError={() => setImgError(true)}
           />
         ) : (
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-sleepie-gray-300">
-            <span className="text-3xl opacity-40 mb-2">☾</span>
-            <span className="text-xs tracking-wide uppercase">{product.category}</span>
+          <div className="absolute inset-0 flex items-center justify-center text-sleepie-gray-300">
+            <span className="text-3xl opacity-40">☾</span>
           </div>
         )}
         {product.badge && (
-          <span className="absolute top-3 left-3 bg-sleepie-black text-white text-[11px] tracking-wide px-2.5 py-1 rounded-full z-10">
+          <span className="absolute top-3 left-3 bg-sleepie-black text-white text-[11px] px-2.5 py-1 rounded-full z-10">
             {product.badge}
           </span>
         )}
       </div>
       <div className="p-5">
-        <p className="text-[11px] tracking-wider uppercase text-sleepie-gray-400 mb-1">
-          {product.category}
-        </p>
         <h3 className="font-medium text-sleepie-black group-hover:underline underline-offset-2 decoration-1">
           {product.name}
         </h3>

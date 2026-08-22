@@ -2,8 +2,19 @@ import Link from "next/link";
 import Image from "next/image";
 import { ProductCard } from "@/components/ProductCard";
 import { Reveal } from "@/components/Reveal";
-import { getFeaturedProducts, getProductBySlug } from "@/lib/products";
-import { Moon, Shield, Truck, Heart, Star, Quote, Check, ArrowRight } from "lucide-react";
+import { getFeaturedProducts, getProductBySlug, products } from "@/lib/products";
+import {
+  Moon,
+  Shield,
+  Truck,
+  Heart,
+  Star,
+  Quote,
+  Check,
+  ArrowRight,
+  RotateCcw,
+  Package,
+} from "lucide-react";
 
 export default function HomePage() {
   const featured = getFeaturedProducts();
@@ -13,7 +24,7 @@ export default function HomePage() {
   return (
     <>
       {/* Announcement */}
-      <div className="bg-sleepie-black text-white text-center text-[11px] sm:text-xs tracking-wide py-2.5 px-4">
+      <div className="bg-sleepie-black text-white text-center text-[11px] sm:text-xs py-2.5 px-4">
         Fri frakt över 799 kr · Swish, kort & Klarna · 14 dagars ångerrätt
       </div>
 
@@ -22,19 +33,16 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-14 pb-16 md:pt-24 md:pb-28">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
             <div className="lg:col-span-6 max-w-xl">
-              <p className="animate-fade-in-up text-[11px] font-medium tracking-[0.22em] uppercase text-sleepie-gray-500 mb-5">
-                Baby sleep &amp; calming
-              </p>
-              <h1 className="animate-fade-in-up-delay-1 font-serif text-[2.7rem] sm:text-5xl md:text-[3.5rem] leading-[1.08] text-sleepie-black text-balance">
+              <h1 className="animate-fade-in-up font-serif text-[2.7rem] sm:text-5xl md:text-[3.5rem] leading-[1.08] text-sleepie-black text-balance">
                 Fler timmar sömn.
                 <br />
                 Färre oroliga nätter.
               </h1>
-              <p className="animate-fade-in-up-delay-2 mt-6 text-base sm:text-lg text-sleepie-gray-600 leading-relaxed max-w-md">
+              <p className="animate-fade-in-up-delay-1 mt-6 text-base sm:text-lg text-sleepie-gray-600 leading-relaxed max-w-md">
                 Produkter som hjälper din bebis somna – så du kan andas ut.
                 Utvalt för trygghet. Designat för lugn. Inget onödigt brus.
               </p>
-              <div className="animate-fade-in-up-delay-3 mt-8 flex flex-wrap gap-3">
+              <div className="animate-fade-in-up-delay-2 mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/produkter"
                   className="inline-flex items-center justify-center gap-2 bg-sleepie-black text-white px-8 py-3.5 rounded-full text-sm font-medium hover:bg-sleepie-gray-800 transition shadow-sm"
@@ -63,10 +71,10 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="lg:col-span-6 animate-fade-in-up-delay-2">
+            <div className="lg:col-span-6 animate-fade-in-up-delay-1">
               <Link
                 href="/produkter/stroller-rocker"
-                className="group block relative aspect-[4/5] sm:aspect-[5/5] rounded-2xl overflow-hidden bg-sleepie-gray-100 border border-sleepie-gray-100 animate-float-soft"
+                className="group block relative aspect-[4/5] sm:aspect-square rounded-2xl overflow-hidden bg-sleepie-gray-100 border border-sleepie-gray-100 animate-float-soft"
               >
                 {heroProduct && (
                   <Image
@@ -79,15 +87,12 @@ export default function HomePage() {
                     unoptimized
                   />
                 )}
-                <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 bg-gradient-to-t from-black/60 via-black/25 to-transparent">
-                  <p className="text-[11px] tracking-[0.15em] uppercase text-white/70 mb-1">
-                    Bästsäljare
-                  </p>
+                <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 bg-gradient-to-t from-black/55 via-black/20 to-transparent">
                   <p className="font-serif text-xl text-white">
                     {heroProduct?.name}
                   </p>
                   <p className="text-sm text-white/85 mt-0.5 tabular-nums">
-                    från {heroProduct?.price} kr
+                    från {heroProduct?.price} kr · Bästsäljare
                   </p>
                 </div>
               </Link>
@@ -98,7 +103,7 @@ export default function HomePage() {
 
       {/* Trust strip */}
       <section className="border-y border-sleepie-gray-100 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap justify-center gap-x-8 gap-y-2 text-xs text-sleepie-gray-500 tracking-wide">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap justify-center gap-x-8 gap-y-2 text-xs text-sleepie-gray-500">
           <span>CE-märkta produkter</span>
           <span className="hidden sm:inline text-sleepie-gray-300">·</span>
           <span>14 dagars ångerrätt</span>
@@ -113,9 +118,6 @@ export default function HomePage() {
       <Reveal as="section" className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-24">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-start">
           <div>
-            <p className="text-[11px] tracking-[0.2em] uppercase text-sleepie-gray-500 mb-3">
-              För dig som sover för lite
-            </p>
             <h2 className="font-serif text-2xl md:text-[2rem] leading-snug text-balance">
               När nätterna blir långa räcker det inte med &quot;det går över&quot;
             </h2>
@@ -146,132 +148,26 @@ export default function HomePage() {
             {[
               { n: "5–12", l: "arbetsdagars leverans" },
               { n: "14", l: "dagars ångerrätt" },
-              { n: "799",
-                l: "kr fri frakt" },
-              { n: "3",
-                l: "betalningssätt" },
+              { n: "799", l: "kr fri frakt" },
+              { n: "3", l: "betalningssätt" },
             ].map((s) => (
               <div key={s.l}>
                 <p className="font-serif text-3xl md:text-4xl tabular-nums">{s.n}</p>
-                <p className="mt-1 text-xs text-sleepie-gray-500 tracking-wide">
-                  {s.l}
-                </p>
+                <p className="mt-1 text-xs text-sleepie-gray-500">{s.l}</p>
               </div>
             ))}
           </div>
         </div>
       </Reveal>
 
-      {/* Categories */}
-      <Reveal as="section" className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-20">
-        <div className="text-center mb-10">
-          <h2 className="font-serif text-2xl md:text-3xl">Hitta din lösning</h2>
-          <p className="mt-2 text-sm text-sleepie-gray-600">
-            Tre vägar till lugnare stunder – välj det som passar er.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 reveal-stagger">
-          {[
-            {
-              title: "Rocker",
-              text: "Mjuk gungning för vagnen – hemma eller på språng",
-              href: "/produkter/stroller-rocker",
-              cta: "Se rocker",
-            },
-            {
-              title: "Ljud",
-              text: "White noise & naturljud för djupare sömn",
-              href: "/produkter/white-noise",
-              cta: "Se white noise",
-            },
-            {
-              title: "Textil",
-              text: "Swaddle & sleep sack i nordiska toner",
-              href: "/produkter",
-              cta: "Se textil",
-            },
-          ].map((cat) => (
-            <Link
-              key={cat.title}
-              href={cat.href}
-              className="group rounded-2xl border border-sleepie-gray-100 bg-white p-7 hover:border-sleepie-gray-300 hover:shadow-md transition-all duration-300"
-            >
-              <p className="text-[11px] tracking-[0.15em] uppercase text-sleepie-gray-400 mb-2">
-                Kategori
-              </p>
-              <h3 className="font-serif text-xl group-hover:underline underline-offset-4 decoration-1">
-                {cat.title}
-              </h3>
-              <p className="mt-2 text-sm text-sleepie-gray-600 leading-relaxed">
-                {cat.text}
-              </p>
-              <p className="mt-4 text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-                {cat.cta} <ArrowRight className="w-3.5 h-3.5" />
-              </p>
-            </Link>
-          ))}
-        </div>
-      </Reveal>
-
-      {/* Why Sleepie */}
-      <Reveal as="section" className="bg-white border-y border-sleepie-gray-100">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-24">
-          <div className="text-center max-w-xl mx-auto mb-14">
-            <h2 className="font-serif text-2xl md:text-3xl text-sleepie-black">
-              Varför föräldrar väljer Sleepie
-            </h2>
-            <p className="mt-3 text-sleepie-gray-600 text-sm leading-relaxed">
-              Lugn, enkelhet och produkter som faktiskt gör skillnad – för både
-              bebis och förälder.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 reveal-stagger">
-            {[
-              {
-                icon: Moon,
-                title: "Lugnare nätter",
-                text: "Designade för att hjälpa både bebis och dig att sova bättre – utan krångel.",
-              },
-              {
-                icon: Shield,
-                title: "Säkert & testat",
-                text: "CE-märkta produkter utvalda med fokus på säkerhet och kvalitet.",
-              },
-              {
-                icon: Truck,
-                title: "Snabb leverans",
-                text: "Vi skickar direkt. Du får tracking så fort ordern är på väg.",
-              },
-              {
-                icon: Heart,
-                title: "Nordisk enkelhet",
-                text: "Minimalistisk design som passar in i ett modernt, lugnt hem.",
-              },
-            ].map((item) => (
-              <div key={item.title} className="text-center">
-                <div className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-sleepie-offwhite border border-sleepie-gray-100 mb-4">
-                  <item.icon
-                    className="w-[18px] h-[18px] text-sleepie-black"
-                    strokeWidth={1.5}
-                  />
-                </div>
-                <h3 className="font-medium text-sm mb-2">{item.title}</h3>
-                <p className="text-sm text-sleepie-gray-600 leading-relaxed">
-                  {item.text}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </Reveal>
-
-      {/* Featured products */}
-      <Reveal as="section" className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-24">
+      {/* Featured products – higher up for selling */}
+      <Reveal as="section" className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-24">
         <div className="flex items-end justify-between mb-10">
           <div>
             <h2 className="font-serif text-2xl md:text-3xl">Utvalda produkter</h2>
-            <p className="mt-2 text-sm text-sleepie-gray-600">
-              Allt du behöver för en lugnare sovrutin.
+            <p className="mt-2 text-sm text-sleepie-gray-600 max-w-md">
+              Allt du behöver för en lugnare sovrutin – från rocker till
+              textilier.
             </p>
           </div>
           <Link
@@ -284,6 +180,117 @@ export default function HomePage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {featured.map((product) => (
             <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+        <div className="mt-8 text-center sm:hidden">
+          <Link
+            href="/produkter"
+            className="inline-flex items-center gap-1.5 text-sm font-medium"
+          >
+            Se alla produkter <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      </Reveal>
+
+      {/* What you get – practical selling */}
+      <Reveal as="section" className="bg-white border-y border-sleepie-gray-100">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-24">
+          <div className="max-w-2xl mb-12">
+            <h2 className="font-serif text-2xl md:text-3xl">
+              Tre saker som faktiskt gör skillnad
+            </h2>
+            <p className="mt-3 text-sleepie-gray-600 text-sm leading-relaxed">
+              Vi har valt bort det mesta. Kvar är det som hjälper både bebis och
+              dig att få fler sammanhängande timmar sömn.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 reveal-stagger">
+            {[
+              {
+                title: "Rocker",
+                text: "Mjuk, tyst gungning på vagnen – hemma, på caféet eller på resan. USB-C, timer och universell passform.",
+                href: "/produkter/stroller-rocker",
+                cta: "Se rocker",
+              },
+              {
+                title: "White noise",
+                text: "En lugn ljudbubbla med naturljud och mjuk nattlampa. Kompakt, uppladdningsbar och enkel att ta med.",
+                href: "/produkter/white-noise",
+                cta: "Se white noise",
+              },
+              {
+                title: "Textil",
+                text: "Muslin och sleep sack i mjuka, neutrala toner. Andningsbara material som känns trygga mot huden.",
+                href: "/produkter",
+                cta: "Se textil",
+              },
+            ].map((cat) => (
+              <Link
+                key={cat.title}
+                href={cat.href}
+                className="group rounded-2xl border border-sleepie-gray-100 bg-sleepie-offwhite p-7 hover:border-sleepie-gray-300 hover:shadow-md transition-all duration-300"
+              >
+                <h3 className="font-serif text-xl group-hover:underline underline-offset-4 decoration-1">
+                  {cat.title}
+                </h3>
+                <p className="mt-3 text-sm text-sleepie-gray-600 leading-relaxed">
+                  {cat.text}
+                </p>
+                <p className="mt-5 text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                  {cat.cta} <ArrowRight className="w-3.5 h-3.5" />
+                </p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </Reveal>
+
+      {/* Why Sleepie */}
+      <Reveal as="section" className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-24">
+        <div className="text-center max-w-xl mx-auto mb-14">
+          <h2 className="font-serif text-2xl md:text-3xl text-sleepie-black">
+            Varför föräldrar väljer Sleepie
+          </h2>
+          <p className="mt-3 text-sleepie-gray-600 text-sm leading-relaxed">
+            Lugn, enkelhet och produkter som faktiskt gör skillnad – för både
+            bebis och förälder.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 reveal-stagger">
+          {[
+            {
+              icon: Moon,
+              title: "Lugnare nätter",
+              text: "Designade för att hjälpa både bebis och dig att sova bättre – utan krångel.",
+            },
+            {
+              icon: Shield,
+              title: "Säkert & testat",
+              text: "CE-märkta produkter utvalda med fokus på säkerhet och kvalitet.",
+            },
+            {
+              icon: Truck,
+              title: "Spårbar leverans",
+              text: "Vi skickar direkt. Du får tracking så fort ordern är på väg.",
+            },
+            {
+              icon: Heart,
+              title: "Nordisk enkelhet",
+              text: "Minimalistisk design som passar in i ett modernt, lugnt hem.",
+            },
+          ].map((item) => (
+            <div key={item.title} className="text-center">
+              <div className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-white border border-sleepie-gray-100 mb-4">
+                <item.icon
+                  className="w-[18px] h-[18px] text-sleepie-black"
+                  strokeWidth={1.5}
+                />
+              </div>
+              <h3 className="font-medium text-sm mb-2">{item.title}</h3>
+              <p className="text-sm text-sleepie-gray-600 leading-relaxed">
+                {item.text}
+              </p>
+            </div>
           ))}
         </div>
       </Reveal>
@@ -304,9 +311,7 @@ export default function HomePage() {
                 />
               </div>
               <div>
-                <p className="text-[11px] tracking-[0.2em] uppercase text-white/50 mb-3">
-                  Sparar 98 kr · Bästa starten
-                </p>
+                <p className="text-sm text-white/55 mb-2">Sparar 98 kr</p>
                 <h2 className="font-serif text-3xl md:text-4xl leading-tight">
                   {kit.name}
                 </h2>
@@ -344,10 +349,50 @@ export default function HomePage() {
         </Reveal>
       )}
 
+      {/* Guarantee / calm shopping */}
+      <Reveal as="section" className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-20">
+        <div className="rounded-2xl border border-sleepie-gray-100 bg-white p-8 md:p-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 reveal-stagger">
+            {[
+              {
+                icon: Package,
+                title: "Spårbar frakt",
+                text: "5–12 arbetsdagar. Du får tracking så fort paketet lämnar lagret.",
+              },
+              {
+                icon: RotateCcw,
+                title: "14 dagars ångerrätt",
+                text: "Ångrar du dig? Kontakta oss så hjälper vi dig enkelt med retur.",
+              },
+              {
+                icon: Shield,
+                title: "Trygg betalning",
+                text: "Swish, kort eller Klarna. Säker checkout utan krångel.",
+              },
+            ].map((item) => (
+              <div key={item.title} className="flex gap-4">
+                <div className="shrink-0 w-10 h-10 rounded-full bg-sleepie-offwhite border border-sleepie-gray-100 flex items-center justify-center">
+                  <item.icon
+                    className="w-4 h-4 text-sleepie-black"
+                    strokeWidth={1.5}
+                  />
+                </div>
+                <div>
+                  <h3 className="font-medium text-sm mb-1">{item.title}</h3>
+                  <p className="text-sm text-sleepie-gray-600 leading-relaxed">
+                    {item.text}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Reveal>
+
       {/* How it works */}
-      <Reveal as="section" className="bg-white border-b border-sleepie-gray-100">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-24">
-          <h2 className="font-serif text-2xl md:text-3xl text-center mb-4">
+      <Reveal as="section" className="bg-white border-y border-sleepie-gray-100">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-24">
+          <h2 className="font-serif text-2xl md:text-3xl text-center mb-3">
             Tre steg till lugnare nätter
           </h2>
           <p className="text-center text-sm text-sleepie-gray-600 mb-14 max-w-md mx-auto">
@@ -356,23 +401,23 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-4xl mx-auto reveal-stagger">
             {[
               {
-                step: "01",
+                step: "1",
                 title: "Välj produkter",
                 text: "Hitta det som passar er – rocker, white noise eller ett komplett kit.",
               },
               {
-                step: "02",
+                step: "2",
                 title: "Betala tryggt",
                 text: "Swish, kort eller Klarna. Säkert och enkelt.",
               },
               {
-                step: "03",
+                step: "3",
                 title: "Få hemleverans",
                 text: "Vi skickar direkt. Du får tracking så du kan följa paketet.",
               },
             ].map((item) => (
               <div key={item.step} className="text-center">
-                <div className="text-[11px] font-medium tracking-[0.15em] text-sleepie-gray-400 mb-3">
+                <div className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-sleepie-black text-white text-sm font-medium mb-4">
                   {item.step}
                 </div>
                 <h3 className="font-medium mb-2">{item.title}</h3>
@@ -386,7 +431,7 @@ export default function HomePage() {
       </Reveal>
 
       {/* Reviews */}
-      <Reveal as="section" className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-24">
+      <Reveal as="section" className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-24">
         <div className="text-center mb-12">
           <h2 className="font-serif text-2xl md:text-3xl">Vad föräldrar säger</h2>
           <p className="mt-3 text-sm text-sleepie-gray-600">
@@ -434,9 +479,55 @@ export default function HomePage() {
         </div>
       </Reveal>
 
+      {/* Full catalog teaser */}
+      <Reveal as="section" className="bg-sleepie-offwhite border-y border-sleepie-gray-100">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-20">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
+            <div>
+              <h2 className="font-serif text-2xl md:text-3xl">Hela kollektionen</h2>
+              <p className="mt-2 text-sm text-sleepie-gray-600">
+                {products.length} produkter – från enskilda favoriter till komplett kit.
+              </p>
+            </div>
+            <Link
+              href="/produkter"
+              className="inline-flex items-center gap-1.5 text-sm font-medium hover:opacity-70 transition"
+            >
+              Gå till shoppen <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4">
+            {products.map((p) => (
+              <Link
+                key={p.id}
+                href={`/produkter/${p.slug}`}
+                className="group rounded-xl overflow-hidden border border-sleepie-gray-100 bg-white"
+              >
+                <div className="relative aspect-square bg-sleepie-gray-50">
+                  <Image
+                    src={p.image}
+                    alt={p.name}
+                    fill
+                    className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                    sizes="(max-width: 768px) 50vw, 20vw"
+                    unoptimized
+                  />
+                </div>
+                <div className="p-3">
+                  <p className="text-sm font-medium truncate">{p.name}</p>
+                  <p className="text-xs text-sleepie-gray-500 tabular-nums mt-0.5">
+                    {p.price} kr
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </Reveal>
+
       {/* FAQ */}
-      <Reveal as="section" className="bg-white border-y border-sleepie-gray-100">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 py-20 md:py-24">
+      <Reveal as="section" className="bg-white">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 py-16 md:py-24">
           <h2 className="font-serif text-2xl md:text-3xl text-center mb-10">
             Vanliga frågor
           </h2>
@@ -487,7 +578,7 @@ export default function HomePage() {
       </Reveal>
 
       {/* Final CTA */}
-      <Reveal as="section" className="bg-sleepie-offwhite">
+      <Reveal as="section" className="bg-sleepie-offwhite border-t border-sleepie-gray-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-28 text-center">
           <h2 className="font-serif text-2xl md:text-4xl mb-4 text-balance">
             Redo för lugnare nätter?
