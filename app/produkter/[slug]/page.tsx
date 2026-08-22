@@ -64,9 +64,6 @@ export default async function ProductPage({
         </div>
 
         <div className="flex flex-col">
-          <p className="text-[11px] tracking-[0.15em] uppercase text-sleepie-gray-500 mb-2">
-            {product.category}
-          </p>
           <h1 className="font-serif text-3xl md:text-4xl leading-tight">
             {product.name}
           </h1>

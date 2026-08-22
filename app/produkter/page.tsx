@@ -11,9 +11,6 @@ export default function ProductsPage() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 md:py-20">
       <div className="mb-12 max-w-lg">
-        <p className="text-[11px] font-medium tracking-[0.2em] uppercase text-sleepie-gray-500 mb-3">
-          Kollektion
-        </p>
         <h1 className="font-serif text-3xl md:text-4xl text-sleepie-black">
           Alla produkter
         </h1>
