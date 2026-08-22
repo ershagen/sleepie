@@ -12,6 +12,7 @@ import { Reviews } from './collections/Reviews'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Settings } from './globals/Settings'
+import { migrations } from './migrations'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -37,8 +38,8 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
     },
-    // Auto-create tables on first boot (needed until formal migrations are run)
-    push: true,
+    push: false,
+    prodMigrations: migrations,
   }),
   sharp,
 })
