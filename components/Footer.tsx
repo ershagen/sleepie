@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Logo } from "./Logo";
 
 export function Footer() {
   return (
@@ -6,8 +7,8 @@ export function Footer() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           <div>
-            <div className="font-serif text-xl mb-3">Sleepie</div>
-            <p className="text-sm text-sleepie-gray-600 leading-relaxed">
+            <Logo className="mb-4" />
+            <p className="text-sm text-sleepie-gray-600 leading-relaxed mt-3">
               Lugnare nätter börjar här. Smarta produkter som hjälper ditt barn sova – och dig andas ut.
             </p>
           </div>
