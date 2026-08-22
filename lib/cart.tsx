@@ -29,6 +29,10 @@ type CartContextValue = {
   totalItems: number;
   totalPrice: number;
   isReady: boolean;
+  isOpen: boolean;
+  openCart: () => void;
+  closeCart: () => void;
+  toggleCart: () => void;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -38,6 +42,7 @@ const STORAGE_KEY = "sleepie-cart";
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isReady, setIsReady] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -54,29 +59,46 @@ export function CartProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }, [items, isReady]);
 
-  const addItem = useCallback((product: Product, quantity = 1) => {
-    setItems((prev) => {
-      const existing = prev.find((i) => i.id === product.id);
-      if (existing) {
-        return prev.map((i) =>
-          i.id === product.id
-            ? { ...i, quantity: i.quantity + quantity }
-            : i
-        );
-      }
-      return [
-        ...prev,
-        {
-          id: product.id,
-          slug: product.slug,
-          name: product.name,
-          price: product.price,
-          image: product.image,
-          quantity,
-        },
-      ];
-    });
-  }, []);
+  useEffect(() => {
+    if (!isOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [isOpen]);
+
+  const openCart = useCallback(() => setIsOpen(true), []);
+  const closeCart = useCallback(() => setIsOpen(false), []);
+  const toggleCart = useCallback(() => setIsOpen((v) => !v), []);
+
+  const addItem = useCallback(
+    (product: Product, quantity = 1) => {
+      setItems((prev) => {
+        const existing = prev.find((i) => i.id === product.id);
+        if (existing) {
+          return prev.map((i) =>
+            i.id === product.id
+              ? { ...i, quantity: i.quantity + quantity }
+              : i
+          );
+        }
+        return [
+          ...prev,
+          {
+            id: product.id,
+            slug: product.slug,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            quantity,
+          },
+        ];
+      });
+      setIsOpen(true);
+    },
+    []
+  );
 
   const removeItem = useCallback((id: string) => {
     setItems((prev) => prev.filter((i) => i.id !== id));
@@ -114,6 +136,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       totalItems,
       totalPrice,
       isReady,
+      isOpen,
+      openCart,
+      closeCart,
+      toggleCart,
     }),
     [
       items,
@@ -124,6 +150,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       totalItems,
       totalPrice,
       isReady,
+      isOpen,
+      openCart,
+      closeCart,
+      toggleCart,
     ]
   );
 

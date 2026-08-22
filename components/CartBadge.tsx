@@ -1,17 +1,17 @@
 "use client";
 
-import Link from "next/link";
 import { ShoppingBag } from "lucide-react";
 import { useCart } from "@/lib/cart";
 
 export function CartBadge() {
-  const { totalItems, isReady } = useCart();
+  const { totalItems, isReady, openCart } = useCart();
 
   return (
-    <Link
-      href="/varukorg"
+    <button
+      type="button"
+      onClick={openCart}
       className="relative p-2.5 hover:bg-sleepie-gray-100 rounded-full transition"
-      aria-label="Varukorg"
+      aria-label="Öppna varukorg"
     >
       <ShoppingBag className="w-[18px] h-[18px]" strokeWidth={1.75} />
       {isReady && totalItems > 0 && (
@@ -19,6 +19,6 @@ export function CartBadge() {
           {totalItems > 99 ? "99+" : totalItems}
         </span>
       )}
-    </Link>
+    </button>
   );
 }
