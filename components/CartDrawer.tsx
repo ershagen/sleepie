@@ -78,7 +78,7 @@ export function CartDrawer() {
             </p>
             <div className="h-1.5 rounded-full bg-sleepie-gray-100 overflow-hidden">
               <div
-                className="h-full bg-sleepie-black transition-all duration-500"
+                className="h-full bg-sleepie-green transition-all duration-500"
                 style={{
                   width: `${Math.min(
                     100,
@@ -91,7 +91,7 @@ export function CartDrawer() {
         )}
         {items.length > 0 && freeShipping && (
           <div className="px-5 py-3 border-b border-sleepie-gray-100 bg-white">
-            <p className="text-xs text-sleepie-gray-700">Du har fri frakt</p>
+            <p className="text-xs text-sleepie-green-dark">Du har fri frakt</p>
           </div>
         )}
 
@@ -109,7 +109,7 @@ export function CartDrawer() {
               <Link
                 href="/produkter"
                 onClick={closeCart}
-                className="inline-flex bg-sleepie-black text-white px-6 py-3 text-sm font-medium hover:bg-sleepie-gray-800 transition"
+                className="inline-flex bg-sleepie-green text-white px-6 py-3 text-sm font-medium hover:bg-sleepie-green-dark transition"
               >
                 Fortsätt handla
               </Link>
@@ -211,7 +211,7 @@ export function CartDrawer() {
             <Link
               href="/kassa"
               onClick={closeCart}
-              className="flex items-center justify-center w-full bg-sleepie-black text-white py-3.5 text-sm font-medium hover:bg-sleepie-gray-800 transition"
+              className="flex items-center justify-center w-full bg-sleepie-green text-white py-3.5 text-sm font-medium hover:bg-sleepie-green-dark transition"
             >
               Gå till kassan
             </Link>
