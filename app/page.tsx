@@ -32,12 +32,10 @@ export default function HomePage() {
         }}
       />
 
-      {/* Announcement – rotating style messages */}
       <div className="bg-sleepie-black text-white text-center text-[11px] sm:text-xs py-2.5 px-4">
         Fri frakt över 799 kr · Swish, kort & Klarna · 14 dagars ångerrätt
       </div>
 
-      {/* Full-bleed style hero (Dion-inspired) */}
       <section className="relative bg-sleepie-offwhite overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[70vh] lg:min-h-[78vh]">
           <div className="relative order-2 lg:order-1 bg-sleepie-gray-100 min-h-[50vh] lg:min-h-0">
@@ -68,7 +66,7 @@ export default function HomePage() {
               <div className="mt-8 flex flex-wrap gap-3 justify-center lg:justify-start">
                 <Link
                   href="/produkter"
-                  className="inline-flex items-center justify-center border border-sleepie-black bg-sleepie-black text-white px-8 py-3.5 text-sm font-medium hover:bg-sleepie-gray-800 transition"
+                  className="inline-flex items-center justify-center bg-sleepie-green text-white px-8 py-3.5 text-sm font-medium hover:bg-sleepie-green-dark transition"
                 >
                   Handla idag
                 </Link>
@@ -92,7 +90,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Trust strip – Dion style clear benefits */}
       <section className="border-y border-sleepie-gray-100 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 md:py-10 grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8">
           {[
@@ -113,7 +110,7 @@ export default function HomePage() {
             },
           ].map((item) => (
             <div key={item.title} className="flex items-start gap-3 sm:justify-center sm:text-center sm:flex-col sm:items-center">
-              <item.icon className="w-5 h-5 text-sleepie-black shrink-0" strokeWidth={1.5} />
+              <item.icon className="w-5 h-5 text-sleepie-green shrink-0" strokeWidth={1.5} />
               <div>
                 <p className="text-sm font-medium">{item.title}</p>
                 <p className="text-xs text-sleepie-gray-500 mt-0.5">{item.text}</p>
@@ -123,7 +120,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Products first – like NYHETER on Dion */}
       <Reveal as="section" className="max-w-6xl mx-auto px-4 sm:px-6 py-14 md:py-20">
         <div className="flex items-end justify-between mb-8">
           <h2 className="font-serif text-2xl md:text-3xl">Utvalda produkter</h2>
@@ -141,7 +137,6 @@ export default function HomePage() {
         </div>
       </Reveal>
 
-      {/* Brand line */}
       <Reveal as="section" className="bg-white border-y border-sleepie-gray-100">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 py-14 md:py-16 text-center">
           <p className="font-serif text-xl md:text-2xl text-sleepie-black leading-snug text-balance">
@@ -153,7 +148,6 @@ export default function HomePage() {
         </div>
       </Reveal>
 
-      {/* Full catalog grid */}
       <Reveal as="section" className="max-w-6xl mx-auto px-4 sm:px-6 py-14 md:py-20">
         <div className="flex items-end justify-between mb-8">
           <h2 className="font-serif text-2xl md:text-3xl">Alla produkter</h2>
@@ -192,7 +186,6 @@ export default function HomePage() {
         </div>
       </Reveal>
 
-      {/* Bundle */}
       {kit && (
         <Reveal as="section" className="bg-sleepie-black text-white">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 md:py-20">
@@ -228,7 +221,7 @@ export default function HomePage() {
                   <p className="text-2xl font-medium tabular-nums">{kit.price} kr</p>
                   <Link
                     href={`/produkter/${kit.slug}`}
-                    className="inline-flex items-center justify-center gap-2 bg-white text-sleepie-black px-7 py-3 text-sm font-medium hover:bg-sleepie-gray-100 transition"
+                    className="inline-flex items-center justify-center gap-2 bg-sleepie-green text-white px-7 py-3 text-sm font-medium hover:bg-sleepie-green-dark transition"
                   >
                     Köp kitet
                   </Link>
@@ -239,7 +232,6 @@ export default function HomePage() {
         </Reveal>
       )}
 
-      {/* Reviews */}
       <Reveal as="section" className="max-w-6xl mx-auto px-4 sm:px-6 py-14 md:py-20">
         <h2 className="font-serif text-2xl md:text-3xl text-center mb-10">
           Vad föräldrar säger
@@ -282,7 +274,6 @@ export default function HomePage() {
         </div>
       </Reveal>
 
-      {/* FAQ compact */}
       <Reveal as="section" className="bg-white border-y border-sleepie-gray-100">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 py-14 md:py-16">
           <h2 className="font-serif text-2xl md:text-3xl text-center mb-8">
@@ -326,7 +317,6 @@ export default function HomePage() {
         </div>
       </Reveal>
 
-      {/* Final CTA */}
       <section className="bg-sleepie-offwhite">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-20 text-center">
           <h2 className="font-serif text-2xl md:text-3xl mb-3">
@@ -337,7 +327,7 @@ export default function HomePage() {
           </p>
           <Link
             href="/produkter"
-            className="inline-flex items-center justify-center bg-sleepie-black text-white px-8 py-3.5 text-sm font-medium hover:bg-sleepie-gray-800 transition"
+            className="inline-flex items-center justify-center bg-sleepie-green text-white px-8 py-3.5 text-sm font-medium hover:bg-sleepie-green-dark transition"
           >
             Handla idag
           </Link>
