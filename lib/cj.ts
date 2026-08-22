@@ -15,14 +15,10 @@ let tokenCache: TokenCache | null = null;
 
 function getApiKey(): string {
   const full =
-    process.env.CJ_API_CREDENTIALS ||
-    process.env.CJ_API_KEY ||
-    "";
+    process.env.CJ_API_CREDENTIALS || process.env.CJ_API_KEY || "";
   if (!full) {
     throw new Error("CJ_API_KEY / CJ_API_CREDENTIALS saknas");
   }
-  // Accept full format CJ...@api@... or just the key part
-  if (full.includes("@api@")) return full;
   return full;
 }
 
@@ -44,7 +40,6 @@ export async function getAccessToken(): Promise<string> {
 
   const accessToken = data.data.accessToken as string;
   const refreshToken = data.data.refreshToken as string;
-  // Cache ~14 days (token lasts longer, refresh early)
   tokenCache = {
     accessToken,
     refreshToken,
@@ -86,7 +81,6 @@ export type CjProduct = {
   productSku?: string;
 };
 
-/** Search / list products in your CJ account or catalog */
 export async function searchProducts(params: {
   productNameEn?: string;
   page?: number;
@@ -110,16 +104,15 @@ export async function queryProduct(pid: string) {
 }
 
 export async function queryVariants(pid: string) {
-  return cjFetch(
-    `/product/variant/query?pid=${encodeURIComponent(pid)}`,
-    { method: "GET" }
-  );
+  return cjFetch(`/product/variant/query?pid=${encodeURIComponent(pid)}`, {
+    method: "GET",
+  });
 }
 
 export type CreateOrderInput = {
-  orderNumber: string; // your store order id
+  orderNumber: string;
   shippingZip: string;
-  shippingCountryCode: string; // e.g. SE
+  shippingCountryCode: string;
   shippingCountry: string;
   shippingProvince?: string;
   shippingCity: string;
@@ -128,15 +121,12 @@ export type CreateOrderInput = {
   shippingCustomer: string;
   shippingAddress: string;
   shippingAddress2?: string;
-  products: Array<{
-    vid: string; // CJ variant id
-    quantity: number;
-  }>;
-  /** 1 = sandbox (no real charge) */
+  products: Array<{ vid: string; quantity: number }>;
+  /** 1 = sandbox */
   isSandbox?: 0 | 1;
+  logisticName?: string;
 };
 
-/** Create order at CJ (use isSandbox: 1 for testing) */
 export async function createOrder(input: CreateOrderInput) {
   return cjFetch(`/shopping/order/createOrderV2`, {
     method: "POST",
@@ -157,6 +147,7 @@ export async function createOrder(input: CreateOrderInput) {
         quantity: p.quantity,
       })),
       isSandbox: input.isSandbox ?? 1,
+      ...(input.logisticName ? { logisticName: input.logisticName } : {}),
     }),
   });
 }
@@ -170,4 +161,65 @@ export async function getOrderDetail(orderId: string) {
 
 export async function getBalance() {
   return cjFetch(`/shopping/pay/getBalance`, { method: "GET" });
+}
+
+/** Freight options for destination (e.g. SE) */
+export type FreightProduct = { vid: string; quantity: number };
+
+export type FreightOption = {
+  logisticName?: string;
+  logisticPrice?: number;
+  logisticAging?: string;
+  [key: string]: unknown;
+};
+
+export async function freightCalculate(input: {
+  startCountryCode?: string;
+  endCountryCode: string;
+  products: FreightProduct[];
+}) {
+  return cjFetch<{ data?: FreightOption[] | FreightOption }>(
+    `/logistic/freightCalculate`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        startCountryCode: input.startCountryCode || "CN",
+        endCountryCode: input.endCountryCode,
+        products: input.products,
+      }),
+    }
+  );
+}
+
+export type TrackInfo = {
+  trackingNumber?: string;
+  logisticName?: string;
+  trackingFrom?: string;
+  trackingTo?: string;
+  deliveryDay?: string;
+  deliveryTime?: string;
+  trackingStatus?: string;
+  lastMileCarrier?: string;
+  lastTrackNumber?: string;
+};
+
+/** Query tracking by tracking number */
+export async function trackInfo(trackNumber: string) {
+  return cjFetch<{ data?: TrackInfo[] }>(
+    `/logistic/trackInfo?trackNumber=${encodeURIComponent(trackNumber)}`,
+    { method: "GET" }
+  );
+}
+
+/** Normalize freight response to a sorted list (cheapest first) */
+export function normalizeFreightOptions(data: unknown): FreightOption[] {
+  if (!data) return [];
+  const list = Array.isArray(data) ? data : [data];
+  return list
+    .filter(Boolean)
+    .sort(
+      (a, b) =>
+        Number(a.logisticPrice ?? a.postage ?? 999) -
+        Number(b.logisticPrice ?? b.postage ?? 999)
+    );
 }
