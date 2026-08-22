@@ -1,25 +1,23 @@
 /**
  * Sleepie product → CJDropshipping mapping
  *
- * Found via CJ API search (Aug 2026).
- * Rocker & White Noise: not found in public CJ catalog via API —
- * import from AliExpress in CJ dashboard, then fill vid below.
- *
- * Costs are approx. USD from CJ (ex. shipping).
+ * Sourcing requests posted 2026-08-22 via CJ API.
+ * Check status: CJ dashboard → Service → Sourcing
+ * When status = success, fill pid/vid below.
  */
 
 export type CjMapping = {
   sleepieSlug: string;
   sleepieName: string;
-  /** CJ product id */
   pid: string | null;
-  /** CJ variant id — required for createOrder */
   vid: string | null;
   sku: string | null;
-  /** Approx supplier cost USD */
   costUsd: number | null;
   cjName: string | null;
-  status: "mapped" | "needs_import";
+  status: "mapped" | "sourcing" | "needs_import";
+  /** CJ sourcing request id */
+  sourcingId?: string | null;
+  sourceNumber?: string | null;
   notes?: string;
 };
 
@@ -32,9 +30,11 @@ export const cjMappings: CjMapping[] = [
     sku: null,
     costUsd: null,
     cjName: null,
-    status: "needs_import",
+    status: "sourcing",
+    sourcingId: "2608221632094505202",
+    sourceNumber: "CJSPU958572050",
     notes:
-      "Ingen bra match i CJ public catalog. Importera från AliExpress i CJ (sök: portable stroller rocker USB vibration).",
+      "Sourcing request sent 2026-08-22. Alibaba USB-C portable stroller rocker. Target ~$18. Check CJ → Service → Sourcing.",
   },
   {
     sleepieSlug: "white-noise",
@@ -44,9 +44,11 @@ export const cjMappings: CjMapping[] = [
     sku: null,
     costUsd: null,
     cjName: null,
-    status: "needs_import",
+    status: "sourcing",
+    sourcingId: "2608221632114500502",
+    sourceNumber: "CJSPU958572051",
     notes:
-      "Ingen bra match i CJ public catalog. Importera från AliExpress (sök: portable baby white noise machine USB-C).",
+      "Sourcing request sent 2026-08-22. Portable baby white noise USB-C. Target ~$12. Check CJ → Service → Sourcing.",
   },
   {
     sleepieSlug: "muslin-set",
@@ -57,7 +59,7 @@ export const cjMappings: CjMapping[] = [
     costUsd: 3.34,
     cjName: "Baby Swaddle Blanket Newborn Bath Towel Gauze Wrap",
     status: "mapped",
-    notes: "Gauze/muslin-liknande swaddle. För 3-pack: quantity=3 vid order, eller köp 3 varianter.",
+    notes: "Gauze/muslin-liknande swaddle. För 3-pack: quantity=3 vid order.",
   },
   {
     sleepieSlug: "sleep-sack",
@@ -68,7 +70,7 @@ export const cjMappings: CjMapping[] = [
     costUsd: 5.56,
     cjName: "Thickened Baby Swaddle For Fall And Winter",
     status: "mapped",
-    notes: "Närmaste sovsäck/swaddle i CJ. Flera färgvarianter finns (vid …4900–…)",
+    notes: "Närmaste sovsäck/swaddle i CJ.",
   },
   {
     sleepieSlug: "komplett-sovrutin",
@@ -79,12 +81,19 @@ export const cjMappings: CjMapping[] = [
     costUsd: null,
     cjName: null,
     status: "needs_import",
-    notes:
-      "Bundle = 3 separata CJ-rader (rocker + noise + muslin) när alla vid finns.",
+    notes: "Bundle = rocker + noise + muslin när alla vid finns.",
   },
 ];
 
-/** Extra CJ products you can sell later */
+/** Extra sourcing request (duplicate rocker variant) */
+export const extraSourcingIds = [
+  {
+    sourcingId: "2608221632074509602",
+    sourceNumber: "CJSPU958572049",
+    product: "stroller-rocker-alt",
+  },
+];
+
 export const cjAlternatives = [
   {
     pid: "2606300707011610000",
