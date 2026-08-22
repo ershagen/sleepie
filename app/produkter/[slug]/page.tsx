@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getProductBySlug, products } from "@/lib/products";
 import { Check } from "lucide-react";
+import { AddToCartButton } from "@/components/AddToCartButton";
 
 export function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
@@ -69,9 +70,7 @@ export default async function ProductPage({
           </ul>
 
           <div className="mt-10 flex flex-col sm:flex-row gap-3">
-            <button className="flex-1 bg-sleepie-black text-white py-3.5 px-6 rounded-full text-sm font-medium hover:bg-sleepie-gray-800 transition">
-              Lägg i varukorg
-            </button>
+            <AddToCartButton product={product} />
             <Link
               href="/produkter"
               className="flex-1 text-center border border-sleepie-gray-300 py-3.5 px-6 rounded-full text-sm font-medium hover:border-sleepie-black transition"

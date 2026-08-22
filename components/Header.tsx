@@ -1,6 +1,6 @@
-import { ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "./Logo";
+import { CartBadge } from "./CartBadge";
 
 export function Header() {
   return (
@@ -23,13 +23,7 @@ export function Header() {
           </Link>
         </nav>
 
-        <Link
-          href="/varukorg"
-          className="relative p-2.5 hover:bg-sleepie-gray-100 rounded-full transition"
-          aria-label="Varukorg"
-        >
-          <ShoppingBag className="w-[18px] h-[18px]" strokeWidth={1.75} />
-        </Link>
+        <CartBadge />
       </div>
     </header>
   );
