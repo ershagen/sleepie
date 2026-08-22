@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/lib/cart";
+import { FREE_SHIPPING_THRESHOLD } from "@/lib/products";
 import { Minus, Plus, Trash2 } from "lucide-react";
 
 export default function CartPage() {
@@ -41,87 +42,110 @@ export default function CartPage() {
     );
   }
 
+  const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - totalPrice);
+  const freeShipping = remaining === 0;
+
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12 md:py-16">
       <h1 className="font-serif text-3xl mb-2">Din varukorg</h1>
-      <p className="text-sm text-sleepie-gray-500 mb-10">
+      <p className="text-sm text-sleepie-gray-500 mb-6">
         {totalItems} {totalItems === 1 ? "produkt" : "produkter"}
       </p>
 
-      <ul className="space-y-6 border-t border-sleepie-gray-100 pt-6">
-        {items.map((item) => (
-          <li
-            key={item.id}
-            className="flex gap-4 sm:gap-6 pb-6 border-b border-sleepie-gray-100"
-          >
-            <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-sleepie-gray-50 shrink-0">
-              <Image
-                src={item.image}
-                alt={item.name}
-                fill
-                className="object-cover"
-                sizes="112px"
-              />
-            </div>
+      <div
+        className={`mb-8 rounded-xl px-4 py-3 text-sm ${
+          freeShipping
+            ? "bg-sleepie-gray-50 text-sleepie-gray-700 border border-sleepie-gray-100"
+            : "bg-white border border-sleepie-gray-200 text-sleepie-gray-600"
+        }`}
+      >
+        {freeShipping
+          ? "✓ Du har fri frakt på den här ordern"
+          : `Lägg till ${remaining} kr till för fri frakt`}
+      </div>
 
-            <div className="flex-1 min-w-0">
-              <div className="flex justify-between gap-4">
-                <div>
-                  <Link
-                    href={`/produkter/${item.slug}`}
-                    className="font-medium text-sleepie-black hover:underline"
-                  >
-                    {item.name}
-                  </Link>
-                  <p className="text-sm text-sleepie-gray-500 mt-0.5 tabular-nums">
-                    {item.price} kr
+      <ul className="space-y-6 border-t border-sleepie-gray-100 pt-6">
+        {items.map((item) => {
+          const local =
+            item.image.startsWith("/api/") || item.image.startsWith("data:");
+          return (
+            <li
+              key={item.id}
+              className="flex gap-4 sm:gap-6 pb-6 border-b border-sleepie-gray-100"
+            >
+              <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-sleepie-gray-50 shrink-0">
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  fill
+                  className="object-cover"
+                  sizes="112px"
+                  unoptimized={local}
+                />
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <div className="flex justify-between gap-4">
+                  <div>
+                    <Link
+                      href={`/produkter/${item.slug}`}
+                      className="font-medium text-sleepie-black hover:underline"
+                    >
+                      {item.name}
+                    </Link>
+                    <p className="text-sm text-sleepie-gray-500 mt-0.5 tabular-nums">
+                      {item.price} kr
+                    </p>
+                  </div>
+                  <p className="font-medium tabular-nums shrink-0">
+                    {item.price * item.quantity} kr
                   </p>
                 </div>
-                <p className="font-medium tabular-nums shrink-0">
-                  {item.price * item.quantity} kr
-                </p>
-              </div>
 
-              <div className="mt-4 flex items-center gap-3">
-                <div className="inline-flex items-center border border-sleepie-gray-200 rounded-full">
+                <div className="mt-4 flex items-center gap-3">
+                  <div className="inline-flex items-center border border-sleepie-gray-200 rounded-full">
+                    <button
+                      type="button"
+                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      className="p-2 hover:bg-sleepie-gray-50 rounded-l-full transition"
+                      aria-label="Minska"
+                    >
+                      <Minus className="w-3.5 h-3.5" />
+                    </button>
+                    <span className="w-8 text-center text-sm tabular-nums">
+                      {item.quantity}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      className="p-2 hover:bg-sleepie-gray-50 rounded-r-full transition"
+                      aria-label="Öka"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                   <button
                     type="button"
-                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    className="p-2 hover:bg-sleepie-gray-50 rounded-l-full transition"
-                    aria-label="Minska"
+                    onClick={() => removeItem(item.id)}
+                    className="p-2 text-sleepie-gray-400 hover:text-sleepie-black transition"
+                    aria-label="Ta bort"
                   >
-                    <Minus className="w-3.5 h-3.5" />
-                  </button>
-                  <span className="w-8 text-center text-sm tabular-nums">
-                    {item.quantity}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    className="p-2 hover:bg-sleepie-gray-50 rounded-r-full transition"
-                    aria-label="Öka"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
+                    <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => removeItem(item.id)}
-                  className="p-2 text-sleepie-gray-400 hover:text-sleepie-black transition"
-                  aria-label="Ta bort"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
               </div>
-            </div>
-          </li>
-        ))}
+            </li>
+          );
+        })}
       </ul>
 
       <div className="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
         <div>
           <p className="text-sm text-sleepie-gray-500">Totalt inkl. moms</p>
           <p className="text-2xl font-medium tabular-nums">{totalPrice} kr</p>
+          <p className="text-xs text-sleepie-gray-500 mt-1">
+            {freeShipping ? "Fri frakt" : "Frakt beräknas i kassan"}
+          </p>
         </div>
         <Link
           href="/kassa"
