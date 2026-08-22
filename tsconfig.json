@@ -14,8 +14,7 @@
     "incremental": true,
     "plugins": [{ "name": "next" }],
     "paths": {
-      "@/*": ["./*"],
-      "@payload-config": ["./src/payload.config.ts"]
+      "@/*": ["./*"]
     },
     "target": "ES2017"
   },
