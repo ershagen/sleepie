@@ -18,7 +18,8 @@ export const products: Product[] = [
     slug: "stroller-rocker",
     name: "Stroller Rocker",
     price: 449,
-    description: "Den portabla stroller rockern som ger din bebis den mjuka gungande rörelsen den älskar – var som helst. Uppladdningsbar, tyst och universell för de flesta vagnar.",
+    description:
+      "Den portabla stroller rockern som ger din bebis den mjuka gungande rörelsen den älskar – var som helst. Uppladdningsbar, tyst och universell för de flesta vagnar.",
     shortDescription: "Mjuk gungning för lugnare stunder – hemma eller på språng.",
     features: [
       "Uppladdningsbar med USB-C",
@@ -30,7 +31,7 @@ export const products: Product[] = [
     ],
     category: "Rocker",
     image: "/products/rocker-1.jpg",
-    images: ["/products/rocker-1.jpg", "/products/rocker-2.jpg"],
+    images: ["/products/rocker-1.jpg"],
     badge: "Bästsäljare",
   },
   {
@@ -38,7 +39,8 @@ export const products: Product[] = [
     slug: "white-noise",
     name: "White Noise Maskin",
     price: 299,
-    description: "Portabel white noise-maskin med naturljud och mjuk nattlampa. Hjälper både bebis och dig att sova bättre.",
+    description:
+      "Portabel white noise-maskin med naturljud och mjuk nattlampa. Hjälper både bebis och dig att sova bättre.",
     shortDescription: "Lugnande ljud och mjukt ljus för bättre sömn.",
     features: [
       "Flera naturljud + white noise",
@@ -56,7 +58,8 @@ export const products: Product[] = [
     slug: "muslin-set",
     name: "Muslin Swaddle Set",
     price: 349,
-    description: "Mjukt set med ekologiska muslinfiltar i neutrala toner. Andningsbara och sköna mot huden.",
+    description:
+      "Mjukt set med ekologiska muslinfiltar i neutrala toner. Andningsbara och sköna mot huden.",
     shortDescription: "Mjuka, andningsbara swaddles i nordiska toner.",
     features: [
       "Ekologisk bambu/bomull",
@@ -74,7 +77,8 @@ export const products: Product[] = [
     slug: "sleep-sack",
     name: "Sleep Sack",
     price: 399,
-    description: "Säker och bekväm sömnsäck som håller bebisen lagom varm utan lösa täcken.",
+    description:
+      "Säker och bekväm sömnsäck som håller bebisen lagom varm utan lösa täcken.",
     shortDescription: "Säker sömn utan lösa täcken.",
     features: [
       "Andningsbar",
@@ -91,7 +95,8 @@ export const products: Product[] = [
     slug: "komplett-sovrutin",
     name: "Komplett Sovrutin",
     price: 899,
-    description: "Allt du behöver för lugnare nätter: Stroller Rocker + White Noise + Muslin Set. Det perfekta startkitet.",
+    description:
+      "Allt du behöver för lugnare nätter: Stroller Rocker + White Noise + Muslin Set. Det perfekta startkitet.",
     shortDescription: "Rocker + White Noise + Muslin – allt i ett.",
     features: [
       "Stroller Rocker",
@@ -100,8 +105,8 @@ export const products: Product[] = [
       "Sparar 198 kr",
     ],
     category: "Bundle",
-    image: "/products/bundle-1.jpg",
-    images: ["/products/bundle-1.jpg"],
+    image: "/products/rocker-1.jpg",
+    images: ["/products/rocker-1.jpg"],
     badge: "Sparar 198 kr",
   },
 ];

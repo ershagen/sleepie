@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { getProductBySlug, products } from "@/lib/products";
 import { Check } from "lucide-react";
 
@@ -33,21 +34,26 @@ export default async function ProductPage({
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
-        {/* Image */}
-        <div className="aspect-square bg-sleepie-gray-50 rounded-2xl flex items-center justify-center relative overflow-hidden">
-          <span className="text-sleepie-gray-300 text-sm">{product.name}</span>
+        <div className="aspect-square bg-sleepie-gray-50 rounded-2xl relative overflow-hidden">
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            className="object-cover"
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            priority
+          />
           {product.badge && (
-            <span className="absolute top-4 left-4 bg-sleepie-black text-white text-xs px-2.5 py-1 rounded-full">
+            <span className="absolute top-4 left-4 bg-sleepie-black text-white text-xs px-2.5 py-1 rounded-full z-10">
               {product.badge}
             </span>
           )}
         </div>
 
-        {/* Info */}
         <div className="flex flex-col">
           <p className="text-sm text-sleepie-gray-500 mb-2">{product.category}</p>
           <h1 className="font-serif text-3xl md:text-4xl">{product.name}</h1>
-          <p className="mt-4 text-2xl font-medium">{product.price} kr</p>
+          <p className="mt-4 text-2xl font-medium tabular-nums">{product.price} kr</p>
 
           <p className="mt-6 text-sleepie-gray-600 leading-relaxed">
             {product.description}

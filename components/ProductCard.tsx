@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Product } from "@/lib/products";
 
 export function ProductCard({ product }: { product: Product }) {
@@ -7,18 +8,16 @@ export function ProductCard({ product }: { product: Product }) {
       href={`/produkter/${product.slug}`}
       className="group block bg-white rounded-2xl overflow-hidden border border-sleepie-gray-100 hover:border-sleepie-gray-200 hover:shadow-md transition-all duration-300"
     >
-      <div className="aspect-square bg-gradient-to-b from-sleepie-gray-50 to-sleepie-gray-100 relative overflow-hidden flex items-center justify-center">
-        {/* Placeholder until real product images are uploaded */}
-        <div className="text-center px-4">
-          <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-white/80 flex items-center justify-center shadow-sm">
-            <span className="text-2xl opacity-40">☾</span>
-          </div>
-          <span className="text-xs text-sleepie-gray-400 font-medium tracking-wide uppercase">
-            {product.category}
-          </span>
-        </div>
+      <div className="aspect-square bg-sleepie-gray-50 relative overflow-hidden">
+        <Image
+          src={product.image}
+          alt={product.name}
+          fill
+          className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+        />
         {product.badge && (
-          <span className="absolute top-3 left-3 bg-sleepie-black text-white text-xs px-2.5 py-1 rounded-full">
+          <span className="absolute top-3 left-3 bg-sleepie-black text-white text-xs px-2.5 py-1 rounded-full z-10">
             {product.badge}
           </span>
         )}
