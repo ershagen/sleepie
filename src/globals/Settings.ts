@@ -41,9 +41,22 @@ export const Settings: GlobalConfig = {
       type: 'group',
       label: 'CJDropshipping',
       fields: [
-        { name: 'apiKey', type: 'text' },
-        { name: 'apiSecret', type: 'text' },
-        { name: 'accessToken', type: 'text' },
+        {
+          name: 'apiKey',
+          type: 'text',
+          admin: {
+            description:
+              'Full API-nyckel (format: CJxxxx@api@...). Primär källa är Vercel env CJ_API_KEY.',
+          },
+        },
+        {
+          name: 'note',
+          type: 'textarea',
+          admin: {
+            description:
+              'Mappa varje Sleepie-produkt till ett CJ variant-ID (vid) under Products → cjProductId.',
+          },
+        },
       ],
     },
     {
@@ -53,7 +66,7 @@ export const Settings: GlobalConfig = {
       fields: [
         {
           name: 'defaultMethod',
-      type: 'text',
+          type: 'text',
           defaultValue: 'Standard',
         },
         {
