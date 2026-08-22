@@ -4,9 +4,19 @@ import { Providers } from "@/components/Providers";
 import { ShopChrome } from "@/components/ShopChrome";
 
 export const metadata: Metadata = {
-  title: "Sleepie | Lugnare nätter börjar här",
+  title: {
+    default: "Sleepie | Lugnare nätter börjar här",
+    template: "%s | Sleepie",
+  },
   description:
-    "Smarta produkter som hjälper ditt barn sova – och dig andas ut. Premium baby sleep & calming.",
+    "Smarta produkter som hjälper ditt barn sova – och dig andas ut. Premium baby sleep & calming. Stroller rocker, white noise, muslin och mer.",
+  openGraph: {
+    title: "Sleepie | Lugnare nätter börjar här",
+    description:
+      "Smarta produkter som hjälper ditt barn sova – och dig andas ut.",
+    locale: "sv_SE",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
