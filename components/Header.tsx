@@ -8,15 +8,18 @@ export function Header() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-[4.25rem] flex items-center justify-between">
         <Logo />
 
-        <nav className="hidden md:flex items-center gap-9 text-[13px] font-medium tracking-wide text-sleepie-gray-600">
+        <nav className="hidden md:flex items-center gap-8 text-[13px] font-medium tracking-wide text-sleepie-gray-600">
           <Link href="/produkter" className="hover:text-sleepie-black transition">
             Produkter
           </Link>
-          <Link href="/#varfor" className="hover:text-sleepie-black transition">
-            Varför Sleepie
+          <Link href="/om-oss" className="hover:text-sleepie-black transition">
+            Om oss
           </Link>
           <Link href="/#faq" className="hover:text-sleepie-black transition">
             FAQ
+          </Link>
+          <Link href="/kontakt" className="hover:text-sleepie-black transition">
+            Kontakt
           </Link>
         </nav>
 
