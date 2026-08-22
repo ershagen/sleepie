@@ -1,15 +1,22 @@
 /**
- * Payment logos — Swish from official swish.nu logotype SVG
+ * Payment logos
+ * Swish: official logotype from https://www.swish.nu
+ * Visa / Mastercard: brand marks
  */
+
+/** Official Swish logotype (hosted on swish.nu) */
+const SWISH_LOGO_SRC =
+  "https://www.swish.nu/assets/swish-logotype-C2_aqj3N.svg";
 
 export function SwishMark({ className = "h-8" }: { className?: string }) {
   return (
     <span className={`inline-flex items-center ${className}`} aria-label="Swish">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/payments/swish.svg"
+        src={SWISH_LOGO_SRC}
         alt="Swish"
-        className="h-full w-auto max-w-[130px] object-contain object-left"
+        className="h-full w-auto max-w-[140px] object-contain object-left"
+        loading="eager"
       />
     </span>
   );
@@ -19,6 +26,7 @@ export function SwishLogo({ className = "h-7" }: { className?: string }) {
   return <SwishMark className={className} />;
 }
 
+/** Official-style Visa wordmark path */
 export function VisaLogo({ className = "h-5" }: { className?: string }) {
   return (
     <svg
@@ -36,6 +44,7 @@ export function VisaLogo({ className = "h-5" }: { className?: string }) {
   );
 }
 
+/** Mastercard interlocking circles */
 export function MastercardLogo({ className = "h-7" }: { className?: string }) {
   return (
     <svg
