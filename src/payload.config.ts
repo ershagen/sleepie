@@ -37,6 +37,8 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
     },
+    // Auto-create tables on first boot (needed until formal migrations are run)
+    push: true,
   }),
   sharp,
 })
