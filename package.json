@@ -15,6 +15,7 @@
     "@payloadcms/db-postgres": "3.28.0",
     "@payloadcms/next": "3.28.0",
     "@payloadcms/richtext-lexical": "3.28.0",
+    "@payloadcms/storage-vercel-blob": "3.28.0",
     "@payloadcms/ui": "3.28.0",
     "clsx": "^2.1.1",
     "cross-env": "^7.0.3",
