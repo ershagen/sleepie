@@ -1,44 +1,35 @@
 # Sleepie
 
-Premium baby sleep & calming e-commerce store.
-
-**Lugnare nätter börjar här.**
+Premium baby sleep & calming e-commerce.
 
 ## Stack
 
 - Next.js 15 (App Router) + TypeScript
 - Tailwind CSS
-- Mollie (Swish + kort + Klarna) – kommer
-- CJDropshipping API – kommer
-- Payload CMS + Supabase – kommer
+- Payload CMS 3 + Supabase (PostgreSQL)
+- Mollie (kommer)
+- CJDropshipping (kommer)
 
-## Kom igång
+## Lokalt
 
 ```bash
 npm install
+cp .env.example .env.local
+# Fyll i DATABASE_URI och PAYLOAD_SECRET
 npm run dev
 ```
 
-Öppna [http://localhost:3000](http://localhost:3000).
+Admin: http://localhost:3000/admin  
+Shop: http://localhost:3000
 
-## Struktur
+## Environment variables (Vercel)
 
-- `app/` – sidor (startsida, produkter, varukorg)
-- `components/` – Header, Footer, ProductCard
-- `lib/products.ts` – mock-produkter (fallback tills databas är inkopplad)
+| Variabel | Beskrivning |
+|----------|-------------|
+| `DATABASE_URI` | Supabase Postgres connection string |
+| `PAYLOAD_SECRET` | Random secret (openssl rand -base64 32) |
+| `NEXT_PUBLIC_SERVER_URL` | https://sleepie-alectiv.vercel.app |
 
-## Design
+## Fallback
 
-Minimalistisk nordisk stil:
-- Svart `#0A0A0A`
-- Off-white `#FAFAF9`
-- Elegant serif för rubriker
-- Mycket white space
-
-## Nästa steg
-
-1. Generera proffsiga produktbilder
-2. Koppla Payload CMS + Supabase
-3. Mollie-betalningar (Swish)
-4. CJDropshipping-orderflöde
-5. Settings-sida för API-nycklar
+Om databasen inte är tillgänglig används mock-data i `lib/products.ts` så att butiken alltid syns.
