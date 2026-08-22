@@ -7,6 +7,11 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart";
 import { calcOrderTotal } from "@/lib/shipping";
 import { Shield, Lock } from "lucide-react";
+import {
+  SwishMark,
+  CardLogosRow,
+  KlarnaLogo,
+} from "@/components/PaymentLogos";
 
 const LAST_ORDER_KEY = "sleepie-last-order";
 
@@ -83,19 +88,16 @@ export default function CheckoutPage() {
       });
 
       if (!res.ok) {
-        throw new Error("order_failed");
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error(
+          (errBody as { error?: string }).error || "order_failed"
+        );
       }
 
       const json = (await res.json()) as {
         orderId: string;
         checkoutUrl?: string;
       };
-
-      // When Mollie is live: window.location = json.checkoutUrl
-      if (json.checkoutUrl) {
-        window.location.href = json.checkoutUrl;
-        return;
-      }
 
       try {
         sessionStorage.setItem(
@@ -110,16 +112,48 @@ export default function CheckoutPage() {
         // ignore
       }
 
+      if (json.checkoutUrl) {
+        // Cart cleared after return from Mollie on confirmation page ideally;
+        // clear here so user doesn't re-order if they abandon mid-pay
+        clearCart();
+        window.location.href = json.checkoutUrl;
+        return;
+      }
+
       clearCart();
-      router.push(`/order-bekraftelse?order=${encodeURIComponent(json.orderId)}`);
-    } catch {
-      setError("Något gick fel. Försök igen.");
+      router.push(
+        `/order-bekraftelse?order=${encodeURIComponent(json.orderId)}`
+      );
+    } catch (err) {
+      setError(
+        err instanceof Error && err.message !== "order_failed"
+          ? err.message
+          : "Något gick fel. Försök igen."
+      );
       setSubmitting(false);
     }
   }
 
   const inputClass =
     "w-full border border-sleepie-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-sleepie-black transition bg-white";
+
+  const methods = [
+    {
+      id: "swish" as const,
+      desc: "Betala direkt i din bankapp",
+      logo: <SwishMark className="h-8 min-w-[4.5rem]" />,
+    },
+    {
+      id: "card" as const,
+      desc: "Visa & Mastercard",
+      logo: <CardLogosRow />,
+    },
+    {
+      id: "klarna" as const,
+      desc: "Faktura eller delbetalning",
+      logo: <KlarnaLogo className="h-8" />,
+    },
+  ];
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
@@ -146,7 +180,7 @@ export default function CheckoutPage() {
                   required
                   autoComplete="email"
                   className={inputClass}
-                  placeholder="namn@exempel.se"
+                  placeholder="namn@mail.se"
                 />
               </div>
               <div>
@@ -161,9 +195,6 @@ export default function CheckoutPage() {
                   className={inputClass}
                   placeholder="07X XXX XX XX"
                 />
-                <p className="mt-1.5 text-xs text-sleepie-gray-500">
-                  För leveransavisering och Swish
-                </p>
               </div>
             </div>
           </section>
@@ -245,30 +276,12 @@ export default function CheckoutPage() {
           <section className="rounded-2xl border border-sleepie-gray-100 bg-white p-6 sm:p-7">
             <h2 className="font-medium mb-5">Betalning</h2>
             <div className="space-y-3">
-              {(
-                [
-                  {
-                    id: "swish" as const,
-                    title: "Swish",
-                    desc: "Betala direkt med Swish",
-                  },
-                  {
-                    id: "card" as const,
-                    title: "Kort",
-                    desc: "Visa, Mastercard",
-                  },
-                  {
-                    id: "klarna" as const,
-                    title: "Klarna",
-                    desc: "Faktura eller delbetalning",
-                  },
-                ] as const
-              ).map((m) => (
+              {methods.map((m) => (
                 <label
                   key={m.id}
-                  className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition ${
+                  className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition ${
                     paymentMethod === m.id
-                      ? "border-sleepie-black bg-sleepie-gray-50"
+                      ? "border-sleepie-black bg-sleepie-gray-50 ring-1 ring-sleepie-black"
                       : "border-sleepie-gray-200 hover:border-sleepie-gray-300"
                   }`}
                 >
@@ -278,11 +291,23 @@ export default function CheckoutPage() {
                     value={m.id}
                     checked={paymentMethod === m.id}
                     onChange={() => setPaymentMethod(m.id)}
-                    className="mt-1"
+                    className="sr-only"
                   />
-                  <span>
-                    <span className="block text-sm font-medium">{m.title}</span>
-                    <span className="block text-xs text-sleepie-gray-500 mt-0.5">
+                  <span
+                    className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
+                      paymentMethod === m.id
+                        ? "border-sleepie-black"
+                        : "border-sleepie-gray-300"
+                    }`}
+                    aria-hidden
+                  >
+                    {paymentMethod === m.id && (
+                      <span className="w-2 h-2 rounded-full bg-sleepie-black" />
+                    )}
+                  </span>
+                  <span className="flex-1 flex items-center justify-between gap-3 min-w-0">
+                    <span className="flex items-center min-h-[2rem]">{m.logo}</span>
+                    <span className="text-xs text-sleepie-gray-500 text-right hidden sm:block">
                       {m.desc}
                     </span>
                   </span>
@@ -291,8 +316,8 @@ export default function CheckoutPage() {
             </div>
             <p className="mt-4 text-xs text-sleepie-gray-500 flex items-start gap-2">
               <Lock className="w-3.5 h-3.5 mt-0.5 shrink-0" strokeWidth={1.5} />
-              Säker betalning. Mollie kopplas in med API-nyckel – just nu skapas
-              en testorder utan dragning.
+              Säker betalning via Mollie. Du slutför i Swish, bank-ID eller
+              kortformulär.
             </p>
           </section>
 
@@ -303,7 +328,7 @@ export default function CheckoutPage() {
             disabled={submitting}
             className="w-full bg-sleepie-black text-white py-4 text-sm font-medium hover:bg-sleepie-gray-800 transition disabled:opacity-60"
           >
-            {submitting ? "Bearbetar…" : `Slutför order · ${total} kr`}
+            {submitting ? "Omdirigerar till betalning…" : `Betala · ${total} kr`}
           </button>
 
           <p className="text-xs text-sleepie-gray-500 text-center">
@@ -323,39 +348,33 @@ export default function CheckoutPage() {
         </form>
 
         <aside className="lg:col-span-5">
-          <div className="rounded-2xl border border-sleepie-gray-100 bg-white p-6 sm:p-7 sticky top-24">
+          <div className="lg:sticky lg:top-24 rounded-2xl border border-sleepie-gray-100 bg-white p-6 sm:p-7">
             <h2 className="font-medium mb-5">Din order</h2>
-
-            <ul className="space-y-4">
+            <ul className="space-y-4 mb-6">
               {items.map((item) => (
                 <li key={item.id} className="flex gap-3">
-                  <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-sleepie-gray-50 shrink-0 border border-sleepie-gray-100">
+                  <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-sleepie-gray-50 shrink-0">
                     <Image
                       src={item.image}
                       alt={item.name}
                       fill
                       className="object-cover"
                       sizes="64px"
-                      unoptimized
                     />
-                    <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 flex items-center justify-center rounded-full bg-sleepie-black text-white text-[10px] font-medium">
-                      {item.quantity}
-                    </span>
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">{item.name}</p>
-                    <p className="text-xs text-sleepie-gray-500 tabular-nums mt-0.5">
-                      {item.price} kr
+                    <p className="text-xs text-sleepie-gray-500">
+                      Antal {item.quantity}
+                    </p>
+                    <p className="text-sm tabular-nums mt-0.5">
+                      {item.price * item.quantity} kr
                     </p>
                   </div>
-                  <p className="text-sm tabular-nums shrink-0">
-                    {item.price * item.quantity} kr
-                  </p>
                 </li>
               ))}
             </ul>
-
-            <dl className="mt-6 space-y-2.5 text-sm border-t border-sleepie-gray-100 pt-5">
+            <dl className="space-y-2 text-sm border-t border-sleepie-gray-100 pt-4">
               <div className="flex justify-between">
                 <dt className="text-sleepie-gray-600">Delsumma</dt>
                 <dd className="tabular-nums">{subtotal} kr</dd>
@@ -366,16 +385,19 @@ export default function CheckoutPage() {
                   {freeShipping ? "Fri" : `${shipping} kr`}
                 </dd>
               </div>
-              <div className="flex justify-between pt-3 border-t border-sleepie-gray-100 text-base font-medium">
-                <dt>Att betala</dt>
+              <div className="flex justify-between font-medium text-base pt-2 border-t border-sleepie-gray-50">
+                <dt>Totalt</dt>
                 <dd className="tabular-nums">{total} kr</dd>
               </div>
             </dl>
-            <p className="mt-2 text-xs text-sleepie-gray-500">Inkl. moms</p>
-
             <div className="mt-5 flex items-center gap-2 text-xs text-sleepie-gray-500">
               <Shield className="w-3.5 h-3.5" strokeWidth={1.5} />
-              SSL-krypterat · 14 dagars ångerrätt
+              14 dagars öppet köp · Säker checkout
+            </div>
+            <div className="mt-4 flex flex-wrap items-center gap-3 opacity-90">
+              <SwishMark className="h-6 min-w-[3.5rem] text-[0.7rem]" />
+              <CardLogosRow />
+              <KlarnaLogo className="h-6 text-[0.65rem]" />
             </div>
           </div>
         </aside>
