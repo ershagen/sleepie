@@ -1,4 +1,4 @@
-import { readFile } from 'fs/promises'
+import { readdir, readFile } from 'fs/promises'
 import path from 'path'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -13,15 +13,32 @@ export async function GET(
     return new NextResponse('Not found', { status: 404 })
   }
 
+  const dir = path.join(process.cwd(), 'public', 'product-images')
+
   try {
-    const filePath = path.join(
-      process.cwd(),
-      'public',
-      'product-images',
-      `${name}.b64`
-    )
-    const b64 = await readFile(filePath, 'utf8')
-    const buffer = Buffer.from(b64, 'base64')
+    // Prefer single file name.b64, else concatenate name.0.b64, name.1.b64, ...
+    let b64 = ''
+    try {
+      b64 = await readFile(path.join(dir, `${name}.b64`), 'utf8')
+    } catch {
+      const files = await readdir(dir)
+      const parts = files
+        .filter((f) => f.startsWith(`${name}.`) && f.endsWith('.b64'))
+        .sort((a, b) => {
+          const ai = parseInt(a.split('.')[1] || '0', 10)
+          const bi = parseInt(b.split('.')[1] || '0', 10)
+          return ai - bi
+        })
+      for (const f of parts) {
+        b64 += await readFile(path.join(dir, f), 'utf8')
+      }
+    }
+
+    if (!b64) {
+      return new NextResponse('Not found', { status: 404 })
+    }
+
+    const buffer = Buffer.from(b64.trim(), 'base64')
     return new NextResponse(buffer, {
       headers: {
         'Content-Type': 'image/webp',
