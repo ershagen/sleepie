@@ -18,8 +18,10 @@ export type Product = {
   cjCostUsd?: number | null;
 };
 
-/** AI product photos via /api/product-image */
-const img = (name: string) => `/api/product-image/${name}`;
+/** AI-generated product photos (Vercel Blob) — based on Alibaba/CJ product types */
+const BLOB =
+  "https://bmpvyjsgiskr7b9a.public.blob.vercel-storage.com/products";
+const img = (name: string) => `${BLOB}/${name}.jpg`;
 
 function withCj(
   base: Omit<Product, "cjPid" | "cjVid" | "cjSku" | "cjCostUsd">
@@ -41,7 +43,7 @@ export const products: Product[] = [
     name: "Stroller Rocker",
     price: 449,
     description:
-      "Portabel USB-C stroller rocker – samma typ som du hittar hos leverantörer på Alibaba/CJ. Klipsas på vagnen, ger mjuk gungning med tyst motor, flera hastigheter och timer. För hemmet, caféet och resan.",
+      "Portabel USB-C stroller rocker – samma typ som hos leverantörer på Alibaba/CJ. Klipsas på vagnen, ger mjuk gungning med tyst motor, flera hastigheter och timer. För hemmet, caféet och resan.",
     shortDescription: "USB-C clip-on rocker – mjuk gungning på språng.",
     features: [
       "Uppladdningsbar USB-C",
@@ -62,7 +64,7 @@ export const products: Product[] = [
     name: "White Noise Maskin",
     price: 299,
     description:
-      "Kompakt portabel white noise-maskin med mjuk nattlampa och USB-C – inspirerad av de mest efterfrågade soothers på Alibaba. Skapar en trygg ljudbubbla för bättre sömn.",
+      "Kompakt portabel white noise-maskin med mjuk nattlampa och USB-C – inspirerad av de mest efterfrågade soothers. Skapar en trygg ljudbubbla för bättre sömn.",
     shortDescription: "Lugnande ljud + mjukt ljus, USB-C.",
     features: [
       "White noise + naturljud",
