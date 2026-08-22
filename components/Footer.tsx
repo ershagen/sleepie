@@ -40,12 +40,17 @@ export function Footer() {
                   Komplett Sovrutin
                 </Link>
               </li>
+              <li>
+                <Link href="/sa-funkar-det" className="hover:text-sleepie-black transition">
+                  Så funkar det
+                </Link>
+              </li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-xs font-medium tracking-wider uppercase text-sleepie-gray-500 mb-4">
-              Om Sleepie
+              Hjälp & mer
             </h4>
             <ul className="space-y-2.5 text-sm text-sleepie-gray-600">
               <li>
@@ -54,13 +59,23 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/kontakt" className="hover:text-sleepie-black transition">
-                  Kontakt
+                <Link href="/guider" className="hover:text-sleepie-black transition">
+                  Guider
+                </Link>
+              </li>
+              <li>
+                <Link href="/faq" className="hover:text-sleepie-black transition">
+                  Vanliga frågor
                 </Link>
               </li>
               <li>
                 <Link href="/frakt-returer" className="hover:text-sleepie-black transition">
                   Frakt & returer
+                </Link>
+              </li>
+              <li>
+                <Link href="/kontakt" className="hover:text-sleepie-black transition">
+                  Kontakt
                 </Link>
               </li>
             </ul>
@@ -79,6 +94,11 @@ export function Footer() {
               <li>
                 <Link href="/integritet" className="hover:text-sleepie-black transition">
                   Integritet
+                </Link>
+              </li>
+              <li>
+                <Link href="/cookies" className="hover:text-sleepie-black transition">
+                  Cookies
                 </Link>
               </li>
             </ul>
