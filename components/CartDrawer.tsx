@@ -37,7 +37,6 @@ export function CartDrawer() {
 
   return (
     <>
-      {/* Backdrop */}
       <div
         className={`fixed inset-0 z-[60] bg-black/40 transition-opacity duration-300 ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
@@ -46,7 +45,6 @@ export function CartDrawer() {
         aria-hidden={!isOpen}
       />
 
-      {/* Drawer */}
       <div
         ref={panelRef}
         role="dialog"
@@ -56,7 +54,6 @@ export function CartDrawer() {
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-sleepie-gray-100">
           <div className="flex items-center gap-2">
             <ShoppingBag className="w-4 h-4" strokeWidth={1.75} />
@@ -74,7 +71,6 @@ export function CartDrawer() {
           </button>
         </div>
 
-        {/* Free shipping progress */}
         {items.length > 0 && !freeShipping && remainingToFree > 0 && (
           <div className="px-5 py-3 border-b border-sleepie-gray-100 bg-white">
             <p className="text-xs text-sleepie-gray-600 mb-2">
@@ -99,7 +95,6 @@ export function CartDrawer() {
           </div>
         )}
 
-        {/* Items */}
         <div className="flex-1 overflow-y-auto">
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full px-6 text-center">
@@ -111,15 +106,13 @@ export function CartDrawer() {
               <p className="text-sm text-sleepie-gray-500 mb-6">
                 Lägg till något mjukt för lugnare nätter.
               </p>
-              <button
-                type="button"
+              <Link
+                href="/produkter"
                 onClick={closeCart}
                 className="inline-flex bg-sleepie-black text-white px-6 py-3 text-sm font-medium hover:bg-sleepie-gray-800 transition"
               >
-                <Link href="/produkter" onClick={closeCart}>
-                  Fortsätt handla
-                </Link>
-              </button>
+                Fortsätt handla
+              </Link>
             </div>
           ) : (
             <ul className="divide-y divide-sleepie-gray-100">
@@ -196,7 +189,6 @@ export function CartDrawer() {
           )}
         </div>
 
-        {/* Footer */}
         {items.length > 0 && (
           <div className="border-t border-sleepie-gray-100 bg-white p-5 space-y-4">
             <dl className="space-y-1.5 text-sm">
