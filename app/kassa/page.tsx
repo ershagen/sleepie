@@ -39,7 +39,7 @@ export default function CheckoutPage() {
         <p className="text-sleepie-gray-600 mb-8">Varukorgen är tom.</p>
         <Link
           href="/produkter"
-          className="inline-flex bg-sleepie-green text-white px-7 py-3.5 text-sm font-medium hover:bg-sleepie-green-dark transition"
+          className="inline-flex bg-sleepie-green text-white px-7 py-3.5 text-sm font-medium rounded-[5px] hover:bg-sleepie-green-dark transition"
         >
           Till produkterna
         </Link>
@@ -324,7 +324,7 @@ export default function CheckoutPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-sleepie-green text-white py-4 text-sm font-medium hover:bg-sleepie-green-dark transition disabled:opacity-60"
+            className="w-full bg-sleepie-green text-white py-4 text-sm font-medium rounded-[5px] hover:bg-sleepie-green-dark transition disabled:opacity-60"
           >
             {submitting ? "Omdirigerar till betalning…" : `Betala · ${total} kr`}
           </button>
