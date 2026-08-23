@@ -5,13 +5,11 @@ export type Review = {
   rating: 1 | 2 | 3 | 4 | 5;
   title: string;
   body: string;
-  date: string; // ISO date
-  detail?: string; // e.g. "Mamma till Alma, 4 mån"
+  date: string;
+  detail?: string;
 };
 
-/** Social proof for PDPs – replace with real customer reviews as they come in */
 export const reviews: Review[] = [
-  // Stroller Rocker
   {
     id: "r1",
     productSlug: "stroller-rocker",
@@ -62,38 +60,6 @@ export const reviews: Review[] = [
     date: "2026-08-15",
     detail: "Pappa till Vera, 5 mån",
   },
-  // White noise
-  {
-    id: "r6",
-    productSlug: "white-noise",
-    name: "Anna",
-    rating: 5,
-    title: "Sover hela natten",
-    body: "Vi tar den överallt – resa, bil, sängen. Ljudet är mjukt utan att bli irriterande. Älskar den lilla lampan.",
-    date: "2026-07-20",
-    detail: "Mamma till Otto, 6 mån",
-  },
-  {
-    id: "r7",
-    productSlug: "white-noise",
-    name: "David",
-    rating: 5,
-    title: "Diskret och effektiv",
-    body: "Äntligen white noise som inte ser ut som en leksak. Kompakt, lång batteritid, enkel.",
-    date: "2026-08-01",
-    detail: "Pappa till Maya, 2 mån",
-  },
-  {
-    id: "r8",
-    productSlug: "white-noise",
-    name: "Klara",
-    rating: 4,
-    title: "Bra på resan",
-    body: "Räddade hotellet i somras. Lite mer volym hade suttit fint i bullriga miljöer, men i övrigt toppen.",
-    date: "2026-08-08",
-    detail: "Mamma till Liam, 9 mån",
-  },
-  // Muslin
   {
     id: "r9",
     productSlug: "muslin-set",
@@ -114,7 +80,6 @@ export const reviews: Review[] = [
     date: "2026-08-03",
     detail: "Mamma till Noah, 5 mån",
   },
-  // Sleep sack
   {
     id: "r11",
     productSlug: "sleep-sack",
@@ -135,14 +100,13 @@ export const reviews: Review[] = [
     date: "2026-08-12",
     detail: "Pappa till Freja, 3 mån",
   },
-  // Bundle
   {
     id: "r13",
     productSlug: "komplett-sovrutin",
     name: "Hanna",
     rating: 5,
     title: "Allt i ett – smart",
-    body: "Köpte kitet istället för att nosa runt. Allt funkar ihop och vi sparade pengar. Nöjd.",
+    body: "Köpte kitet istället för att nosa runt. Rocker, muslin och sömnsäck – allt funkar ihop och vi sparade pengar.",
     date: "2026-08-09",
     detail: "Mamma till Isak, 1 mån",
   },
