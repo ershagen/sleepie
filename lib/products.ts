@@ -14,10 +14,14 @@ export {
   FREE_SHIPPING_THRESHOLD,
   SITE_URL,
   ROCKER_GALLERY,
-  CJ_ROCKER,
+  CJ_ROCKER_BLACK,
+  BUNDLE_IMAGE,
   getProductBySlugSync,
   img,
 } from "./catalog";
+
+/** @deprecated use CJ_ROCKER_BLACK */
+export { CJ_ROCKER_BLACK as CJ_ROCKER } from "./catalog";
 
 type MediaDoc = { url?: string | null } | string | null | undefined;
 
