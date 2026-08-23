@@ -9,7 +9,7 @@ import { productJsonLd } from "@/lib/structured-data";
 import { getReviewStatsAsync } from "@/lib/reviews";
 import { Check, Truck, RotateCcw, Shield } from "lucide-react";
 import { AddToCartButton } from "@/components/AddToCartButton";
-import { ProductImage } from "@/components/ProductImage";
+import { ProductGallery } from "@/components/ProductGallery";
 import { ProductCard } from "@/components/ProductCard";
 import { StarRating } from "@/components/StarRating";
 import { ProductReviews } from "@/components/ProductReviews";
@@ -54,6 +54,8 @@ export default async function ProductPage({
 
   const related = await getRelatedProducts(slug);
   const stats = await getReviewStatsAsync(slug);
+  const gallery =
+    product.images?.length > 0 ? product.images : [product.image];
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
@@ -77,14 +79,11 @@ export default async function ProductPage({
       </nav>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
-        <div className="aspect-square bg-sleepie-gray-50 rounded-xl relative overflow-hidden border border-sleepie-gray-100">
-          <ProductImage
-            src={product.image}
-            alt={product.name}
-            badge={product.badge}
-            category={product.category}
-          />
-        </div>
+        <ProductGallery
+          images={gallery}
+          alt={product.name}
+          badge={product.badge}
+        />
 
         <div className="flex flex-col">
           <h1 className="font-serif text-3xl md:text-4xl leading-tight">

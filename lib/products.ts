@@ -29,6 +29,16 @@ const BLOB =
   "https://bmpvyjsgiskr7b9a.public.blob.vercel-storage.com/products";
 const img = (name: string) => `${BLOB}/${name}.jpg`;
 
+/** Official product photos from supplier (SR10 Black + angles) */
+const CJ_ROCKER = {
+  black:
+    "https://cf.cjdropshipping.com/quick/product/daad17b5-b85e-4aac-bbb6-390c401a7f9c.jpg",
+  angle:
+    "https://cf.cjdropshipping.com/quick/product/5bb6416e-a279-4b68-9416-118a819c76e3.jpg",
+  pack:
+    "https://oss-cf.cjdropshipping.com/product/2026/05/02/06/e7e3e898-36b6-47a2-bf7e-ef369c2ab4fb_water_trans.jpeg",
+};
+
 function withCj(
   base: Omit<
     Product,
@@ -75,7 +85,13 @@ export const FALLBACK_PRODUCTS: Product[] = [
     ],
     category: "Rocker",
     image: img("rocker-stroller"),
-    images: [img("rocker-stroller"), img("rocker-nursery")],
+    images: [
+      img("rocker-stroller"),
+      img("rocker-nursery"),
+      CJ_ROCKER.black,
+      CJ_ROCKER.angle,
+      CJ_ROCKER.pack,
+    ],
     badge: "Bästsäljare",
   }),
   withCj({
