@@ -1,7 +1,11 @@
 import { Product, SITE_URL } from "./products";
+import { getReviewStats, getReviewsForProduct } from "./reviews";
 
 export function productJsonLd(product: Product) {
-  return {
+  const stats = getReviewStats(product.slug);
+  const list = getReviewsForProduct(product.slug);
+
+  const base: Record<string, unknown> = {
     "@context": "https://schema.org/",
     "@type": "Product",
     name: product.name,
@@ -70,6 +74,31 @@ export function productJsonLd(product: Product) {
       },
     },
   };
+
+  if (stats.count > 0) {
+    base.aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue: stats.average.toFixed(1),
+      reviewCount: stats.count,
+      bestRating: "5",
+      worstRating: "1",
+    };
+    base.review = list.slice(0, 5).map((r) => ({
+      "@type": "Review",
+      author: { "@type": "Person", name: r.name },
+      datePublished: r.date,
+      reviewBody: r.body,
+      name: r.title,
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: String(r.rating),
+        bestRating: "5",
+        worstRating: "1",
+      },
+    }));
+  }
+
+  return base;
 }
 
 export function organizationJsonLd() {
