@@ -104,7 +104,7 @@ export default function BabysSomnGuidePage() {
         </p>
         <Link
           href="/produkter"
-          className="mt-4 inline-flex bg-sleepie-green text-white px-6 py-3 text-sm font-medium hover:bg-sleepie-green-dark transition"
+          className="mt-4 inline-flex bg-sleepie-green text-white px-6 py-3 text-sm font-medium rounded-[5px] hover:bg-sleepie-green-dark transition"
         >
           Utforska produkterna
         </Link>
