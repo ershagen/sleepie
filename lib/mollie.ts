@@ -5,6 +5,9 @@
 
 const MOLLIE_API = "https://api.mollie.com/v2";
 
+/** Swedish standard VAT for goods */
+const VAT_RATE = 25;
+
 function apiKey() {
   const key = process.env.MOLLIE_API_KEY;
   if (!key) throw new Error("MOLLIE_API_KEY saknas");
@@ -47,6 +50,19 @@ export type MollieAddress = {
   phone?: string;
 };
 
+export type MollieMoney = { currency: "SEK"; value: string };
+
+export type MollieLine = {
+  type: "physical" | "digital" | "shipping_fee" | "discount" | "store_credit" | "gift_card" | "surcharge";
+  description: string;
+  quantity: number;
+  unitPrice: MollieMoney;
+  totalAmount: MollieMoney;
+  vatRate: string;
+  vatAmount: MollieMoney;
+  sku?: string;
+};
+
 export type CreatePaymentInput = {
   orderId: string;
   amountSek: number;
@@ -55,6 +71,7 @@ export type CreatePaymentInput = {
   customerEmail?: string;
   billingAddress: MollieAddress;
   shippingAddress?: MollieAddress;
+  lines: MollieLine[];
   metadata?: Record<string, string>;
 };
 
@@ -72,10 +89,58 @@ export type MolliePayment = {
 };
 
 function formatAmount(sek: number) {
-  return sek.toFixed(2);
+  return (Math.round(sek * 100) / 100).toFixed(2);
 }
 
-/** Normalize SE phone to E.164-ish for Mollie */
+/** Price is VAT-inclusive; extract VAT portion */
+function vatFromInclusive(totalIncl: number, rate = VAT_RATE) {
+  const vat = totalIncl - totalIncl / (1 + rate / 100);
+  return Math.round(vat * 100) / 100;
+}
+
+export function buildOrderLines(input: {
+  items: Array<{ name: string; price: number; quantity: number; sku?: string }>;
+  shippingSek: number;
+}): MollieLine[] {
+  const lines: MollieLine[] = input.items.map((item) => {
+    const total = item.price * item.quantity;
+    const vat = vatFromInclusive(total);
+    return {
+      type: "physical" as const,
+      description: item.name.slice(0, 100),
+      quantity: item.quantity,
+      unitPrice: { currency: "SEK" as const, value: formatAmount(item.price) },
+      totalAmount: { currency: "SEK" as const, value: formatAmount(total) },
+      vatRate: formatAmount(VAT_RATE),
+      vatAmount: { currency: "SEK" as const, value: formatAmount(vat) },
+      sku: item.sku,
+    };
+  });
+
+  if (input.shippingSek > 0) {
+    const vat = vatFromInclusive(input.shippingSek);
+    lines.push({
+      type: "shipping_fee",
+      description: "Frakt",
+      quantity: 1,
+      unitPrice: {
+        currency: "SEK",
+        value: formatAmount(input.shippingSek),
+      },
+      totalAmount: {
+        currency: "SEK",
+        value: formatAmount(input.shippingSek),
+      },
+      vatRate: formatAmount(VAT_RATE),
+      vatAmount: { currency: "SEK", value: formatAmount(vat) },
+    });
+  } else {
+    // Free shipping still needs a zero line for some Klarna flows — skip zero
+  }
+
+  return lines;
+}
+
 function normalizePhone(phone?: string) {
   if (!phone) return undefined;
   const digits = phone.replace(/\s+/g, "");
@@ -114,19 +179,18 @@ export async function createPayment(
     description: input.description.slice(0, 255),
     redirectUrl,
     webhookUrl,
+    locale: "sv_SE",
     metadata: {
       orderId: input.orderId,
       ...(input.metadata || {}),
     },
-    // Required for Klarna; harmless for Swish/card
     billingAddress: billing,
     shippingAddress: shipping,
+    // Required for Klarna / klarna methods
+    lines: input.lines,
   };
 
   if (method) body.method = method;
-  if (input.customerEmail) {
-    body.locale = "sv_SE";
-  }
 
   const res = await fetch(`${MOLLIE_API}/payments`, {
     method: "POST",
@@ -139,12 +203,16 @@ export async function createPayment(
 
   const data = await res.json();
   if (!res.ok) {
-    console.error("[mollie:create]", data);
+    console.error("[mollie:create]", JSON.stringify(data));
     const detail = String(data?.detail || data?.title || "");
-    // User-friendly Swedish messages
     if (/billing address/i.test(detail)) {
       throw new Error(
         "Fyll i hela adressen (namn, gata, postnummer och ort) för att betala."
+      );
+    }
+    if (/lines are required/i.test(detail)) {
+      throw new Error(
+        "Orderdetaljer saknas för Klarna. Prova igen eller välj Swish/kort."
       );
     }
     if (/not enabled/i.test(detail) || /not available/i.test(detail)) {
