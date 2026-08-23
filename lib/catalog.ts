@@ -33,17 +33,16 @@ export const CJ_ROCKER = {
     "https://cf.cjdropshipping.com/quick/product/daad17b5-b85e-4aac-bbb6-390c401a7f9c.jpg",
   angle:
     "https://cf.cjdropshipping.com/quick/product/5bb6416e-a279-4b68-9416-118a819c76e3.jpg",
-  pack:
-    "https://oss-cf.cjdropshipping.com/product/2026/05/02/06/e7e3e898-36b6-47a2-bf7e-ef369c2ab4fb_water_trans.jpeg",
 };
 
+/** Hero first = Swedish lifestyle; then product shots */
 export const ROCKER_GALLERY = [
+  img("rocker-lifestyle-sv"),
   img("rocker-stroller-v2"),
   img("rocker-nursery-v2"),
   img("rocker-studio-v2"),
   CJ_ROCKER.black,
   CJ_ROCKER.angle,
-  CJ_ROCKER.pack,
 ];
 
 function withCj(
@@ -90,7 +89,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
       "CE-märkt",
     ],
     category: "Rocker",
-    image: img("rocker-stroller-v2"),
+    image: img("rocker-lifestyle-sv"),
     images: ROCKER_GALLERY,
     badge: "Bästsäljare",
   }),
