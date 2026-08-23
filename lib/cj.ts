@@ -121,39 +121,150 @@ export type CreateOrderInput = {
   shippingCustomer: string;
   shippingAddress: string;
   shippingAddress2?: string;
+  email?: string;
   products: Array<{ vid: string; quantity: number }>;
   isSandbox?: 0 | 1;
   logisticName?: string;
+  fromCountryCode?: string;
 };
 
-export async function createOrder(input: CreateOrderInput) {
-  return cjFetch(`/shopping/order/createOrderV2`, {
+export type CreateOrderResult = {
+  orderId: string | null;
+  orderNum: string | null;
+  cjOrderId: string | null;
+  raw: unknown;
+  endpoint: string;
+};
+
+/** Pick cheapest logistic name for destination */
+export async function pickLogisticName(input: {
+  endCountryCode: string;
+  products: Array<{ vid: string; quantity: number }>;
+  preferred?: string;
+}): Promise<string | null> {
+  if (input.preferred) return input.preferred;
+  try {
+    const res = await freightCalculate({
+      endCountryCode: input.endCountryCode,
+      products: input.products,
+    });
+    const options = normalizeFreightOptions(res?.data);
+    return options[0]?.logisticName || null;
+  } catch (e) {
+    console.error("[cj:pickLogistic]", e);
+    return null;
+  }
+}
+
+/**
+ * Create CJ order.
+ * Uses createOrder (v1) which works for SE without IOSS.
+ * Optionally tries V2 when CJ_IOSS_NUMBER is set.
+ */
+export async function createOrder(
+  input: CreateOrderInput
+): Promise<CreateOrderResult> {
+  const logisticName =
+    input.logisticName ||
+    (await pickLogisticName({
+      endCountryCode: input.shippingCountryCode,
+      products: input.products,
+    })) ||
+    undefined;
+
+  const baseBody: Record<string, unknown> = {
+    orderNumber: input.orderNumber,
+    fromCountryCode: input.fromCountryCode || "CN",
+    shippingZip: input.shippingZip,
+    shippingCountryCode: input.shippingCountryCode,
+    shippingCountry: input.shippingCountry,
+    shippingProvince: input.shippingProvince || input.shippingCity,
+    shippingCity: input.shippingCity,
+    shippingCounty: input.shippingCounty || "",
+    shippingPhone: input.shippingPhone,
+    shippingCustomer: input.shippingCustomer,
+    shippingCustomerName: input.shippingCustomer,
+    shippingAddress: input.shippingAddress,
+    shippingAddress2: input.shippingAddress2 || "",
+    products: input.products.map((p) => ({
+      vid: p.vid,
+      quantity: p.quantity,
+    })),
+    isSandbox: input.isSandbox ?? 0,
+  };
+
+  if (logisticName) baseBody.logisticName = logisticName;
+  if (input.email) {
+    baseBody.email = input.email;
+    baseBody.customerEmail = input.email;
+  }
+
+  const ioss = process.env.CJ_IOSS_NUMBER;
+  if (ioss) {
+    baseBody.iossNumber = ioss;
+    baseBody.ioss = ioss;
+  }
+
+  // Prefer v1 for EU without IOSS (V2 hard-requires IOSS for SE)
+  const useV2 = Boolean(ioss);
+  const path = useV2
+    ? `/shopping/order/createOrderV2`
+    : `/shopping/order/createOrder`;
+
+  const res = await cjFetch<{ data?: unknown; message?: string }>(path, {
     method: "POST",
-    body: JSON.stringify({
-      orderNumber: input.orderNumber,
-      shippingZip: input.shippingZip,
-      shippingCountryCode: input.shippingCountryCode,
-      shippingCountry: input.shippingCountry,
-      shippingProvince: input.shippingProvince || input.shippingCity,
-      shippingCity: input.shippingCity,
-      shippingCounty: input.shippingCounty || "",
-      products: input.products.map((p) => ({
-        vid: p.vid,
-        quantity: p.quantity,
-      })),
-      shippingPhone: input.shippingPhone,
-      shippingCustomer: input.shippingCustomer,
-      shippingAddress: input.shippingAddress,
-      shippingAddress2: input.shippingAddress2 || "",
-      isSandbox: input.isSandbox ?? 1,
-      ...(input.logisticName ? { logisticName: input.logisticName } : {}),
-    }),
+    body: JSON.stringify(baseBody),
   });
+
+  const data = res?.data;
+  let orderId: string | null = null;
+  let orderNum: string | null = null;
+  let cjOrderId: string | null = null;
+
+  if (typeof data === "string") {
+    // v1 often returns orderNumber as string
+    orderNum = data;
+  } else if (data && typeof data === "object") {
+    const d = data as Record<string, unknown>;
+    orderId = (d.orderId as string) || null;
+    orderNum = (d.orderNum as string) || (d.orderNumber as string) || null;
+    cjOrderId = (d.cjOrderId as string) || null;
+  }
+
+  // If v1 only returned orderNum, resolve orderId via list/detail
+  if (!orderId && orderNum) {
+    try {
+      const detail = await getOrderDetail(orderNum);
+      const d = (detail as { data?: Record<string, unknown> })?.data;
+      if (d) {
+        orderId = (d.orderId as string) || orderId;
+        cjOrderId = (d.cjOrderId as string) || cjOrderId;
+        orderNum = (d.orderNum as string) || orderNum;
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  return {
+    orderId,
+    orderNum,
+    cjOrderId: cjOrderId || orderId,
+    raw: data,
+    endpoint: path,
+  };
 }
 
 export async function getOrderDetail(orderId: string) {
   return cjFetch(
     `/shopping/order/getOrderDetail?orderId=${encodeURIComponent(orderId)}`,
+    { method: "GET" }
+  );
+}
+
+export async function listOrders(pageNum = 1, pageSize = 20) {
+  return cjFetch<{ data?: { total?: number; list?: unknown[] } }>(
+    `/shopping/order/list?pageNum=${pageNum}&pageSize=${pageSize}`,
     { method: "GET" }
   );
 }
@@ -167,7 +278,17 @@ export async function deleteOrder(orderId: string) {
 }
 
 export async function getBalance() {
-  return cjFetch(`/shopping/pay/getBalance`, { method: "GET" });
+  return cjFetch<{ data?: { amount?: number } }>(`/shopping/pay/getBalance`, {
+    method: "GET",
+  });
+}
+
+/** Pay CJ order from account balance (required for live fulfill) */
+export async function payBalance(orderId: string) {
+  return cjFetch(`/shopping/pay/payBalance`, {
+    method: "POST",
+    body: JSON.stringify({ orderId }),
+  });
 }
 
 export type FreightProduct = { vid: string; quantity: number };

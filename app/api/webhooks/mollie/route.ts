@@ -6,7 +6,7 @@ import { markOrderPaid } from "@/lib/orders-db";
 
 /**
  * Mollie webhook — POST body: id=tr_xxx
- * On paid: Payload → paid/processing, Resend confirmation, CJ live fulfill
+ * On paid: Payload → paid/processing, Resend confirmation, CJ fulfill
  */
 export async function POST(req: NextRequest) {
   try {
@@ -35,18 +35,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true, status: payment.status });
     }
 
-    let items: Array<{ name: string; quantity: number; price: number; slug?: string }> =
-      [];
+    let items: Array<{
+      name: string;
+      quantity: number;
+      price: number;
+      slug?: string;
+    }> = [];
     try {
       const raw = meta.itemsJson ? JSON.parse(meta.itemsJson) : [];
-      items = (raw as Array<{ s?: string; n?: string; p?: number; q?: number }>).map(
-        (i) => ({
-          slug: i.s,
-          name: i.n || i.s || "Produkt",
-          price: Number(i.p) || 0,
-          quantity: Number(i.q) || 1,
-        })
-      );
+      items = (
+        raw as Array<{ s?: string; n?: string; p?: number; q?: number }>
+      ).map((i) => ({
+        slug: i.s,
+        name: i.n || i.s || "Produkt",
+        price: Number(i.p) || 0,
+        quantity: Number(i.q) || 1,
+      }));
     } catch {
       items = [];
     }
@@ -71,7 +75,6 @@ export async function POST(req: NextRequest) {
       console.log("[mollie:email]", mail);
     }
 
-    // Auto-fulfill to CJ unless explicitly disabled
     const skipCj = process.env.CJ_AUTO_FULFILL === "0";
     let cjOrderId: string | null = null;
 
@@ -89,6 +92,7 @@ export async function POST(req: NextRequest) {
           customer: `${firstName} ${meta.lastName || ""}`.trim(),
           countryCode: meta.country || "SE",
           country: "Sweden",
+          email: email || undefined,
         },
       });
       console.log("[mollie:cj]", cj);

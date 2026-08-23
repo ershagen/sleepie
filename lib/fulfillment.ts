@@ -3,6 +3,7 @@ import {
   createOrder,
   freightCalculate,
   normalizeFreightOptions,
+  payBalance,
   trackInfo,
   type FreightOption,
 } from "./cj";
@@ -81,6 +82,7 @@ export async function fulfillOrderAtCj(input: {
     customer: string;
     countryCode?: string;
     country?: string;
+    email?: string;
   };
   isSandbox?: 0 | 1;
   logisticName?: string;
@@ -95,11 +97,10 @@ export async function fulfillOrderAtCj(input: {
   }
 
   const sandbox =
-    input.isSandbox ??
-    (process.env.CJ_SANDBOX === "1" ? 1 : 0);
+    input.isSandbox ?? (process.env.CJ_SANDBOX === "1" ? 1 : 0);
 
   try {
-    const res = await createOrder({
+    const created = await createOrder({
       orderNumber: input.orderNumber,
       shippingZip: input.shipping.zip,
       shippingCountryCode: input.shipping.countryCode || "SE",
@@ -108,22 +109,38 @@ export async function fulfillOrderAtCj(input: {
       shippingPhone: input.shipping.phone || "0700000000",
       shippingCustomer: input.shipping.customer,
       shippingAddress: input.shipping.address,
+      email: input.shipping.email,
       products: products.map((p) => ({ vid: p.vid, quantity: p.quantity })),
       isSandbox: sandbox as 0 | 1,
       logisticName: input.logisticName,
     });
 
-    const data = (res as { data?: Record<string, unknown> })?.data || {};
+    const cjOrderId =
+      created.cjOrderId || created.orderId || created.orderNum || null;
+
+    // Live orders: attempt balance payment so CJ processes shipment
+    let paid: unknown = null;
+    if (!sandbox && cjOrderId) {
+      try {
+        paid = await payBalance(created.orderId || cjOrderId);
+      } catch (e) {
+        console.error("[cj:payBalance]", e);
+        paid = {
+          error: e instanceof Error ? e.message : "pay_failed",
+        };
+      }
+    }
+
     return {
       ok: true as const,
-      cjOrderId:
-        (data.orderId as string) ||
-        (data.cjOrderId as string) ||
-        (data.orderNum as string) ||
-        null,
-      raw: data,
+      cjOrderId,
+      orderId: created.orderId,
+      orderNum: created.orderNum,
+      raw: created.raw,
+      paid,
       skipped,
       sandbox: Boolean(sandbox),
+      endpoint: created.endpoint,
     };
   } catch (e) {
     console.error("[cj:createOrder]", e);
