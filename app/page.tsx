@@ -74,7 +74,7 @@ export default function HomePage() {
                 </Link>
               </div>
               <div className="mt-8 flex items-center gap-2 justify-center lg:justify-start text-sm text-sleepie-gray-500">
-                <div className="flex text-sleepie-black">
+                <div className="flex text-sleepie-green">
                   {[1, 2, 3, 4, 5].map((i) => (
                     <Star key={i} className="w-3.5 h-3.5 fill-current" strokeWidth={0} />
                   ))}
