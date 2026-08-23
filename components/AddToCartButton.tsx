@@ -26,7 +26,7 @@ export function AddToCartButton({
       onClick={handleClick}
       className={
         className ||
-        "flex-1 bg-sleepie-green text-white py-3.5 px-6 rounded-full text-sm font-medium hover:bg-sleepie-green-dark transition"
+        "flex-1 bg-sleepie-green text-white py-3.5 px-6 rounded-[5px] text-sm font-medium hover:bg-sleepie-green-dark transition"
       }
     >
       {added ? "Tillagd ✓" : "Lägg i varukorg"}
