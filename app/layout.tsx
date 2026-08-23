@@ -34,6 +34,7 @@ export const metadata: Metadata = {
   applicationName: SITE_NAME,
   keywords: [
     "baby sömn",
+    "Sleepie Rocker",
     "stroller rocker",
     "white noise bebis",
     "muslin swaddle",
