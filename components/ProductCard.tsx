@@ -4,6 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { Product } from "@/lib/products";
+import { getReviewStats } from "@/lib/reviews";
+import { StarRating } from "./StarRating";
 
 export function ProductCard({ product }: { product: Product }) {
   const [imgError, setImgError] = useState(false);
@@ -11,6 +13,7 @@ export function ProductCard({ product }: { product: Product }) {
     product.image.startsWith("/api/") ||
     product.image.startsWith("data:") ||
     product.image.includes("blob.vercel-storage.com");
+  const stats = getReviewStats(product.slug);
 
   return (
     <Link
@@ -43,6 +46,11 @@ export function ProductCard({ product }: { product: Product }) {
         <h3 className="font-medium text-sleepie-black group-hover:underline underline-offset-2 decoration-1">
           {product.name}
         </h3>
+        {stats.count > 0 && (
+          <div className="mt-1.5">
+            <StarRating rating={stats.average} size="sm" count={stats.count} showValue />
+          </div>
+        )}
         <p className="mt-1.5 text-sm text-sleepie-gray-600 line-clamp-2 leading-relaxed">
           {product.shortDescription}
         </p>
