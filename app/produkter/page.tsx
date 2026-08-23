@@ -4,7 +4,7 @@ import { products } from "@/lib/products";
 export const metadata = {
   title: "Produkter",
   description:
-    "Alla produkter från Sleepie – stroller rocker, white noise, muslin och mer. Lugnare nätter börjar här.",
+    "Alla produkter från Sleepie – Sleepie Rocker, white noise, muslin och mer. Lugnare nätter börjar här.",
 };
 
 export default function ProductsPage() {
