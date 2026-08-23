@@ -3,7 +3,7 @@ import { SITE_URL } from "./products";
 
 export const SITE_NAME = "Sleepie";
 export const DEFAULT_DESCRIPTION =
-  "Smarta produkter som hjälper ditt barn sova – och dig andas ut. Sleepie Rocker, white noise, muslin och mer. Fri frakt över 799 kr.";
+  "Smarta produkter som hjälper ditt barn sova – och dig andas ut. Sleepie Rocker, muslin, sömnsäck och mer. Fri frakt över 799 kr.";
 
 export function absoluteUrl(path = "") {
   const base = SITE_URL.replace(/\/$/, "");

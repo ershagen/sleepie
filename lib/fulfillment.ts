@@ -20,13 +20,11 @@ export function cartToCjProducts(lines: CartLine[]) {
   for (const line of lines) {
     const m = getCjMapping(line.slug);
     if (m?.vid && m.status === "mapped") {
-      // Muslin set is sold as 3-pack in shop → order qty * 3 if needed
       let qty = line.quantity;
       if (line.slug === "muslin-set") qty = line.quantity * 3;
       products.push({ vid: m.vid, quantity: qty, slug: line.slug });
     } else if (line.slug === "komplett-sovrutin") {
-      // Expand bundle when parts are mapped
-      for (const part of ["stroller-rocker", "white-noise", "muslin-set"]) {
+      for (const part of ["stroller-rocker", "muslin-set", "sleep-sack"]) {
         const pm = getCjMapping(part);
         if (pm?.vid && pm.status === "mapped") {
           let qty = line.quantity;
@@ -44,7 +42,6 @@ export function cartToCjProducts(lines: CartLine[]) {
   return { products, skipped };
 }
 
-/** Quote cheapest CJ freight to country (USD). Falls back to null on error. */
 export async function quoteCjFreight(input: {
   endCountryCode: string;
   lines: CartLine[];
@@ -72,7 +69,7 @@ export async function quoteCjFreight(input: {
   }
 }
 
-/** Create CJ sandbox/live order after payment */
+/** Create CJ order after payment. Live by default; set CJ_SANDBOX=1 for test. */
 export async function fulfillOrderAtCj(input: {
   orderNumber: string;
   lines: CartLine[];
@@ -97,6 +94,10 @@ export async function fulfillOrderAtCj(input: {
     };
   }
 
+  const sandbox =
+    input.isSandbox ??
+    (process.env.CJ_SANDBOX === "1" ? 1 : 0);
+
   try {
     const res = await createOrder({
       orderNumber: input.orderNumber,
@@ -108,7 +109,7 @@ export async function fulfillOrderAtCj(input: {
       shippingCustomer: input.shipping.customer,
       shippingAddress: input.shipping.address,
       products: products.map((p) => ({ vid: p.vid, quantity: p.quantity })),
-      isSandbox: input.isSandbox ?? 1,
+      isSandbox: sandbox as 0 | 1,
       logisticName: input.logisticName,
     });
 
@@ -122,6 +123,7 @@ export async function fulfillOrderAtCj(input: {
         null,
       raw: data,
       skipped,
+      sandbox: Boolean(sandbox),
     };
   } catch (e) {
     console.error("[cj:createOrder]", e);

@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { getPayment, isPaid } from "@/lib/mollie";
 import { sendOrderConfirmation } from "@/lib/email";
 import { fulfillOrderAtCj } from "@/lib/fulfillment";
+import { markOrderPaid } from "@/lib/orders-db";
 
 /**
- * Mollie webhook — POST body: id=tr_xxx (application/x-www-form-urlencoded)
- * On paid: send Resend confirmation + optional CJ fulfill
+ * Mollie webhook — POST body: id=tr_xxx
+ * On paid: Payload → paid/processing, Resend confirmation, CJ live fulfill
  */
 export async function POST(req: NextRequest) {
   try {
@@ -34,7 +35,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true, status: payment.status });
     }
 
-    // Parse items from metadata
     let items: Array<{ name: string; quantity: number; price: number; slug?: string }> =
       [];
     try {
@@ -71,9 +71,11 @@ export async function POST(req: NextRequest) {
       console.log("[mollie:email]", mail);
     }
 
-    // Live CJ fulfill only when explicitly enabled
-    const liveCj = process.env.CJ_AUTO_FULFILL === "1";
-    if (liveCj && items.length > 0) {
+    // Auto-fulfill to CJ unless explicitly disabled
+    const skipCj = process.env.CJ_AUTO_FULFILL === "0";
+    let cjOrderId: string | null = null;
+
+    if (!skipCj && items.length > 0) {
       const cj = await fulfillOrderAtCj({
         orderNumber: orderId,
         lines: items
@@ -88,15 +90,26 @@ export async function POST(req: NextRequest) {
           countryCode: meta.country || "SE",
           country: "Sweden",
         },
-        isSandbox: process.env.CJ_LIVE_ORDERS === "1" ? 0 : 1,
       });
       console.log("[mollie:cj]", cj);
+      if (cj.ok) cjOrderId = cj.cjOrderId;
     }
 
-    return NextResponse.json({ ok: true, status: payment.status, orderId });
+    await markOrderPaid({
+      orderNumber: orderId,
+      molliePaymentId: paymentId,
+      status: cjOrderId ? "processing" : "paid",
+      cjOrderId,
+    });
+
+    return NextResponse.json({
+      ok: true,
+      status: payment.status,
+      orderId,
+      cjOrderId,
+    });
   } catch (e) {
     console.error("[mollie:webhook:error]", e);
-    // Still 200 so Mollie does not retry forever on our bugs for paid events we logged
     return NextResponse.json({ ok: false }, { status: 200 });
   }
 }

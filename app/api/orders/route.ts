@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createPayment, checkoutUrl } from "@/lib/mollie";
+import { createOrderDoc } from "@/lib/orders-db";
 
 export type OrderPayload = {
   email: string;
@@ -33,7 +34,7 @@ function orderId() {
 }
 
 /**
- * Create order + Mollie payment.
+ * Create order in Payload + Mollie payment.
  * Confirmation email + CJ fulfill run from Mollie webhook after paid.
  */
 export async function POST(req: NextRequest) {
@@ -45,6 +46,8 @@ export async function POST(req: NextRequest) {
       !body?.firstName ||
       !body?.lastName ||
       !body?.address ||
+      !body?.zip ||
+      !body?.city ||
       !Array.isArray(body.items) ||
       body.items.length === 0 ||
       !body.total ||
@@ -55,7 +58,6 @@ export async function POST(req: NextRequest) {
 
     const id = orderId();
 
-    // Compact metadata for Mollie (string values only, keep small)
     const itemsMeta = body.items
       .map((i) => `${i.slug}x${i.quantity}`)
       .join(",")
@@ -95,6 +97,31 @@ export async function POST(req: NextRequest) {
         { status: 503 }
       );
     }
+
+    // Persist pending order in Payload (non-blocking on failure)
+    await createOrderDoc({
+      orderNumber: id,
+      email: body.email,
+      firstName: body.firstName,
+      lastName: body.lastName,
+      phone: body.phone,
+      address: body.address,
+      zip: body.zip,
+      city: body.city,
+      country: body.country || "SE",
+      subtotal: body.subtotal,
+      shipping: body.shipping,
+      total: body.total,
+      paymentMethod: body.paymentMethod,
+      items: body.items.map((i) => ({
+        productId: i.id,
+        slug: i.slug,
+        name: i.name,
+        price: i.price,
+        quantity: i.quantity,
+      })),
+      status: "pending",
+    });
 
     const payment = await createPayment({
       orderId: id,
