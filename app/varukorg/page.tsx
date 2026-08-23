@@ -24,13 +24,13 @@ export default function CartPage() {
         <button
           type="button"
           onClick={openCart}
-          className="inline-flex justify-center bg-sleepie-black text-white px-7 py-3.5 text-sm font-medium hover:bg-sleepie-gray-800 transition"
+          className="inline-flex justify-center bg-sleepie-black text-white px-7 py-3.5 text-sm font-medium rounded-[5px] hover:bg-sleepie-gray-800 transition"
         >
           Öppna varukorg
         </button>
         <Link
           href="/produkter"
-          className="inline-flex justify-center border border-sleepie-gray-300 px-7 py-3.5 text-sm font-medium hover:border-sleepie-black transition"
+          className="inline-flex justify-center border border-sleepie-gray-300 px-7 py-3.5 text-sm font-medium rounded-[5px] hover:border-sleepie-black transition"
         >
           Fortsätt handla
         </Link>
