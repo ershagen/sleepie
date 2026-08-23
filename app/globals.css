@@ -14,25 +14,35 @@
   ::selection {
     @apply bg-sleepie-green/20 text-sleepie-black;
   }
+
+  /** Default button corners ~5px */
+  button:not([class*="rounded-"]),
+  a[class*="bg-sleepie-green"]:not([class*="rounded-"]),
+  a[class*="bg-sleepie-black"]:not([class*="rounded-"]) {
+    border-radius: 5px;
+  }
 }
 
 @layer components {
   /** Primary CTA — sage green */
   .btn-primary {
     @apply inline-flex items-center justify-center bg-sleepie-green text-white px-7 py-3.5 text-sm font-medium
-      hover:bg-sleepie-green-dark transition disabled:opacity-60 rounded-none;
+      hover:bg-sleepie-green-dark transition disabled:opacity-60;
+    border-radius: 5px;
   }
 
   /** Secondary / outline */
   .btn-secondary {
     @apply inline-flex items-center justify-center border border-sleepie-gray-300 px-7 py-3.5 text-sm font-medium
       hover:border-sleepie-black transition;
+    border-radius: 5px;
   }
 
-  /** Black CTA when green is too soft (e.g. footer) */
+  /** Black CTA */
   .btn-dark {
     @apply inline-flex items-center justify-center bg-sleepie-black text-white px-7 py-3.5 text-sm font-medium
       hover:bg-sleepie-gray-800 transition disabled:opacity-60;
+    border-radius: 5px;
   }
 
   .badge-soft {
