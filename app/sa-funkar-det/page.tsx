@@ -78,7 +78,7 @@ export default function SaFunkarDetPage() {
       <div className="mt-10">
         <Link
           href="/produkter"
-          className="inline-flex bg-sleepie-green text-white px-7 py-3.5 text-sm font-medium hover:bg-sleepie-green-dark transition"
+          className="inline-flex bg-sleepie-green text-white px-7 py-3.5 text-sm font-medium rounded-[5px] hover:bg-sleepie-green-dark transition"
         >
           Börja handla
         </Link>
