@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createPayment, checkoutUrl } from "@/lib/mollie";
+import { createPayment, checkoutUrl, buildOrderLines } from "@/lib/mollie";
 import { createOrderDoc } from "@/lib/orders-db";
 
 export type OrderPayload = {
@@ -91,7 +91,13 @@ export async function POST(req: NextRequest) {
       paymentMethod: body.paymentMethod || "swish",
     };
 
-    console.log("[order:create]", id, body.email, body.total, body.paymentMethod);
+    console.log(
+      "[order:create]",
+      id,
+      body.email,
+      body.total,
+      body.paymentMethod
+    );
 
     if (!process.env.MOLLIE_API_KEY) {
       console.error("[order] MOLLIE_API_KEY missing");
@@ -136,6 +142,16 @@ export async function POST(req: NextRequest) {
       phone: body.phone?.trim(),
     };
 
+    const lines = buildOrderLines({
+      items: body.items.map((i) => ({
+        name: i.name,
+        price: i.price,
+        quantity: i.quantity,
+        sku: i.slug,
+      })),
+      shippingSek: body.shipping || 0,
+    });
+
     const payment = await createPayment({
       orderId: id,
       amountSek: body.total,
@@ -144,6 +160,7 @@ export async function POST(req: NextRequest) {
       customerEmail: body.email,
       billingAddress: address,
       shippingAddress: address,
+      lines,
       metadata,
     });
 
