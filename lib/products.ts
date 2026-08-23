@@ -175,15 +175,27 @@ function mediaUrl(m: MediaDoc): string | null {
   return m.url || null;
 }
 
-/** Prefer Payload gallery; if sparse, fill from FALLBACK so PDP always has thumbs */
+/**
+ * Prefer FALLBACK gallery when Payload is sparse OR still points at old
+ * non-v2 rocker paths (CDN caches old blob URLs for a year).
+ */
 function enrichGallery(product: Product): Product {
   const fallback = FALLBACK_PRODUCTS.find((p) => p.slug === product.slug);
   if (!fallback || fallback.images.length <= 1) return product;
 
+  // Always force latest rocker gallery (v2)
+  if (product.slug === "stroller-rocker") {
+    return {
+      ...product,
+      image: fallback.image,
+      images: fallback.images,
+    };
+  }
+
   if (!product.images || product.images.length <= 1) {
     return {
       ...product,
-      image: product.image || fallback.image,
+      image: fallback.image,
       images: fallback.images,
     };
   }
