@@ -106,6 +106,28 @@ export default async function ProductPage({
           </p>
           <p className="text-xs text-sleepie-gray-500 mt-1">Inkl. moms</p>
 
+          {/* Color: black only */}
+          {product.variantsNote && (
+            <div className="mt-6">
+              <p className="text-xs font-medium text-sleepie-gray-500 mb-2">
+                Färg
+              </p>
+              <div className="flex items-center gap-3">
+                <span
+                  className="inline-flex items-center justify-center w-9 h-9 rounded-full border-2 border-sleepie-black ring-2 ring-offset-2 ring-sleepie-black/20"
+                  title="Svart"
+                  aria-label="Svart – vald"
+                >
+                  <span className="w-6 h-6 rounded-full bg-sleepie-black" />
+                </span>
+                <span className="text-sm text-sleepie-black">Svart</span>
+              </div>
+              <p className="mt-2 text-xs text-sleepie-gray-500">
+                Endast svart finish – den stilrena versionen.
+              </p>
+            </div>
+          )}
+
           <p className="mt-6 text-sleepie-gray-600 leading-relaxed">
             {product.description}
           </p>
