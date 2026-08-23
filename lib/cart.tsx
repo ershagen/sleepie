@@ -9,20 +9,22 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { Product } from "./catalog";
 
-export type CartItem = {
+export type CartProductInput = {
   id: string;
   slug: string;
   name: string;
   price: number;
   image: string;
+};
+
+export type CartItem = CartProductInput & {
   quantity: number;
 };
 
 type CartContextValue = {
   items: CartItem[];
-  addItem: (product: Product, quantity?: number) => void;
+  addItem: (product: CartProductInput, quantity?: number) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
@@ -72,7 +74,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const closeCart = useCallback(() => setIsOpen(false), []);
   const toggleCart = useCallback(() => setIsOpen((v) => !v), []);
 
-  const addItem = useCallback((product: Product, quantity = 1) => {
+  const addItem = useCallback((product: CartProductInput, quantity = 1) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.id === product.id);
       if (existing) {
