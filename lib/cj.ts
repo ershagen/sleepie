@@ -137,14 +137,14 @@ export async function createOrder(input: CreateOrderInput) {
       shippingProvince: input.shippingProvince || input.shippingCity,
       shippingCity: input.shippingCity,
       shippingCounty: input.shippingCounty || "",
-      shippingPhone: input.shippingPhone,
-      shippingCustomer: input.shippingCustomer,
-      shippingAddress: input.shippingAddress,
-      shippingAddress2: input.shippingAddress2 || "",
       products: input.products.map((p) => ({
         vid: p.vid,
         quantity: p.quantity,
       })),
+      shippingPhone: input.shippingPhone,
+      shippingCustomer: input.shippingCustomer,
+      shippingAddress: input.shippingAddress,
+      shippingAddress2: input.shippingAddress2 || "",
       isSandbox: input.isSandbox ?? 1,
       ...(input.logisticName ? { logisticName: input.logisticName } : {}),
     }),
@@ -158,10 +158,7 @@ export async function getOrderDetail(orderId: string) {
   );
 }
 
-/**
- * Cancel / delete CJ order (works before shipment).
- * DELETE /shopping/order/deleteOrder?orderId=
- */
+/** Cancel CJ order before shipment */
 export async function deleteOrder(orderId: string) {
   return cjFetch<{ data?: string; message?: string }>(
     `/shopping/order/deleteOrder?orderId=${encodeURIComponent(orderId)}`,
@@ -221,7 +218,7 @@ export async function trackInfo(trackNumber: string) {
 
 export function normalizeFreightOptions(data: unknown): FreightOption[] {
   if (!data) return [];
-  const list = Array.isArray(data) { data : [data];
+  const list = Array.isArray(data) ? data : [data];
   return list
     .filter(Boolean)
     .sort(
