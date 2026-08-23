@@ -6,10 +6,13 @@ import {
   products,
 } from "@/lib/products";
 import { productJsonLd } from "@/lib/structured-data";
+import { getReviewStats } from "@/lib/reviews";
 import { Check, Truck, RotateCcw, Shield } from "lucide-react";
 import { AddToCartButton } from "@/components/AddToCartButton";
 import { ProductImage } from "@/components/ProductImage";
 import { ProductCard } from "@/components/ProductCard";
+import { StarRating } from "@/components/StarRating";
+import { ProductReviews } from "@/components/ProductReviews";
 
 export function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
@@ -23,12 +26,17 @@ export async function generateMetadata({
   const { slug } = await params;
   const product = getProductBySlug(slug);
   if (!product) return { title: "Produkt | Sleepie" };
+  const stats = getReviewStats(slug);
+  const desc =
+    stats.count > 0
+      ? `${product.shortDescription} Betyg ${stats.average}/5 från ${stats.count} recensioner.`
+      : product.shortDescription;
   return {
     title: `${product.name} | Sleepie`,
-    description: product.shortDescription,
+    description: desc,
     openGraph: {
       title: product.name,
-      description: product.shortDescription,
+      description: desc,
       images: [{ url: product.image }],
       type: "website",
     },
@@ -45,6 +53,7 @@ export default async function ProductPage({
   if (!product) notFound();
 
   const related = getRelatedProducts(slug);
+  const stats = getReviewStats(slug);
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
@@ -81,6 +90,18 @@ export default async function ProductPage({
           <h1 className="font-serif text-3xl md:text-4xl leading-tight">
             {product.name}
           </h1>
+
+          {stats.count > 0 && (
+            <div className="mt-3">
+              <StarRating
+                rating={stats.average}
+                size="md"
+                showValue
+                count={stats.count}
+              />
+            </div>
+          )}
+
           <p className="mt-4 text-2xl font-medium tabular-nums">
             {product.price} kr
           </p>
@@ -106,7 +127,7 @@ export default async function ProductPage({
             <AddToCartButton product={product} />
             <Link
               href="/produkter"
-              className="flex-1 text-center border border-sleepie-gray-300 py-3.5 px-6 rounded-full text-sm font-medium hover:border-sleepie-black transition"
+              className="flex-1 text-center border border-sleepie-gray-300 py-3.5 px-6 rounded-[5px] text-sm font-medium hover:border-sleepie-black transition"
             >
               Fortsätt handla
             </Link>
@@ -132,6 +153,8 @@ export default async function ProductPage({
           </div>
         </div>
       </div>
+
+      <ProductReviews slug={slug} />
 
       {related.length > 0 && (
         <section className="mt-20 md:mt-28">
