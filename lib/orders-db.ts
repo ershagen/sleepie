@@ -2,8 +2,7 @@
  * Persist orders in Payload CMS (Postgres via Payload).
  * Best-effort: never block checkout if CMS is down.
  */
-import { getPayload } from "payload";
-import config from "@payload-config";
+import { getPayloadClient, payloadConfigured } from "./payload";
 
 export type OrderItemInput = {
   productId?: string;
@@ -32,13 +31,12 @@ export type CreateOrderDoc = {
   status?: "pending" | "paid" | "processing" | "shipped" | "delivered" | "cancelled";
 };
 
-async function payloadClient() {
-  return getPayload({ config });
-}
-
 export async function createOrderDoc(data: CreateOrderDoc) {
+  if (!payloadConfigured()) {
+    return { ok: false as const, error: "payload_not_configured" };
+  }
   try {
-    const payload = await payloadClient();
+    const payload = await getPayloadClient();
     const doc = await payload.create({
       collection: "orders",
       data: {
@@ -84,8 +82,11 @@ export async function markOrderPaid(input: {
   cjOrderId?: string | null;
   trackingNumber?: string | null;
 }) {
+  if (!payloadConfigured()) {
+    return { ok: false as const, reason: "payload_not_configured" as const };
+  }
   try {
-    const payload = await payloadClient();
+    const payload = await getPayloadClient();
     const found = await payload.find({
       collection: "orders",
       where: { orderNumber: { equals: input.orderNumber } },

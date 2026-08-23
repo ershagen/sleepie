@@ -3,11 +3,23 @@ import type { CollectionConfig } from 'payload'
 export const Reviews: CollectionConfig = {
   slug: 'reviews',
   admin: {
-    useAsTitle: 'author',
+    useAsTitle: 'title',
+    defaultColumns: ['title', 'author', 'rating', 'productSlug', 'approved'],
+  },
+  access: {
+    read: () => true,
+    create: ({ req }) => Boolean(req.user),
+    update: ({ req }) => Boolean(req.user),
+    delete: ({ req }) => Boolean(req.user),
   },
   fields: [
     {
       name: 'author',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'title',
       type: 'text',
       required: true,
     },
@@ -24,14 +36,30 @@ export const Reviews: CollectionConfig = {
       required: true,
     },
     {
+      name: 'productSlug',
+      type: 'text',
+      required: true,
+      admin: { description: 't.ex. stroller-rocker' },
+    },
+    {
       name: 'product',
       type: 'relationship',
       relationTo: 'products',
     },
     {
+      name: 'detail',
+      type: 'text',
+      admin: { description: 't.ex. Mamma till Alma, 4 mån' },
+    },
+    {
+      name: 'reviewDate',
+      type: 'date',
+    },
+    {
       name: 'approved',
       type: 'checkbox',
-      defaultValue: false,
+      defaultValue: true,
+      admin: { position: 'sidebar' },
     },
   ],
 }

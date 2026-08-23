@@ -1,4 +1,5 @@
 import { getCjMapping } from "./cj-mapping";
+import { getPayloadClient, payloadConfigured } from "./payload";
 
 export type Product = {
   id: string;
@@ -20,9 +21,10 @@ export type Product = {
   cjVid?: string | null;
   cjSku?: string | null;
   cjCostUsd?: number | null;
+  averageRating?: number;
+  reviewCount?: number;
 };
 
-/** Product photos hosted on Vercel Blob */
 const BLOB =
   "https://bmpvyjsgiskr7b9a.public.blob.vercel-storage.com/products";
 const img = (name: string) => `${BLOB}/${name}.jpg`;
@@ -30,7 +32,13 @@ const img = (name: string) => `${BLOB}/${name}.jpg`;
 function withCj(
   base: Omit<
     Product,
-    "cjPid" | "cjVid" | "cjSku" | "cjCostUsd" | "brand" | "condition" | "availability"
+    | "cjPid"
+    | "cjVid"
+    | "cjSku"
+    | "cjCostUsd"
+    | "brand"
+    | "condition"
+    | "availability"
   >
 ): Product {
   const m = getCjMapping(base.slug);
@@ -46,7 +54,8 @@ function withCj(
   };
 }
 
-export const products: Product[] = [
+/** Hardcoded catalog — used when Payload is empty or offline */
+export const FALLBACK_PRODUCTS: Product[] = [
   withCj({
     id: "1",
     slug: "stroller-rocker",
@@ -131,18 +140,120 @@ export const products: Product[] = [
   }),
 ];
 
+/** @deprecated Prefer getProducts() — kept for generateStaticParams fallback */
+export const products = FALLBACK_PRODUCTS;
+
 export const FREE_SHIPPING_THRESHOLD = 799;
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SERVER_URL || "https://sleepie-alectiv.vercel.app";
 
-export function getProductBySlug(slug: string): Product | undefined {
-  return products.find((p) => p.slug === slug);
+type MediaDoc = { url?: string | null } | string | null | undefined;
+
+function mediaUrl(m: MediaDoc): string | null {
+  if (!m) return null;
+  if (typeof m === "string") return m;
+  return m.url || null;
 }
 
-export function getFeaturedProducts(): Product[] {
-  return products.slice(0, 4);
+function mapDoc(doc: Record<string, unknown>): Product {
+  const featuresRaw = (doc.features as Array<{ feature?: string }> | undefined) || [];
+  const features = featuresRaw
+    .map((f) => f.feature)
+    .filter((x): x is string => Boolean(x));
+
+  const gallery =
+    ((doc.galleryUrls as Array<{ url?: string }> | undefined) || [])
+      .map((g) => g.url)
+      .filter((x): x is string => Boolean(x));
+
+  const imagesFromMedia = (
+    (doc.images as Array<{ image?: MediaDoc }> | undefined) || []
+  )
+    .map((i) => mediaUrl(i.image))
+    .filter((x): x is string => Boolean(x));
+
+  const mainImage =
+    mediaUrl(doc.image as MediaDoc) ||
+    (doc.imageUrl as string) ||
+    gallery[0] ||
+    imagesFromMedia[0] ||
+    img("rocker-stroller");
+
+  const images =
+    gallery.length > 0
+      ? gallery
+      : imagesFromMedia.length > 0
+        ? imagesFromMedia
+        : [mainImage];
+
+  const cj = (doc.cj as Record<string, unknown>) || {};
+  const slug = String(doc.slug || "");
+  const m = getCjMapping(slug);
+
+  return {
+    id: String(doc.id),
+    slug,
+    name: String(doc.name || ""),
+    sku: String(doc.sku || m?.sku || ""),
+    price: Number(doc.price) || 0,
+    description: String(doc.description || ""),
+    shortDescription: String(doc.shortDescription || ""),
+    features,
+    category: String(doc.category || ""),
+    image: mainImage,
+    images,
+    badge: doc.badge ? String(doc.badge) : undefined,
+    brand: "Sleepie",
+    condition: "new",
+    availability: "in_stock",
+    cjPid: (cj.pid as string) || m?.pid || null,
+    cjVid: (cj.vid as string) || m?.vid || null,
+    cjSku: (cj.sku as string) || m?.sku || null,
+    cjCostUsd:
+      typeof cj.costUsd === "number" ? cj.costUsd : m?.costUsd ?? null,
+  };
 }
 
-export function getRelatedProducts(slug: string, limit = 3): Product[] {
-  return products.filter((p) => p.slug !== slug).slice(0, limit);
+export async function getProducts(): Promise<Product[]> {
+  if (!payloadConfigured()) return FALLBACK_PRODUCTS;
+  try {
+    const payload = await getPayloadClient();
+    const res = await payload.find({
+      collection: "products",
+      where: { active: { equals: true } },
+      limit: 100,
+      depth: 1,
+      overrideAccess: true,
+    });
+    if (!res.docs.length) return FALLBACK_PRODUCTS;
+    return res.docs.map((d) => mapDoc(d as unknown as Record<string, unknown>));
+  } catch (e) {
+    console.error("[catalog:products]", e);
+    return FALLBACK_PRODUCTS;
+  }
+}
+
+export async function getProductBySlug(
+  slug: string
+): Promise<Product | undefined> {
+  const all = await getProducts();
+  return all.find((p) => p.slug === slug);
+}
+
+export async function getFeaturedProducts(): Promise<Product[]> {
+  const all = await getProducts();
+  return all.slice(0, 4);
+}
+
+export async function getRelatedProducts(
+  slug: string,
+  limit = 3
+): Promise<Product[]> {
+  const all = await getProducts();
+  return all.filter((p) => p.slug !== slug).slice(0, limit);
+}
+
+/** Sync helpers for client components / static paths */
+export function getProductBySlugSync(slug: string): Product | undefined {
+  return FALLBACK_PRODUCTS.find((p) => p.slug === slug);
 }

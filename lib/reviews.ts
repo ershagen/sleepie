@@ -1,3 +1,5 @@
+import { getPayloadClient, payloadConfigured } from "./payload";
+
 export type Review = {
   id: string;
   productSlug: string;
@@ -9,7 +11,7 @@ export type Review = {
   detail?: string;
 };
 
-export const reviews: Review[] = [
+export const FALLBACK_REVIEWS: Review[] = [
   {
     id: "r1",
     productSlug: "stroller-rocker",
@@ -112,10 +114,12 @@ export const reviews: Review[] = [
   },
 ];
 
+export const reviews = FALLBACK_REVIEWS;
+
 export function getReviewsForProduct(slug: string): Review[] {
-  return reviews
-    .filter((r) => r.productSlug === slug)
-    .sort((a, b) => (a.date < b.date ? 1 : -1));
+  return FALLBACK_REVIEWS.filter((r) => r.productSlug === slug).sort((a, b) =>
+    a.date < b.date ? 1 : -1
+  );
 }
 
 export function getReviewStats(slug: string): {
@@ -123,6 +127,62 @@ export function getReviewStats(slug: string): {
   average: number;
 } {
   const list = getReviewsForProduct(slug);
+  if (list.length === 0) return { count: 0, average: 0 };
+  const sum = list.reduce((acc, r) => acc + r.rating, 0);
+  return {
+    count: list.length,
+    average: Math.round((sum / list.length) * 10) / 10,
+  };
+}
+
+export async function getReviewsForProductAsync(
+  slug: string
+): Promise<Review[]> {
+  if (!payloadConfigured()) return getReviewsForProduct(slug);
+  try {
+    const payload = await getPayloadClient();
+    const res = await payload.find({
+      collection: "reviews",
+      where: {
+        and: [
+          { productSlug: { equals: slug } },
+          { approved: { equals: true } },
+        ],
+      },
+      limit: 50,
+      sort: "-reviewDate",
+      overrideAccess: true,
+    });
+    if (!res.docs.length) return getReviewsForProduct(slug);
+    return res.docs.map((d) => {
+      const doc = d as unknown as Record<string, unknown>;
+      const rating = Math.min(5, Math.max(1, Number(doc.rating) || 5)) as
+        | 1
+        | 2
+        | 3
+        | 4
+        | 5;
+      return {
+        id: String(doc.id),
+        productSlug: String(doc.productSlug || slug),
+        name: String(doc.author || ""),
+        rating,
+        title: String(doc.title || ""),
+        body: String(doc.content || ""),
+        date: doc.reviewDate
+          ? String(doc.reviewDate).slice(0, 10)
+          : new Date().toISOString().slice(0, 10),
+        detail: doc.detail ? String(doc.detail) : undefined,
+      };
+    });
+  } catch (e) {
+    console.error("[catalog:reviews]", e);
+    return getReviewsForProduct(slug);
+  }
+}
+
+export async function getReviewStatsAsync(slug: string) {
+  const list = await getReviewsForProductAsync(slug);
   if (list.length === 0) return { count: 0, average: 0 };
   const sum = list.reduce((acc, r) => acc + r.rating, 0);
   return {

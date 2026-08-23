@@ -4,7 +4,13 @@ export const Products: CollectionConfig = {
   slug: 'products',
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'price', 'category', 'cjVid', 'updatedAt'],
+    defaultColumns: ['name', 'price', 'category', 'active', 'updatedAt'],
+  },
+  access: {
+    read: () => true,
+    create: ({ req }) => Boolean(req.user),
+    update: ({ req }) => Boolean(req.user),
+    delete: ({ req }) => Boolean(req.user),
   },
   fields: [
     {
@@ -17,9 +23,12 @@ export const Products: CollectionConfig = {
       type: 'text',
       required: true,
       unique: true,
-      admin: {
-        position: 'sidebar',
-      },
+      admin: { position: 'sidebar' },
+    },
+    {
+      name: 'sku',
+      type: 'text',
+      admin: { position: 'sidebar' },
     },
     {
       name: 'price',
@@ -38,12 +47,7 @@ export const Products: CollectionConfig = {
     {
       name: 'features',
       type: 'array',
-      fields: [
-        {
-          name: 'feature',
-          type: 'text',
-        },
-      ],
+      fields: [{ name: 'feature', type: 'text' }],
     },
     {
       name: 'category',
@@ -58,9 +62,20 @@ export const Products: CollectionConfig = {
     {
       name: 'badge',
       type: 'text',
+      admin: { description: 't.ex. Bästsäljare, Kit' },
+    },
+    {
+      name: 'imageUrl',
+      type: 'text',
       admin: {
-        description: 't.ex. Bästsäljare, Kit',
+        description: 'Extern bild-URL (t.ex. Vercel Blob) om media inte används',
       },
+    },
+    {
+      name: 'galleryUrls',
+      type: 'array',
+      labels: { singular: 'URL', plural: 'Gallery URLs' },
+      fields: [{ name: 'url', type: 'text' }],
     },
     {
       name: 'image',
@@ -84,47 +99,22 @@ export const Products: CollectionConfig = {
       label: 'CJDropshipping',
       admin: { position: 'sidebar' },
       fields: [
-        {
-          name: 'pid',
-          type: 'text',
-          label: 'Product ID (pid)',
-        },
+        { name: 'pid', type: 'text', label: 'Product ID (pid)' },
         {
           name: 'vid',
           type: 'text',
           label: 'Variant ID (vid)',
-          admin: {
-            description: 'Krävs för createOrder',
-          },
+          admin: { description: 'Krävs för createOrder' },
         },
-        {
-          name: 'sku',
-          type: 'text',
-          label: 'SKU',
-        },
-        {
-          name: 'costUsd',
-          type: 'number',
-          label: 'Kostnad USD',
-        },
+        { name: 'sku', type: 'text', label: 'SKU' },
+        { name: 'costUsd', type: 'number', label: 'Kostnad USD' },
       ],
-    },
-    {
-      name: 'cjProductId',
-      type: 'text',
-      admin: {
-        description: 'Legacy: använd cj.vid istället',
-        position: 'sidebar',
-        hidden: true,
-      },
     },
     {
       name: 'active',
       type: 'checkbox',
       defaultValue: true,
-      admin: {
-        position: 'sidebar',
-      },
+      admin: { position: 'sidebar' },
     },
   ],
 }
