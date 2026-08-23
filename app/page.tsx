@@ -5,7 +5,7 @@ import { Reveal } from "@/components/Reveal";
 import {
   getFeaturedProducts,
   getProductBySlug,
-  products,
+  getProducts,
 } from "@/lib/products";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/structured-data";
 import {
@@ -18,10 +18,13 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-export default function HomePage() {
-  const featured = getFeaturedProducts();
-  const heroProduct = getProductBySlug("stroller-rocker");
-  const kit = getProductBySlug("komplett-sovrutin");
+export default async function HomePage() {
+  const [featured, heroProduct, kit, products] = await Promise.all([
+    getFeaturedProducts(),
+    getProductBySlug("stroller-rocker"),
+    getProductBySlug("komplett-sovrutin"),
+    getProducts(),
+  ]);
 
   return (
     <>
