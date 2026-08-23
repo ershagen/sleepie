@@ -39,10 +39,11 @@ export const CJ_ROCKER = {
     "https://oss-cf.cjdropshipping.com/product/2026/05/02/06/e7e3e898-36b6-47a2-bf7e-ef369c2ab4fb_water_trans.jpeg",
 };
 
+/** Realistic lifestyle + studio (v2 = cache-busted) */
 export const ROCKER_GALLERY = [
-  img("rocker-stroller"),
-  img("rocker-nursery"),
-  img("rocker-studio"),
+  img("rocker-stroller-v2"),
+  img("rocker-nursery-v2"),
+  img("rocker-studio-v2"),
   CJ_ROCKER.black,
   CJ_ROCKER.angle,
   CJ_ROCKER.pack,
@@ -93,7 +94,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
       "CE-märkt",
     ],
     category: "Rocker",
-    image: img("rocker-stroller"),
+    image: img("rocker-stroller-v2"),
     images: ROCKER_GALLERY,
     badge: "Bästsäljare",
   }),
@@ -220,7 +221,7 @@ function mapDoc(doc: Record<string, unknown>): Product {
     (doc.imageUrl as string) ||
     gallery[0] ||
     imagesFromMedia[0] ||
-    img("rocker-stroller");
+    img("rocker-stroller-v2");
 
   const images =
     gallery.length > 0
