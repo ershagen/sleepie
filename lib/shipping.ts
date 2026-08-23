@@ -1,4 +1,4 @@
-import { FREE_SHIPPING_THRESHOLD } from "./products";
+import { FREE_SHIPPING_THRESHOLD } from "./catalog";
 
 /** Standardfrakt SE (kr) under tröskel */
 export const STANDARD_SHIPPING_SEK = 49;

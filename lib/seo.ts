@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SITE_URL } from "./products";
+import { SITE_URL } from "./catalog";
 
 export const SITE_NAME = "Sleepie";
 export const DEFAULT_DESCRIPTION =

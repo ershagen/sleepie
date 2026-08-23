@@ -1,8 +1,5 @@
 import { products, SITE_URL } from "@/lib/catalog";
 
-/**
- * Google Merchant Center product feed (TSV).
- */
 export async function GET() {
   const headers = [
     "id",
