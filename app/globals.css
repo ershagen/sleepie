@@ -14,13 +14,6 @@
   ::selection {
     @apply bg-sleepie-green/20 text-sleepie-black;
   }
-
-  /** Default button corners ~5px */
-  button:not([class*="rounded-"]),
-  a[class*="bg-sleepie-green"]:not([class*="rounded-"]),
-  a[class*="bg-sleepie-black"]:not([class*="rounded-"]) {
-    border-radius: 5px;
-  }
 }
 
 @layer components {
@@ -48,4 +41,17 @@
   .badge-soft {
     @apply inline-flex items-center rounded-full bg-sleepie-green-muted text-sleepie-green-dark px-2.5 py-0.5 text-xs font-medium;
   }
+}
+
+/* Force 5px on shop CTAs (overrides leftover rounded-full on action buttons) */
+a.inline-flex.bg-sleepie-green,
+a.inline-flex.bg-sleepie-black,
+button.bg-sleepie-green,
+button.bg-sleepie-black,
+a[class*="bg-sleepie-green"][class*="px-"],
+a[class*="bg-sleepie-black"][class*="px-"],
+button[class*="bg-sleepie-green"],
+button[class*="bg-sleepie-black"],
+a[class*="border-sleepie-gray"][class*="px-"][class*="py-"][class*="font-medium"] {
+  border-radius: 5px !important;
 }
