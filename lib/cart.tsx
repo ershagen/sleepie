@@ -9,7 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { Product } from "./products";
+import type { Product } from "./catalog";
 
 export type CartItem = {
   id: string;
@@ -72,33 +72,30 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const closeCart = useCallback(() => setIsOpen(false), []);
   const toggleCart = useCallback(() => setIsOpen((v) => !v), []);
 
-  const addItem = useCallback(
-    (product: Product, quantity = 1) => {
-      setItems((prev) => {
-        const existing = prev.find((i) => i.id === product.id);
-        if (existing) {
-          return prev.map((i) =>
-            i.id === product.id
-              ? { ...i, quantity: i.quantity + quantity }
-              : i
-          );
-        }
-        return [
-          ...prev,
-          {
-            id: product.id,
-            slug: product.slug,
-            name: product.name,
-            price: product.price,
-            image: product.image,
-            quantity,
-          },
-        ];
-      });
-      setIsOpen(true);
-    },
-    []
-  );
+  const addItem = useCallback((product: Product, quantity = 1) => {
+    setItems((prev) => {
+      const existing = prev.find((i) => i.id === product.id);
+      if (existing) {
+        return prev.map((i) =>
+          i.id === product.id
+            ? { ...i, quantity: i.quantity + quantity }
+            : i
+        );
+      }
+      return [
+        ...prev,
+        {
+          id: product.id,
+          slug: product.slug,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          quantity,
+        },
+      ];
+    });
+    setIsOpen(true);
+  }, []);
 
   const removeItem = useCallback((id: string) => {
     setItems((prev) => prev.filter((i) => i.id !== id));

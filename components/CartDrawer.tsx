@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 import { X, Minus, Plus, ShoppingBag } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { calcOrderTotal } from "@/lib/shipping";
-import { FREE_SHIPPING_THRESHOLD } from "@/lib/products";
+import { FREE_SHIPPING_THRESHOLD } from "@/lib/catalog";
 
 export function CartDrawer() {
   const {

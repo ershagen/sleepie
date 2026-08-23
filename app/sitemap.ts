@@ -1,12 +1,16 @@
 import { MetadataRoute } from "next";
-import { products, SITE_URL } from "@/lib/products";
+import { products, SITE_URL } from "@/lib/catalog";
 
 const base = SITE_URL.replace(/\/$/, "");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
-  const staticPages: { path: string; priority: number; freq: MetadataRoute.Sitemap[0]["changeFrequency"] }[] = [
+  const staticPages: {
+    path: string;
+    priority: number;
+    freq: MetadataRoute.Sitemap[0]["changeFrequency"];
+  }[] = [
     { path: "/", priority: 1, freq: "weekly" },
     { path: "/produkter", priority: 0.95, freq: "daily" },
     { path: "/om-oss", priority: 0.6, freq: "monthly" },

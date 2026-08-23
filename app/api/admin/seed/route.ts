@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPayloadClient, payloadConfigured } from "@/lib/payload";
-import { FALLBACK_PRODUCTS } from "@/lib/products";
-import { FALLBACK_REVIEWS } from "@/lib/reviews";
+import { FALLBACK_PRODUCTS } from "@/lib/catalog";
+import { FALLBACK_REVIEWS } from "@/lib/reviews-data";
 import { getCjMapping } from "@/lib/cj-mapping";
 
 /**
  * POST /api/admin/seed
  * Header: Authorization: Bearer <PAYLOAD_SECRET or SEED_SECRET>
- * Upserts catalog products + reviews into Payload.
  */
 export async function POST(req: NextRequest) {
   const auth = req.headers.get("authorization") || "";

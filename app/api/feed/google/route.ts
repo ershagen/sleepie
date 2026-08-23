@@ -1,9 +1,7 @@
-import { products, SITE_URL } from "@/lib/products";
+import { products, SITE_URL } from "@/lib/catalog";
 
 /**
  * Google Merchant Center product feed (TSV).
- * Connect this URL in Merchant Center → Products → Feeds.
- * https://yoursite.com/api/feed/google
  */
 export async function GET() {
   const headers = [
@@ -38,8 +36,8 @@ export async function GET() {
       p.brand,
       p.sku,
       escape(`Baby > Sleep > ${p.category}`),
-      "1239", // Baby & Toddler > Baby Care
-      "SE::Standard:0 SEK", // free ship message; adjust rates in GMC
+      "1239",
+      "SE::Standard:0 SEK",
     ].join("\t");
   });
 
