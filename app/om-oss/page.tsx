@@ -69,7 +69,7 @@ export default function OmOssPage() {
       <div className="mt-12">
         <Link
           href="/produkter"
-          className="inline-flex items-center justify-center bg-sleepie-black text-white px-7 py-3.5 rounded-full text-sm font-medium hover:bg-sleepie-gray-800 transition"
+          className="inline-flex items-center justify-center bg-sleepie-black text-white px-7 py-3.5 rounded-[5px] text-sm font-medium hover:bg-sleepie-gray-800 transition"
         >
           Upptäck kollektionen
         </Link>
