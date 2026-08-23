@@ -1,5 +1,5 @@
-import { Product, SITE_URL } from "./products";
-import { getReviewStats, getReviewsForProduct } from "./reviews";
+import { type Product, SITE_URL } from "./catalog";
+import { getReviewStats, getReviewsForProduct } from "./reviews-data";
 
 export function productJsonLd(product: Product) {
   const stats = getReviewStats(product.slug);
