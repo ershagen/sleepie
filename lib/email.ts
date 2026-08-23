@@ -34,8 +34,10 @@ const BLACK = "#0a0a0a";
 const MUTED = "#57534e";
 const BORDER = "#e7e5e4";
 const BG = "#f5f4f2";
-const GREEN = "#6B8F71";
-const GREEN_DARK = "#557a5c";
+
+/** Hosted wordmark (moon on i) — PNG for Gmail/Outlook compatibility */
+const LOGO_URL =
+  "https://bmpvyjsgiskr7b9a.public.blob.vercel-storage.com/brand/sleepie-logo-email-E6Aqn2WxDLyXmtIdoImnEYhwKQXMAv.png";
 
 function siteUrl() {
   return (
@@ -90,48 +92,32 @@ async function sendResend(payload: {
 }
 
 function escapeHtml(s: string) {
+  const amp = ["&", "a", "m", "p", ";"].join("");
+  const lt = ["&", "l", "t", ";"].join("");
+  const gt = ["&", "g", "t", ";"].join("");
+  const quot = ["&", "q", "u", "o", "t", ";"].join("");
   return String(s)
-    .replace(/&/g, "&")
-    .replace(/</g, "<")
-    .replace(/>/g, ">")
-    .replace(/"/g, """);
+    .replace(/&/g, amp)
+    .replace(/</g, lt)
+    .replace(/>/g, gt)
+    .replace(/"/g, quot);
 }
 
 function formatKr(n: number) {
   return `${Math.round(n).toLocaleString("sv-SE")} kr`;
 }
 
-/** Wordmark matching site Logo.tsx — crescent moon replaces the i */
 function logoHtml() {
   const href = siteUrl();
   return `
-  <a href="${href}" style="text-decoration:none;color:${BLACK};display:inline-block;">
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td style="font-family:Georgia,'Times New Roman',serif;font-size:28px;line-height:1;letter-spacing:-0.03em;color:${BLACK};vertical-align:baseline;">
-          Sleep
-        </td>
-        <td style="padding:0 1px;vertical-align:baseline;">
-          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-            <tr>
-              <td align="center" style="line-height:0;font-size:0;padding-bottom:2px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 12 12" style="display:block;">
-                  <path fill="${BLACK}" d="M9.2 1.4C6.2 1.8 4 4.4 4 7.4C4 9 4.8 10.4 6 11.2C3.8 10.4 2.2 8.4 2.2 6C2.2 2.8 4.8 0.4 8 0.2C8.4 0.6 8.8 1 9.2 1.4Z"/>
-                </svg>
-              </td>
-            </tr>
-            <tr>
-              <td align="center" style="line-height:0;font-size:0;">
-                <div style="width:2px;height:12px;background:${BLACK};border-radius:1px;margin:0 auto;"></div>
-              </td>
-            </tr>
-          </table>
-        </td>
-        <td style="font-family:Georgia,'Times New Roman',serif;font-size:28px;line-height:1;letter-spacing:-0.03em;color:${BLACK};vertical-align:baseline;">
-          e
-        </td>
-      </tr>
-    </table>
+  <a href="${href}" style="text-decoration:none;display:inline-block;line-height:0;">
+    <img
+      src="${LOGO_URL}"
+      width="140"
+      height="50"
+      alt="Sleepie"
+      style="display:block;width:140px;height:auto;border:0;outline:none;text-decoration:none;"
+    />
   </a>`;
 }
 
@@ -188,14 +174,12 @@ function emailShell(opts: {
       <td align="center" style="padding:40px 16px;">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;margin:0 auto;">
 
-          <!-- Logo -->
           <tr>
             <td align="center" style="padding:0 0 28px;">
               ${logoHtml()}
             </td>
           </tr>
 
-          <!-- Card -->
           <tr>
             <td style="background:#ffffff;border-radius:16px;border:1px solid ${BORDER};overflow:hidden;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -214,7 +198,6 @@ function emailShell(opts: {
             </td>
           </tr>
 
-          <!-- Footer -->
           <tr>
             <td style="padding:32px 12px 8px;text-align:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
               <p style="margin:0 0 10px;font-size:13px;color:${MUTED};line-height:1.6;">
