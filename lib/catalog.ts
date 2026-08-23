@@ -16,6 +16,8 @@ export type Product = {
   brand: string;
   condition: "new";
   availability: "in_stock";
+  /** Shown on PDP, e.g. color */
+  variantsNote?: string;
   cjPid?: string | null;
   cjVid?: string | null;
   cjSku?: string | null;
@@ -28,21 +30,24 @@ const BLOB =
   "https://bmpvyjsgiskr7b9a.public.blob.vercel-storage.com/products";
 export const img = (name: string) => `${BLOB}/${name}.jpg`;
 
-export const CJ_ROCKER = {
-  black:
-    "https://cf.cjdropshipping.com/quick/product/daad17b5-b85e-4aac-bbb6-390c401a7f9c.jpg",
-  angle:
+/** Official black (SR10 Black Edition) product shots from supplier */
+export const CJ_ROCKER_BLACK = {
+  main: "https://cf.cjdropshipping.com/quick/product/daad17b5-b85e-4aac-bbb6-390c401a7f9c.jpg",
+  detail:
     "https://cf.cjdropshipping.com/quick/product/5bb6416e-a279-4b68-9416-118a819c76e3.jpg",
 };
 
-/** Hero first = Swedish lifestyle; then product shots */
+/**
+ * Gallery = black only.
+ * Lifestyle shots first for conversion, then black product photos.
+ */
 export const ROCKER_GALLERY = [
   img("rocker-lifestyle-sv"),
   img("rocker-stroller-v2"),
   img("rocker-nursery-v2"),
   img("rocker-studio-v2"),
-  CJ_ROCKER.black,
-  CJ_ROCKER.angle,
+  CJ_ROCKER_BLACK.main,
+  CJ_ROCKER_BLACK.detail,
 ];
 
 function withCj(
@@ -78,9 +83,10 @@ export const FALLBACK_PRODUCTS: Product[] = [
     sku: "SLP-ROCK-001",
     price: 449,
     description:
-      "Portabel USB-C rocker som klipsas på vagnen. Mjuk gungning med tyst motor, flera hastigheter och timer. För hemmet, caféet och resan – när armarna behöver vila.",
-    shortDescription: "USB-C clip-on rocker – mjuk gungning på språng.",
+      "Portabel USB-C rocker i svart finish som klipsas på vagnen. Mjuk gungning med tyst motor, flera hastigheter och timer. För hemmet, caféet och resan – när armarna behöver vila. Levereras i svart – den stilrena versionen som passar de flesta vagnar.",
+    shortDescription: "Svart USB-C clip-on rocker – mjuk gungning på språng.",
     features: [
+      "Färg: Svart",
       "Uppladdningsbar USB-C",
       "5 justerbara hastigheter",
       "Timer 15 / 30 / 45 min",
@@ -89,9 +95,10 @@ export const FALLBACK_PRODUCTS: Product[] = [
       "CE-märkt",
     ],
     category: "Rocker",
-    image: img("rocker-lifestyle-sv"),
+    image: CJ_ROCKER_BLACK.main,
     images: ROCKER_GALLERY,
     badge: "Bästsäljare",
+    variantsNote: "Färg: Svart",
   }),
   withCj({
     id: "2",
@@ -140,10 +147,10 @@ export const FALLBACK_PRODUCTS: Product[] = [
     sku: "SLP-KIT-001",
     price: 999,
     description:
-      "Allt i ett: Sleepie Rocker + Muslin Swaddle Set + Sleep Sack. Bästa starten för lugnare nätter – sparar jämfört med att köpa separat.",
-    shortDescription: "Rocker + Muslin + Sleep Sack. Sparar 198 kr.",
+      "Allt i ett: Sleepie Rocker (svart) + Muslin Swaddle Set + Sleep Sack. Bästa starten för lugnare nätter – sparar jämfört med att köpa separat.",
+    shortDescription: "Rocker (svart) + Muslin + Sleep Sack. Sparar 198 kr.",
     features: [
-      "Sleepie Rocker (449 kr)",
+      "Sleepie Rocker svart (449 kr)",
       "Muslin Swaddle Set (349 kr)",
       "Sleep Sack (399 kr)",
       "Sparar 198 kr mot separat",
