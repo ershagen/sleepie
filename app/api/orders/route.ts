@@ -53,7 +53,10 @@ export async function POST(req: NextRequest) {
       !body.total ||
       body.total <= 0
     ) {
-      return NextResponse.json({ error: "Ogiltig order" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Fyll i alla obligatoriska fält" },
+        { status: 400 }
+      );
     }
 
     const id = orderId();
@@ -88,7 +91,7 @@ export async function POST(req: NextRequest) {
       paymentMethod: body.paymentMethod || "swish",
     };
 
-    console.log("[order:create]", id, body.email, body.total);
+    console.log("[order:create]", id, body.email, body.total, body.paymentMethod);
 
     if (!process.env.MOLLIE_API_KEY) {
       console.error("[order] MOLLIE_API_KEY missing");
@@ -98,7 +101,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Persist pending order in Payload (non-blocking on failure)
     await createOrderDoc({
       orderNumber: id,
       email: body.email,
@@ -123,12 +125,25 @@ export async function POST(req: NextRequest) {
       status: "pending",
     });
 
+    const address = {
+      givenName: body.firstName.trim(),
+      familyName: body.lastName.trim(),
+      email: body.email.trim(),
+      streetAndNumber: body.address.trim(),
+      postalCode: body.zip.replace(/\s+/g, "").trim(),
+      city: body.city.trim(),
+      country: (body.country || "SE").toUpperCase(),
+      phone: body.phone?.trim(),
+    };
+
     const payment = await createPayment({
       orderId: id,
       amountSek: body.total,
       description: `Sleepie ${id}`,
       method: body.paymentMethod,
       customerEmail: body.email,
+      billingAddress: address,
+      shippingAddress: address,
       metadata,
     });
 
