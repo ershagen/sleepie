@@ -30,7 +30,7 @@ const BLOB =
 const img = (name: string) => `${BLOB}/${name}.jpg`;
 
 /** Official product photos from supplier (SR10 Black + angles) */
-const CJ_ROCKER = {
+export const CJ_ROCKER = {
   black:
     "https://cf.cjdropshipping.com/quick/product/daad17b5-b85e-4aac-bbb6-390c401a7f9c.jpg",
   angle:
@@ -38,6 +38,14 @@ const CJ_ROCKER = {
   pack:
     "https://oss-cf.cjdropshipping.com/product/2026/05/02/06/e7e3e898-36b6-47a2-bf7e-ef369c2ab4fb_water_trans.jpeg",
 };
+
+export const ROCKER_GALLERY = [
+  img("rocker-stroller"),
+  img("rocker-nursery"),
+  CJ_ROCKER.black,
+  CJ_ROCKER.angle,
+  CJ_ROCKER.pack,
+];
 
 function withCj(
   base: Omit<
@@ -85,13 +93,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
     ],
     category: "Rocker",
     image: img("rocker-stroller"),
-    images: [
-      img("rocker-stroller"),
-      img("rocker-nursery"),
-      CJ_ROCKER.black,
-      CJ_ROCKER.angle,
-      CJ_ROCKER.pack,
-    ],
+    images: ROCKER_GALLERY,
     badge: "Bästsäljare",
   }),
   withCj({
@@ -171,6 +173,31 @@ function mediaUrl(m: MediaDoc): string | null {
   return m.url || null;
 }
 
+/** Prefer Payload gallery; if sparse, fill from FALLBACK so PDP always has thumbs */
+function enrichGallery(product: Product): Product {
+  const fallback = FALLBACK_PRODUCTS.find((p) => p.slug === product.slug);
+  if (!fallback || fallback.images.length <= 1) return product;
+
+  if (!product.images || product.images.length <= 1) {
+    return {
+      ...product,
+      image: product.image || fallback.image,
+      images: fallback.images,
+    };
+  }
+
+  // Merge unique URLs – Payload first, then missing fallback shots
+  const seen = new Set(product.images);
+  const merged = [...product.images];
+  for (const url of fallback.images) {
+    if (!seen.has(url)) {
+      seen.add(url);
+      merged.push(url);
+    }
+  }
+  return { ...product, images: merged };
+}
+
 function mapDoc(doc: Record<string, unknown>): Product {
   const featuresRaw = (doc.features as Array<{ feature?: string }> | undefined) || [];
   const features = featuresRaw
@@ -206,7 +233,7 @@ function mapDoc(doc: Record<string, unknown>): Product {
   const slug = String(doc.slug || "");
   const m = getCjMapping(slug);
 
-  return {
+  return enrichGallery({
     id: String(doc.id),
     slug,
     name: String(doc.name || ""),
@@ -227,7 +254,7 @@ function mapDoc(doc: Record<string, unknown>): Product {
     cjSku: (cj.sku as string) || m?.sku || null,
     cjCostUsd:
       typeof cj.costUsd === "number" ? cj.costUsd : m?.costUsd ?? null,
-  };
+  });
 }
 
 export async function getProducts(): Promise<Product[]> {
@@ -253,7 +280,9 @@ export async function getProductBySlug(
   slug: string
 ): Promise<Product | undefined> {
   const all = await getProducts();
-  return all.find((p) => p.slug === slug);
+  const found = all.find((p) => p.slug === slug);
+  if (found) return enrichGallery(found);
+  return FALLBACK_PRODUCTS.find((p) => p.slug === slug);
 }
 
 export async function getFeaturedProducts(): Promise<Product[]> {
