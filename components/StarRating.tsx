@@ -18,7 +18,10 @@ export function StarRating({
 
   return (
     <div className="inline-flex items-center gap-1.5">
-      <div className="flex items-center gap-0.5" aria-label={`${rating} av 5 stjärnor`}>
+      <div
+        className="flex items-center gap-0.5"
+        aria-label={`${rating} av 5 stjärnor`}
+      >
         {[1, 2, 3, 4, 5].map((i) => {
           const filled = i <= full || (i === full + 1 && hasHalf);
           return (
@@ -26,7 +29,7 @@ export function StarRating({
               key={i}
               className={`${sizeClass} ${
                 filled
-                  ? "fill-sleepie-black text-sleepie-black"
+                  ? "fill-sleepie-green text-sleepie-green"
                   : "text-sleepie-gray-200"
               }`}
               strokeWidth={filled ? 0 : 1.5}
