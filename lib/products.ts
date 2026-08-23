@@ -42,6 +42,7 @@ export const CJ_ROCKER = {
 export const ROCKER_GALLERY = [
   img("rocker-stroller"),
   img("rocker-nursery"),
+  img("rocker-studio"),
   CJ_ROCKER.black,
   CJ_ROCKER.angle,
   CJ_ROCKER.pack,
@@ -186,7 +187,6 @@ function enrichGallery(product: Product): Product {
     };
   }
 
-  // Merge unique URLs – Payload first, then missing fallback shots
   const seen = new Set(product.images);
   const merged = [...product.images];
   for (const url of fallback.images) {
