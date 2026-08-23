@@ -1,3 +1,4 @@
+import { AnnouncementBar } from "./AnnouncementBar";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { StickyCta } from "./StickyCta";
@@ -10,6 +11,7 @@ export function ShopChrome({
 }) {
   return (
     <>
+      <AnnouncementBar />
       <Header />
       <main className="min-h-[70vh]">{children}</main>
       <Footer />
