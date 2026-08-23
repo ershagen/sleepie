@@ -64,7 +64,7 @@ export function CartDrawer() {
           <button
             type="button"
             onClick={closeCart}
-            className="p-2 -mr-2 rounded-full hover:bg-sleepie-gray-100 transition"
+            className="p-2 -mr-2 rounded-[5px] hover:bg-sleepie-gray-100 transition"
             aria-label="Stäng"
           >
             <X className="w-5 h-5" strokeWidth={1.5} />
@@ -109,7 +109,7 @@ export function CartDrawer() {
               <Link
                 href="/produkter"
                 onClick={closeCart}
-                className="inline-flex bg-sleepie-green text-white px-6 py-3 text-sm font-medium hover:bg-sleepie-green-dark transition"
+                className="inline-flex bg-sleepie-green text-white px-6 py-3 text-sm font-medium rounded-[5px] hover:bg-sleepie-green-dark transition"
               >
                 Fortsätt handla
               </Link>
@@ -149,11 +149,11 @@ export function CartDrawer() {
                       {item.price} kr / st
                     </p>
                     <div className="mt-auto pt-3 flex items-center justify-between">
-                      <div className="inline-flex items-center border border-sleepie-gray-200 rounded-full">
+                      <div className="inline-flex items-center border border-sleepie-gray-200 rounded-[5px]">
                         <button
                           type="button"
                           aria-label="Minska"
-                          className="w-8 h-8 flex items-center justify-center hover:bg-sleepie-gray-50 rounded-l-full"
+                          className="w-8 h-8 flex items-center justify-center hover:bg-sleepie-gray-50 rounded-l-[5px]"
                           onClick={() =>
                             updateQuantity(item.id, item.quantity - 1)
                           }
@@ -166,7 +166,7 @@ export function CartDrawer() {
                         <button
                           type="button"
                           aria-label="Öka"
-                          className="w-8 h-8 flex items-center justify-center hover:bg-sleepie-gray-50 rounded-r-full"
+                          className="w-8 h-8 flex items-center justify-center hover:bg-sleepie-gray-50 rounded-r-[5px]"
                           onClick={() =>
                             updateQuantity(item.id, item.quantity + 1)
                           }
@@ -211,7 +211,7 @@ export function CartDrawer() {
             <Link
               href="/kassa"
               onClick={closeCart}
-              className="flex items-center justify-center w-full bg-sleepie-green text-white py-3.5 text-sm font-medium hover:bg-sleepie-green-dark transition"
+              className="flex items-center justify-center w-full bg-sleepie-green text-white py-3.5 text-sm font-medium rounded-[5px] hover:bg-sleepie-green-dark transition"
             >
               Gå till kassan
             </Link>
