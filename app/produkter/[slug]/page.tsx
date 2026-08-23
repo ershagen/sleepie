@@ -3,10 +3,10 @@ import Link from "next/link";
 import {
   getProductBySlug,
   getRelatedProducts,
-  products,
+  FALLBACK_PRODUCTS,
 } from "@/lib/products";
 import { productJsonLd } from "@/lib/structured-data";
-import { getReviewStats } from "@/lib/reviews";
+import { getReviewStatsAsync } from "@/lib/reviews";
 import { Check, Truck, RotateCcw, Shield } from "lucide-react";
 import { AddToCartButton } from "@/components/AddToCartButton";
 import { ProductImage } from "@/components/ProductImage";
@@ -15,7 +15,7 @@ import { StarRating } from "@/components/StarRating";
 import { ProductReviews } from "@/components/ProductReviews";
 
 export function generateStaticParams() {
-  return products.map((p) => ({ slug: p.slug }));
+  return FALLBACK_PRODUCTS.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({
@@ -24,9 +24,9 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
   if (!product) return { title: "Produkt | Sleepie" };
-  const stats = getReviewStats(slug);
+  const stats = await getReviewStatsAsync(slug);
   const desc =
     stats.count > 0
       ? `${product.shortDescription} Betyg ${stats.average}/5 från ${stats.count} recensioner.`
@@ -49,11 +49,11 @@ export default async function ProductPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  const related = getRelatedProducts(slug);
-  const stats = getReviewStats(slug);
+  const related = await getRelatedProducts(slug);
+  const stats = await getReviewStatsAsync(slug);
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
