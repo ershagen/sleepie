@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
+import { COMPANY } from "@/lib/company";
 
 export const metadata: Metadata = pageMetadata({
   title: "Cookies",
@@ -15,7 +16,8 @@ export default function CookiesPage() {
       </h1>
       <div className="mt-8 space-y-6 text-sm text-sleepie-gray-600 leading-relaxed">
         <p>
-          Vi använder nödvändiga cookies för att webbplatsen ska fungera – till
+          Sleepie drivs av {COMPANY.legalName} (org.nr {COMPANY.orgNr}). Vi
+          använder nödvändiga cookies för att webbplatsen ska fungera – till
           exempel för varukorg och säker betalning. Utan dessa kan du inte
           genomföra ett köp.
         </p>
@@ -29,8 +31,11 @@ export default function CookiesPage() {
         </p>
         <p>
           Frågor? Kontakta{" "}
-          <a href="mailto:hej@sleepie.se" className="underline hover:text-sleepie-black">
-            hej@sleepie.se
+          <a
+            href={`mailto:${COMPANY.email}`}
+            className="underline hover:text-sleepie-black"
+          >
+            {COMPANY.email}
           </a>
           . Se även vår{" "}
           <a href="/integritet" className="underline hover:text-sleepie-black">

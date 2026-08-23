@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { COMPANY } from "@/lib/company";
 
 export const metadata: Metadata = {
   title: "Köpvillkor | Sleepie",
@@ -17,15 +18,26 @@ export default function VillkorPage() {
 
       <div className="mt-10 space-y-8 text-sm text-sleepie-gray-600 leading-relaxed">
         <section>
-          <h2 className="font-medium text-sleepie-black mb-2">1. Avtal</h2>
+          <h2 className="font-medium text-sleepie-black mb-2">1. Säljare</h2>
           <p>
-            När du lägger en order hos Sleepie ingår du ett köpeavtal med oss.
-            Orderbekräftelse skickas till den e-postadress du angett.
+            Sleepie drivs av {COMPANY.legalName}, org.nr {COMPANY.orgNr},
+            momsregistreringsnummer {COMPANY.vatNr}. Adress: {COMPANY.address},{" "}
+            {COMPANY.zip} {COMPANY.city}, {COMPANY.country}. Kontakt:{" "}
+            {COMPANY.email}.
           </p>
         </section>
 
         <section>
-          <h2 className="font-medium text-sleepie-black mb-2">2. Priser</h2>
+          <h2 className="font-medium text-sleepie-black mb-2">2. Avtal</h2>
+          <p>
+            När du lägger en order hos Sleepie ingår du ett köpeavtal med{" "}
+            {COMPANY.legalName}. Orderbekräftelse skickas till den e-postadress du
+            angett.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="font-medium text-sleepie-black mb-2">3. Priser</h2>
           <p>
             Alla priser anges i svenska kronor (SEK) och inkluderar moms om inte
             annat anges. Vi förbehåller oss rätten att korrigera uppenbara
@@ -34,7 +46,7 @@ export default function VillkorPage() {
         </section>
 
         <section>
-          <h2 className="font-medium text-sleepie-black mb-2">3. Betalning</h2>
+          <h2 className="font-medium text-sleepie-black mb-2">4. Betalning</h2>
           <p>
             Betalning sker via Mollie (Swish, kort, Klarna m.m.). Betalningen
             dras när ordern bekräftas.
@@ -42,7 +54,7 @@ export default function VillkorPage() {
         </section>
 
         <section>
-          <h2 className="font-medium text-sleepie-black mb-2">4. Leverans</h2>
+          <h2 className="font-medium text-sleepie-black mb-2">5. Leverans</h2>
           <p>
             Leveranstid anges som uppskattning. Eventuella förseningar meddelas
             så snart vi har information. Se även sidan Frakt & returer.
@@ -50,15 +62,15 @@ export default function VillkorPage() {
         </section>
 
         <section>
-          <h2 className="font-medium text-sleepie-black mb-2">5. Ångerrätt</h2>
+          <h2 className="font-medium text-sleepie-black mb-2">6. Ångerrätt</h2>
           <p>
-            Du har 14 dagars ångerrätt enligt distansavtalslagen. Kontakta
-            hej@sleepie.se för att påbörja en retur.
+            Du har 14 dagars ångerrätt enligt distansavtalslagen. Kontakta{" "}
+            {COMPANY.email} för att påbörja en retur.
           </p>
         </section>
 
         <section>
-          <h2 className="font-medium text-sleepie-black mb-2">6. Reklamation</h2>
+          <h2 className="font-medium text-sleepie-black mb-2">7. Reklamation</h2>
           <p>
             Vid fel på vara gäller reklamationsrätt enligt konsumentköplagen.
             Hör av dig till oss med ordernummer och beskrivning.
@@ -66,9 +78,24 @@ export default function VillkorPage() {
         </section>
 
         <section>
-          <h2 className="font-medium text-sleepie-black mb-2">7. Kontakt</h2>
+          <h2 className="font-medium text-sleepie-black mb-2">8. Tvist</h2>
           <p>
-            Sleepie · hej@sleepie.se
+            Tvist tolkas enligt svensk lag. Vid konsumenttvist kan du vända dig
+            till Allmänna reklamationsnämnden (ARN) eller EU:s onlineplattform
+            för tvistlösning.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="font-medium text-sleepie-black mb-2">9. Kontakt</h2>
+          <p>
+            {COMPANY.legalName}
+            <br />
+            Org.nr {COMPANY.orgNr}
+            <br />
+            {COMPANY.address}, {COMPANY.zip} {COMPANY.city}
+            <br />
+            {COMPANY.email}
           </p>
         </section>
       </div>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { COMPANY } from "@/lib/company";
 
 export const metadata: Metadata = {
   title: "Integritetspolicy | Sleepie",
@@ -17,9 +18,25 @@ export default function IntegritetPage() {
 
       <div className="mt-10 space-y-8 text-sm text-sleepie-gray-600 leading-relaxed">
         <p>
-          Sleepie värnar om din integritet. Här beskriver vi hur vi samlar in,
-          använder och skyddar personuppgifter i enlighet med GDPR.
+          Sleepie drivs av {COMPANY.legalName} (org.nr {COMPANY.orgNr}). Vi värnar
+          om din integritet. Här beskriver vi hur vi samlar in, använder och
+          skyddar personuppgifter i enlighet med GDPR.
         </p>
+
+        <section>
+          <h2 className="font-medium text-sleepie-black mb-2">
+            Personuppgiftsansvarig
+          </h2>
+          <p>
+            {COMPANY.legalName}
+            <br />
+            Org.nr {COMPANY.orgNr}
+            <br />
+            {COMPANY.address}, {COMPANY.zip} {COMPANY.city}
+            <br />
+            E-post: {COMPANY.email}
+          </p>
+        </section>
 
         <section>
           <h2 className="font-medium text-sleepie-black mb-2">
@@ -55,10 +72,10 @@ export default function IntegritetPage() {
         <section>
           <h2 className="font-medium text-sleepie-black mb-2">Dina rättigheter</h2>
           <p>
-            Du har rätt att begära tillgång, rättelse, radering och
-            begränsning av behandling, samt att invända mot viss behandling. Kontakta
-            hej@sleepie.se. Du kan också lämna klagomål till Integritetsskyddsmyndigheten
-            (IMY).
+            Du har rätt att begära tillgång, rättelse, radering och begränsning
+            av behandling, samt att invända mot viss behandling. Kontakta{" "}
+            {COMPANY.email}. Du kan också lämna klagomål till
+            Integritetsskyddsmyndigheten (IMY).
           </p>
         </section>
 
@@ -67,13 +84,17 @@ export default function IntegritetPage() {
           <p>
             Vi kan använda nödvändiga cookies för att sajten ska fungera, samt
             analysverktyg för att förstå hur sajten används. Du kan styra cookies
-            via din webbläsare.
+            via din webbläsare. Se även vår cookie-sida.
           </p>
         </section>
 
         <section>
           <h2 className="font-medium text-sleepie-black mb-2">Kontakt</h2>
-          <p>hej@sleepie.se</p>
+          <p>
+            {COMPANY.legalName} · Org.nr {COMPANY.orgNr}
+            <br />
+            {COMPANY.email}
+          </p>
         </section>
       </div>
     </div>

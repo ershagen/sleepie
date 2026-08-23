@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
+import { COMPANY } from "@/lib/company";
 
 export function Footer() {
   return (
@@ -11,6 +12,11 @@ export function Footer() {
             <p className="text-sm text-sleepie-gray-600 leading-relaxed mt-4 max-w-xs">
               Lugnare nätter börjar här. Smarta produkter som hjälper ditt barn
               sova – och dig andas ut.
+            </p>
+            <p className="text-xs text-sleepie-gray-500 mt-4 leading-relaxed">
+              {COMPANY.legalName}
+              <br />
+              Org.nr {COMPANY.orgNr}
             </p>
           </div>
 
@@ -106,7 +112,10 @@ export function Footer() {
         </div>
 
         <div className="mt-14 pt-6 border-t border-sleepie-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-sleepie-gray-500">
-          <p>© {new Date().getFullYear()} Sleepie. Alla rättigheter förbehållna.</p>
+          <p>
+            © {new Date().getFullYear()} {COMPANY.brand}. {COMPANY.legalName}, org.nr{" "}
+            {COMPANY.orgNr}.
+          </p>
           <div className="flex gap-5">
             <span>Swish</span>
             <span>Klarna</span>
