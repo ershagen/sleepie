@@ -22,7 +22,7 @@ export type Product = {
   cjCostUsd?: number | null;
 };
 
-/** AI-generated product photos hosted on Vercel Blob */
+/** Product photos hosted on Vercel Blob */
 const BLOB =
   "https://bmpvyjsgiskr7b9a.public.blob.vercel-storage.com/products";
 const img = (name: string) => `${BLOB}/${name}.jpg`;
@@ -65,8 +65,9 @@ export const products: Product[] = [
       "CE-märkt",
     ],
     category: "Rocker",
-    image: img("rocker"),
-    images: [img("rocker")],
+    // 1 = nursery, 2 = on stroller (exact product lifestyle shots)
+    image: img("rocker-stroller"),
+    images: [img("rocker-stroller"), img("rocker-nursery")],
     badge: "Bästsäljare",
   }),
   withCj({
