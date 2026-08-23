@@ -149,13 +149,13 @@ function ConfirmationContent() {
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
         <Link
           href="/produkter"
-          className="inline-flex items-center justify-center bg-sleepie-black text-white px-7 py-3.5 text-sm font-medium hover:bg-sleepie-gray-800 transition"
+          className="inline-flex items-center justify-center bg-sleepie-black text-white px-7 py-3.5 text-sm font-medium rounded-[5px] hover:bg-sleepie-gray-800 transition"
         >
           Fortsätt handla
         </Link>
         <Link
           href="/"
-          className="inline-flex items-center justify-center border border-sleepie-gray-300 px-7 py-3.5 text-sm font-medium hover:border-sleepie-black transition"
+          className="inline-flex items-center justify-center border border-sleepie-gray-300 px-7 py-3.5 text-sm font-medium rounded-[5px] hover:border-sleepie-black transition"
         >
           Till startsidan
         </Link>
