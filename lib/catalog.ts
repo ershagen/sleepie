@@ -30,6 +30,10 @@ const BLOB =
   "https://bmpvyjsgiskr7b9a.public.blob.vercel-storage.com/products";
 export const img = (name: string) => `${BLOB}/${name}.jpg`;
 
+/** New kit flat-lay (black rocker + muslin + sleep sack) */
+export const BUNDLE_IMAGE =
+  "https://bmpvyjsgiskr7b9a.public.blob.vercel-storage.com/products/bundle-v2-GT5ca910zMH1d8XnLJwu7jcIBOBsdM.jpg";
+
 /** Official black (SR10 Black Edition) product shots from supplier */
 export const CJ_ROCKER_BLACK = {
   main: "https://cf.cjdropshipping.com/quick/product/daad17b5-b85e-4aac-bbb6-390c401a7f9c.jpg",
@@ -156,8 +160,8 @@ export const FALLBACK_PRODUCTS: Product[] = [
       "Sparar 198 kr mot separat",
     ],
     category: "Bundle",
-    image: img("bundle"),
-    images: [img("bundle")],
+    image: BUNDLE_IMAGE,
+    images: [BUNDLE_IMAGE],
     badge: "Kit",
   }),
 ];
