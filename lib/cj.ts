@@ -122,7 +122,6 @@ export type CreateOrderInput = {
   shippingAddress: string;
   shippingAddress2?: string;
   products: Array<{ vid: string; quantity: number }>;
-  /** 1 = sandbox */
   isSandbox?: 0 | 1;
   logisticName?: string;
 };
@@ -159,11 +158,21 @@ export async function getOrderDetail(orderId: string) {
   );
 }
 
+/**
+ * Cancel / delete CJ order (works before shipment).
+ * DELETE /shopping/order/deleteOrder?orderId=
+ */
+export async function deleteOrder(orderId: string) {
+  return cjFetch<{ data?: string; message?: string }>(
+    `/shopping/order/deleteOrder?orderId=${encodeURIComponent(orderId)}`,
+    { method: "DELETE" }
+  );
+}
+
 export async function getBalance() {
   return cjFetch(`/shopping/pay/getBalance`, { method: "GET" });
 }
 
-/** Freight options for destination (e.g. SE) */
 export type FreightProduct = { vid: string; quantity: number };
 
 export type FreightOption = {
@@ -203,7 +212,6 @@ export type TrackInfo = {
   lastTrackNumber?: string;
 };
 
-/** Query tracking by tracking number */
 export async function trackInfo(trackNumber: string) {
   return cjFetch<{ data?: TrackInfo[] }>(
     `/logistic/trackInfo?trackNumber=${encodeURIComponent(trackNumber)}`,
@@ -211,10 +219,9 @@ export async function trackInfo(trackNumber: string) {
   );
 }
 
-/** Normalize freight response to a sorted list (cheapest first) */
 export function normalizeFreightOptions(data: unknown): FreightOption[] {
   if (!data) return [];
-  const list = Array.isArray(data) ? data : [data];
+  const list = Array.isArray(data) { data : [data];
   return list
     .filter(Boolean)
     .sort(
