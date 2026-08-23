@@ -32,10 +32,6 @@ export default function HomePage() {
         }}
       />
 
-      <div className="bg-sleepie-black text-white text-center text-[11px] sm:text-xs py-2.5 px-4">
-        Fri frakt över 799 kr · Swish, kort & Klarna · 14 dagars ångerrätt
-      </div>
-
       <section className="relative bg-sleepie-offwhite overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[70vh] lg:min-h-[78vh]">
           <div className="relative order-2 lg:order-1 bg-sleepie-gray-100 min-h-[50vh] lg:min-h-0">
@@ -66,13 +62,13 @@ export default function HomePage() {
               <div className="mt-8 flex flex-wrap gap-3 justify-center lg:justify-start">
                 <Link
                   href="/produkter"
-                  className="inline-flex items-center justify-center bg-sleepie-green text-white px-8 py-3.5 text-sm font-medium hover:bg-sleepie-green-dark transition"
+                  className="inline-flex items-center justify-center bg-sleepie-green text-white px-8 py-3.5 text-sm font-medium rounded-[5px] hover:bg-sleepie-green-dark transition"
                 >
                   Handla idag
                 </Link>
                 <Link
                   href="/produkter/stroller-rocker"
-                  className="inline-flex items-center justify-center border border-sleepie-gray-300 px-8 py-3.5 text-sm font-medium text-sleepie-gray-700 hover:border-sleepie-black transition"
+                  className="inline-flex items-center justify-center border border-sleepie-gray-300 px-8 py-3.5 text-sm font-medium rounded-[5px] text-sleepie-gray-700 hover:border-sleepie-black transition"
                 >
                   Se bästsäljaren
                 </Link>
@@ -105,7 +101,7 @@ export default function HomePage() {
             },
             {
               icon: RotateCcw,
-              title: "14 dagars ångerrätt",
+              title: "14 dagars öppet köp",
               text: "100 % nöjd – eller pengarna tillbaka",
             },
           ].map((item) => (
@@ -221,7 +217,7 @@ export default function HomePage() {
                   <p className="text-2xl font-medium tabular-nums">{kit.price} kr</p>
                   <Link
                     href={`/produkter/${kit.slug}`}
-                    className="inline-flex items-center justify-center gap-2 bg-sleepie-green text-white px-7 py-3 text-sm font-medium hover:bg-sleepie-green-dark transition"
+                    className="inline-flex items-center justify-center gap-2 bg-sleepie-green text-white px-7 py-3 text-sm font-medium rounded-[5px] hover:bg-sleepie-green-dark transition"
                   >
                     Köp kitet
                   </Link>
@@ -327,7 +323,7 @@ export default function HomePage() {
           </p>
           <Link
             href="/produkter"
-            className="inline-flex items-center justify-center bg-sleepie-green text-white px-8 py-3.5 text-sm font-medium hover:bg-sleepie-green-dark transition"
+            className="inline-flex items-center justify-center bg-sleepie-green text-white px-8 py-3.5 text-sm font-medium rounded-[5px] hover:bg-sleepie-green-dark transition"
           >
             Handla idag
           </Link>
