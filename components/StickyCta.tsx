@@ -28,7 +28,7 @@ export function StickyCta() {
         </div>
         <Link
           href="/produkter"
-          className="shrink-0 inline-flex items-center gap-1.5 bg-sleepie-black text-white text-sm font-medium px-5 py-2.5 rounded-full"
+          className="shrink-0 inline-flex items-center gap-1.5 bg-sleepie-black text-white text-sm font-medium px-5 py-2.5 rounded-[5px]"
         >
           Shoppa
           <ArrowRight className="w-3.5 h-3.5" />
