@@ -1,3 +1,4 @@
+import "server-only";
 import { getPayload, type Payload } from "payload";
 import config from "@payload-config";
 

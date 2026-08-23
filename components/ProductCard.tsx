@@ -3,8 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { Product } from "@/lib/products";
-import { getReviewStats } from "@/lib/reviews";
+import type { Product } from "@/lib/catalog";
+import { getReviewStats } from "@/lib/reviews-data";
 import { StarRating } from "./StarRating";
 
 export function ProductCard({ product }: { product: Product }) {
@@ -61,7 +61,7 @@ export function ProductCard({ product }: { product: Product }) {
           </div>
         )}
 
-        <p className="mt-1.5 text-xs sm:text-sm text-sleepie-gray-600 line-clamp-2 leading-relaxed hidden xs:block sm:block">
+        <p className="mt-1.5 text-xs sm:text-sm text-sleepie-gray-600 line-clamp-2 leading-relaxed hidden sm:block">
           {product.shortDescription}
         </p>
 
