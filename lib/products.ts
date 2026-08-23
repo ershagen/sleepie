@@ -50,11 +50,11 @@ export const products: Product[] = [
   withCj({
     id: "1",
     slug: "stroller-rocker",
-    name: "Stroller Rocker",
+    name: "Sleepie Rocker",
     sku: "SLP-ROCK-001",
     price: 449,
     description:
-      "Portabel USB-C stroller rocker som klipsas på vagnen. Mjuk gungning med tyst motor, flera hastigheter och timer. För hemmet, caféet och resan – när armarna behöver vila.",
+      "Portabel USB-C rocker som klipsas på vagnen. Mjuk gungning med tyst motor, flera hastigheter och timer. För hemmet, caféet och resan – när armarna behöver vila.",
     shortDescription: "USB-C clip-on rocker – mjuk gungning på språng.",
     features: [
       "Uppladdningsbar USB-C",
@@ -65,7 +65,6 @@ export const products: Product[] = [
       "CE-märkt",
     ],
     category: "Rocker",
-    // 1 = nursery, 2 = on stroller (exact product lifestyle shots)
     image: img("rocker-stroller"),
     images: [img("rocker-stroller"), img("rocker-nursery")],
     badge: "Bästsäljare",
@@ -137,10 +136,10 @@ export const products: Product[] = [
     sku: "SLP-KIT-001",
     price: 999,
     description:
-      "Allt i ett: Stroller Rocker + White Noise + Muslin Set. Bästa starten för lugnare nätter – sparar jämfört med att köpa separat.",
+      "Allt i ett: Sleepie Rocker + White Noise + Muslin Set. Bästa starten för lugnare nätter – sparar jämfört med att köpa separat.",
     shortDescription: "Rocker + White Noise + Muslin. Sparar 98 kr.",
     features: [
-      "Stroller Rocker (449 kr)",
+      "Sleepie Rocker (449 kr)",
       "White Noise Maskin (299 kr)",
       "Muslin Swaddle Set (349 kr)",
       "Sparar 98 kr mot separat",
