@@ -35,7 +35,7 @@ export function Footer() {
                   href="/produkter/stroller-rocker"
                   className="hover:text-sleepie-black transition"
                 >
-                  Stroller Rocker
+                  Sleepie Rocker
                 </Link>
               </li>
               <li>
