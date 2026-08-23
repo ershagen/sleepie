@@ -53,7 +53,14 @@ export type MollieAddress = {
 export type MollieMoney = { currency: "SEK"; value: string };
 
 export type MollieLine = {
-  type: "physical" | "digital" | "shipping_fee" | "discount" | "store_credit" | "gift_card" | "surcharge";
+  type:
+    | "physical"
+    | "digital"
+    | "shipping_fee"
+    | "discount"
+    | "store_credit"
+    | "gift_card"
+    | "surcharge";
   description: string;
   quantity: number;
   unitPrice: MollieMoney;
@@ -79,6 +86,7 @@ export type MolliePayment = {
   id: string;
   status: string;
   amount?: { value: string; currency: string };
+  amountRemaining?: { value: string; currency: string };
   description?: string;
   metadata?: Record<string, string>;
   method?: string;
@@ -88,11 +96,18 @@ export type MolliePayment = {
   };
 };
 
+export type MollieRefund = {
+  id: string;
+  status: string;
+  amount?: { value: string; currency: string };
+  description?: string;
+  paymentId?: string;
+};
+
 function formatAmount(sek: number) {
   return (Math.round(sek * 100) / 100).toFixed(2);
 }
 
-/** Price is VAT-inclusive; extract VAT portion */
 function vatFromInclusive(totalIncl: number, rate = VAT_RATE) {
   const vat = totalIncl - totalIncl / (1 + rate / 100);
   return Math.round(vat * 100) / 100;
@@ -134,8 +149,6 @@ export function buildOrderLines(input: {
       vatRate: formatAmount(VAT_RATE),
       vatAmount: { currency: "SEK", value: formatAmount(vat) },
     });
-  } else {
-    // Free shipping still needs a zero line for some Klarna flows — skip zero
   }
 
   return lines;
@@ -186,7 +199,6 @@ export async function createPayment(
     },
     billingAddress: billing,
     shippingAddress: shipping,
-    // Required for Klarna / klarna methods
     lines: input.lines,
   };
 
@@ -238,6 +250,43 @@ export async function getPayment(paymentId: string): Promise<MolliePayment> {
     throw new Error(data?.detail || `Mollie get ${res.status}`);
   }
   return data as MolliePayment;
+}
+
+/** Full or partial refund of a paid payment */
+export async function createRefund(input: {
+  paymentId: string;
+  amountSek: number;
+  description?: string;
+}): Promise<MollieRefund> {
+  const res = await fetch(
+    `${MOLLIE_API}/payments/${encodeURIComponent(input.paymentId)}/refunds`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey()}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        amount: {
+          currency: "SEK",
+          value: formatAmount(input.amountSek),
+        },
+        description: (input.description || "Återbetalning Sleepie").slice(
+          0,
+          255
+        ),
+      }),
+    }
+  );
+
+  const data = await res.json();
+  if (!res.ok) {
+    console.error("[mollie:refund]", data);
+    throw new Error(
+      data?.detail || data?.title || `Refund failed (${res.status})`
+    );
+  }
+  return data as MollieRefund;
 }
 
 export function checkoutUrl(payment: MolliePayment): string | null {
