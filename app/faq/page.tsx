@@ -27,7 +27,7 @@ const FAQ = [
     a: "Ja. Du har 14 dagars ångerrätt enligt lag. Kontakta hej@sleepie.se så hjälper vi dig med retursedel och instruktioner.",
   },
   {
-    q: "Passar Stroller Rocker alla vagnar?",
+    q: "Passar Sleepie Rocker alla vagnar?",
     a: "Den är universell och passar de flesta standardvagnar. Kontrollera alltid att fästet sitter stabilt innan användning.",
   },
   {
