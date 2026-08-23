@@ -36,7 +36,6 @@ export const metadata: Metadata = {
     "baby sömn",
     "Sleepie Rocker",
     "stroller rocker",
-    "white noise bebis",
     "muslin swaddle",
     "sömnsäck",
     "lugnare nätter",
