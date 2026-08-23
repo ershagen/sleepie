@@ -1,9 +1,12 @@
-import { getReviewsForProduct, getReviewStats } from "@/lib/reviews";
+import {
+  getReviewsForProductAsync,
+  getReviewStatsAsync,
+} from "@/lib/reviews";
 import { StarRating } from "./StarRating";
 
-export function ProductReviews({ slug }: { slug: string }) {
-  const list = getReviewsForProduct(slug);
-  const stats = getReviewStats(slug);
+export async function ProductReviews({ slug }: { slug: string }) {
+  const list = await getReviewsForProductAsync(slug);
+  const stats = await getReviewStatsAsync(slug);
 
   if (list.length === 0) return null;
 
