@@ -1,13 +1,15 @@
 import { ProductCard } from "@/components/ProductCard";
-import { products } from "@/lib/products";
+import { getProducts } from "@/lib/products";
 
 export const metadata = {
   title: "Produkter",
   description:
-    "Alla produkter från Sleepie – Sleepie Rocker, white noise, muslin och mer. Lugnare nätter börjar här.",
+    "Alla produkter från Sleepie – Sleepie Rocker, muslin, sömnsäck och mer. Lugnare nätter börjar här.",
 };
 
-export default function ProductsPage() {
+export default async function ProductsPage() {
+  const products = await getProducts();
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 md:py-20">
       <div className="mb-12 max-w-lg">
@@ -31,8 +33,8 @@ export default function ProductsPage() {
           Osäker på vad ni behöver?
         </h2>
         <p className="text-sm text-sleepie-gray-600 leading-relaxed mb-6">
-          Börja med vårt kit "Komplett Sovrutin" – rocker, white noise och
-          muslin i ett paket. Det enklaste sättet att komma igång.
+          Börja med vårt kit "Komplett Sovrutin" – rocker, muslin och sömnsäck i
+          ett paket. Det enklaste sättet att komma igång.
         </p>
         <a
           href="/produkter/komplett-sovrutin"
