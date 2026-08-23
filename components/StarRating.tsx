@@ -5,21 +5,24 @@ export function StarRating({
   size = "md",
   showValue = false,
   count,
+  compact = false,
 }: {
   rating: number;
   size?: "sm" | "md" | "lg";
   showValue?: boolean;
   count?: number;
+  /** Hide "recensioner" label – better for narrow product cards */
+  compact?: boolean;
 }) {
   const sizeClass =
-    size === "sm" ? "w-3.5 h-3.5" : size === "lg" ? "w-5 h-5" : "w-4 h-4";
+    size === "sm" ? "w-3 h-3" : size === "lg" ? "w-5 h-5" : "w-4 h-4";
   const full = Math.floor(rating);
   const hasHalf = rating - full >= 0.4 && rating - full < 1;
 
   return (
-    <div className="inline-flex items-center gap-1.5">
+    <div className="inline-flex items-center gap-1 min-w-0 max-w-full">
       <div
-        className="flex items-center gap-0.5"
+        className="flex items-center gap-px shrink-0"
         aria-label={`${rating} av 5 stjärnor`}
       >
         {[1, 2, 3, 4, 5].map((i) => {
@@ -38,12 +41,17 @@ export function StarRating({
         })}
       </div>
       {showValue && (
-        <span className="text-sm text-sleepie-gray-600 tabular-nums">
+        <span
+          className={`tabular-nums text-sleepie-gray-600 truncate ${
+            compact ? "text-xs" : "text-sm"
+          }`}
+        >
           {rating.toFixed(1)}
           {typeof count === "number" && count > 0 && (
             <span className="text-sleepie-gray-400">
-              {" "}
-              ({count} {count === 1 ? "recension" : "recensioner"})
+              {compact
+                ? ` (${count})`
+                : ` (${count} ${count === 1 ? "recension" : "recensioner"})`}
             </span>
           )}
         </span>
